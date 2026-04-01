@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Freight Charge Type Form View -->
+    <record id="view_freight_charge_type_form" model="ir.ui.view">
+        <field name="name">freight.charge.type.form</field>
+        <field name="model">freight.charge.type</field>
+        <field name="arch" type="xml">
+            <form string="Charge Type">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="charge_category"/>
+                        </group>
+                        <group>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="description" placeholder="Description..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Freight Charge Type Tree View -->
+    <record id="view_freight_charge_type_tree" model="ir.ui.view">
+        <field name="name">freight.charge.type.tree</field>
+        <field name="model">freight.charge.type</field>
+        <field name="arch" type="xml">
+            <tree string="Charge Types">
+                <field name="sequence" widget="handle"/>
+                <field name="code"/>
+                <field name="name"/>
+                <field name="charge_category"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!-- Freight Charge Type Action -->
+    <record id="action_freight_charge_type" model="ir.actions.act_window">
+        <field name="name">Charge Types</field>
+        <field name="res_model">freight.charge.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

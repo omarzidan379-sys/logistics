@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Main Freight Menu -->
+    <menuitem id="menu_freight_root"
+              name="Freight"
+              sequence="10"/>
+
+    <!-- Pricing Menu -->
+    <menuitem id="menu_freight_pricing"
+              name="Pricing"
+              parent="menu_freight_root"
+              sequence="20"/>
+
+    <menuitem id="menu_freight_quotations"
+              name="Quotations"
+              parent="menu_freight_pricing"
+              action="action_freight_quotation"
+              sequence="10"/>
+
+    <menuitem id="menu_freight_rates"
+              name="Rates"
+              parent="menu_freight_pricing"
+              action="action_freight_rate"
+              sequence="20"/>
+
+    <menuitem id="menu_freight_surcharges"
+              name="Surcharges"
+              parent="menu_freight_pricing"
+              action="action_freight_surcharge"
+              sequence="30"/>
+
+    <!-- Operations Menu -->
+    <menuitem id="menu_freight_operations"
+              name="Operations"
+              parent="menu_freight_root"
+              sequence="30"/>
+
+    <menuitem id="menu_freight_bookings"
+              name="Bookings"
+              parent="menu_freight_operations"
+              action="action_freight_booking"
+              sequence="10"/>
+
+    <menuitem id="menu_freight_shipments"
+              name="Shipments"
+              parent="menu_freight_operations"
+              action="action_freight_shipment"
+              sequence="20"/>
+
+    <menuitem id="menu_freight_transport_legs"
+              name="Transport Legs"
+              parent="menu_freight_operations"
+              action="action_freight_transport_leg"
+              sequence="25"/>
+
+    <menuitem id="menu_freight_containers"
+              name="Containers"
+              parent="menu_freight_operations"
+              action="action_freight_container"
+              sequence="30"/>
+
+    <menuitem id="menu_freight_documents"
+              name="Documents"
+              parent="menu_freight_operations"
+              action="action_freight_shipment_document"
+              sequence="40"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_freight_configuration"
+              name="Configuration"
+              parent="menu_freight_root"
+              sequence="100"/>
+
+    <menuitem id="menu_freight_locations"
+              name="Locations"
+              parent="menu_freight_configuration"
+              action="action_freight_location"
+              sequence="10"/>
+
+    <menuitem id="menu_freight_charge_types"
+              name="Charge Types"
+              parent="menu_freight_configuration"
+              action="action_freight_charge_type"
+              sequence="20"/>
+
+    <menuitem id="menu_freight_settings"
+              name="Settings"
+              parent="menu_freight_configuration"
+              action="action_freight_config"
+              sequence="100"/>
+</odoo>

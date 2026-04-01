@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Cron Job: Check Expired Quotations -->
+    <record id="ir_cron_check_expired_quotations" model="ir.cron">
+        <field name="name">Freight: Check Expired Quotations</field>
+        <field name="model_id" ref="model_freight_quotation"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_check_expired_quotations()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active" eval="True"/>
+        <field name="doall" eval="False"/>
+    </record>
+
+    <!-- Cron Job: Send Payment Reminders -->
+    <record id="ir_cron_send_payment_reminders" model="ir.cron">
+        <field name="name">Freight: Send Payment Reminders</field>
+        <field name="model_id" ref="model_freight_shipment"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_send_payment_reminders()</field>
+        <field name="interval_number">1</field>
+        <field name="interval_type">days</field>
+        <field name="numbercall">-1</field>
+        <field name="active" eval="True"/>
+        <field name="doall" eval="False"/>
+    </record>
+
+    <!-- Cron Job: Update Shipment Status from Carrier API -->
+    <record id="ir_cron_update_shipment_status" model="ir.cron">
+        <field name="name">Freight: Update Shipment Status</field>
+        <field name="model_id" ref="model_freight_shipment"/>
+        <field name="state">code</field>
+        <field name="code">model._cron_update_shipment_status()</field>
+        <field name="interval_number">6</field>
+        <field name="interval_type">hours</field>
+        <field name="numbercall">-1</field>
+        <field name="active" eval="False"/>
+        <field name="doall" eval="False"/>
+    </record>
+
+</odoo>

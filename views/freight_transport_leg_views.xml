@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Transport Leg Tree View -->
+    <record id="view_freight_transport_leg_tree" model="ir.ui.view">
+        <field name="name">freight.transport.leg.tree</field>
+        <field name="model">freight.transport.leg</field>
+        <field name="arch" type="xml">
+            <tree string="Transport Legs" decoration-info="state=='draft'" 
+                  decoration-success="state=='completed'" decoration-warning="is_delayed==True">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="shipment_id"/>
+                <field name="transport_mode"/>
+                <field name="origin_location_id"/>
+                <field name="destination_location_id"/>
+                <field name="carrier_id"/>
+                <field name="estimated_departure"/>
+                <field name="estimated_arrival"/>
+                <field name="estimated_transit_days" string="Transit (Days)"/>
+                <field name="estimated_cost" sum="Total Estimated Cost"/>
+                <field name="is_delayed" invisible="1"/>
+                <field name="state" widget="badge" 
+                       decoration-info="state=='draft'"
+                       decoration-primary="state=='booked'"
+                       decoration-warning="state=='in_transit'"
+                       decoration-success="state=='completed'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Transport Leg Form View -->
+    <record id="view_freight_transport_leg_form" model="ir.ui.view">
+        <field name="name">freight.transport.leg.form</field>
+        <field name="model">freight.transport.leg</field>
+        <field name="arch" type="xml">
+            <form string="Transport Leg">
+                <header>
+                    <button name="action_book" string="Book" type="object" 
+                            invisible="state != 'draft'" class="oe_highlight"/>
+                    <button name="action_load" string="Load Cargo" type="object" 
+                            invisible="state != 'booked'"/>
+                    <button name="action_depart" string="Depart" type="object" 
+                            invisible="state != 'loaded'" class="oe_highlight"/>
+                    <button name="action_arrive" string="Arrive" type="object" 
+                            invisible="state != 'in_transit'" class="oe_highlight"/>
+                    <button name="action_discharge" string="Discharge" type="object" 
+                            invisible="state != 'arrived'"/>
+                    <button name="action_complete" string="Complete" type="object" 
+                            invisible="state != 'discharged'" class="oe_highlight"/>
+                    <button name="action_cancel" string="Cancel" type="object" 
+                            invisible="state in ['completed', 'cancelled']"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,booked,loaded,in_transit,arrived,discharged,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_containers" type="object" class="oe_stat_button" icon="fa-cube">
+                            <field name="container_count" widget="statinfo" string="Containers"/>
+                        </button>
+                        <button name="action_view_documents" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="document_count" widget="statinfo" string="Documents"/>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group name="basic_info">
+                            <field name="shipment_id" readonly="1"/>
+                            <field name="sequence"/>
+                            <field name="transport_mode" widget="radio"/>
+                            <field name="carrier_id"/>
+                        </group>
+                        <group name="status_info">
+                            <field name="is_transshipment_point" readonly="1"/>
+                            <field name="is_delayed" readonly="1"/>
+                            <field name="delay_hours" invisible="not is_delayed" readonly="1"/>
+                            <field name="affects_next_leg" invisible="not is_delayed" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Route &amp; Schedule" name="route">
+                            <group>
+                                <group string="Route">
+                                    <field name="origin_location_id"/>
+                                    <field name="destination_location_id"/>
+                                    <field name="distance_km"/>
+                                </group>
+                                <group string="Transport Details">
+                                    <field name="vessel_name"/>
+                                    <field name="voyage_number"/>
+                                    <field name="booking_reference"/>
+                                </group>
+                            </group>
+                            <group>
+                                <group string="Estimated Schedule">
+                                    <field name="estimated_departure"/>
+                                    <field name="estimated_arrival"/>
+                                    <field name="estimated_transit_days" readonly="1"/>
+                                </group>
+                                <group string="Actual Schedule">
+                                    <field name="actual_departure"/>
+                                    <field name="actual_arrival"/>
+                                    <field name="actual_transit_days" readonly="1"/>
+                                    <field name="transit_variance_days" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Costs" name="costs">
+                            <group>
+                                <group string="Estimated Costs">
+                                    <field name="freight_charge"/>
+                                    <field name="fuel_surcharge"/>
+                                    <field name="handling_fee"/>
+                                    <field name="other_charges"/>
+                                    <field name="estimated_cost" readonly="1" class="oe_subtotal_footer_separator"/>
+                                </group>
+                                <group string="Actual Costs">
+                                    <field name="actual_cost"/>
+                                    <field name="cost_variance" readonly="1"/>
+                                    <field name="cost_variance_percentage" readonly="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Transshipment" name="transshipment" invisible="not is_transshipment_point">
+                            <group>
+                                <group string="Handling">
+                                    <field name="handling_time_hours"/>
+                                    <field name="handling_cost"/>
+                                    <field name="transfer_status"/>
+                                </group>
+                                <group string="Delay Impact">
+                                    <field name="delay_reason"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Milestones" name="milestones">
+                            <group>
+                                <group string="Booking &amp; Loading">
+                                    <field name="booking_confirmed_date"/>
+                                    <field name="cargo_loaded_date"/>
+                                </group>
+                                <group string="Transit &amp; Arrival">
+                                    <field name="departed_date"/>
+                                    <field name="arrived_date"/>
+                                    <field name="cargo_discharged_date"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="Containers" name="containers">
+                            <field name="container_ids" widget="many2many_tags"/>
+                        </page>
+                        
+                        <page string="Documents" name="documents">
+                            <field name="document_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="document_type"/>
+                                    <field name="upload_date"/>
+                                    <field name="uploaded_by"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="Notes" name="notes">
+                            <field name="notes" placeholder="Additional notes..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Transport Leg Search View -->
+    <record id="view_freight_transport_leg_search" model="ir.ui.view">
+        <field name="name">freight.transport.leg.search</field>
+        <field name="model">freight.transport.leg</field>
+        <field name="arch" type="xml">
+            <search string="Transport Legs">
+                <field name="name"/>
+                <field name="shipment_id"/>
+                <field name="carrier_id"/>
+                <field name="origin_location_id"/>
+                <field name="destination_location_id"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="Booked" name="booked" domain="[('state', '=', 'booked')]"/>
+                <filter string="In Transit" name="in_transit" domain="[('state', '=', 'in_transit')]"/>
+                <filter string="Completed" name="completed" domain="[('state', '=', 'completed')]"/>
+                <separator/>
+                <filter string="Delayed" name="delayed" domain="[('is_delayed', '=', True)]"/>
+                <filter string="Transshipment Points" name="transshipment" domain="[('is_transshipment_point', '=', True)]"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Shipment" name="group_shipment" context="{'group_by': 'shipment_id'}"/>
+                    <filter string="Transport Mode" name="group_mode" context="{'group_by': 'transport_mode'}"/>
+                    <filter string="Carrier" name="group_carrier" context="{'group_by': 'carrier_id'}"/>
+                    <filter string="Status" name="group_state" context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Transport Leg Kanban View -->
+    <record id="view_freight_transport_leg_kanban" model="ir.ui.view">
+        <field name="name">freight.transport.leg.kanban</field>
+        <field name="model">freight.transport.leg</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile" default_group_by="state">
+                <field name="name"/>
+                <field name="transport_mode"/>
+                <field name="origin_location_id"/>
+                <field name="destination_location_id"/>
+                <field name="carrier_id"/>
+                <field name="estimated_departure"/>
+                <field name="estimated_arrival"/>
+                <field name="state"/>
+                <field name="is_delayed"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <div class="o_kanban_record_top">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                </div>
+                                <span class="badge badge-pill" t-att-class="record.is_delayed.raw_value ? 'badge-danger' : 'badge-success'">
+                                    <field name="transport_mode"/>
+                                </span>
+                            </div>
+                            <div class="o_kanban_record_body">
+                                <div><i class="fa fa-map-marker"/> <field name="origin_location_id"/> → <field name="destination_location_id"/></div>
+                                <div><i class="fa fa-truck"/> <field name="carrier_id"/></div>
+                                <div><i class="fa fa-calendar"/> <field name="estimated_departure"/> - <field name="estimated_arrival"/></div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Transport Leg Action -->
+    <record id="action_freight_transport_leg" model="ir.actions.act_window">
+        <field name="name">Transport Legs</field>
+        <field name="res_model">freight.transport.leg</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="context">{}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first transport leg
+            </p>
+            <p>
+                Transport legs represent individual segments of a multi-modal shipment.
+            </p>
+        </field>
+    </record>
+
+    <!-- Leg Document Tree View -->
+    <record id="view_freight_leg_document_tree" model="ir.ui.view">
+        <field name="name">freight.leg.document.tree</field>
+        <field name="model">freight.leg.document</field>
+        <field name="arch" type="xml">
+            <tree string="Leg Documents">
+                <field name="name"/>
+                <field name="leg_id"/>
+                <field name="document_type"/>
+                <field name="upload_date"/>
+                <field name="uploaded_by"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Leg Document Form View -->
+    <record id="view_freight_leg_document_form" model="ir.ui.view">
+        <field name="name">freight.leg.document.form</field>
+        <field name="model">freight.leg.document</field>
+        <field name="arch" type="xml">
+            <form string="Leg Document">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="leg_id"/>
+                            <field name="document_type"/>
+                        </group>
+                        <group>
+                            <field name="upload_date" readonly="1"/>
+                            <field name="uploaded_by" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <field name="document_file" filename="file_name"/>
+                        <field name="file_name" invisible="1"/>
+                    </group>
+                    <group>
+                        <field name="notes" placeholder="Additional notes..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

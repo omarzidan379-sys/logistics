@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Freight Container Form View -->
+    <record id="view_freight_container_form" model="ir.ui.view">
+        <field name="name">freight.container.form</field>
+        <field name="model">freight.container</field>
+        <field name="arch" type="xml">
+            <form string="Container">
+                <header>
+                    <button name="action_gate_in" string="Gate In" type="object" class="oe_highlight" invisible="state != 'allocated'"/>
+                    <button name="action_gate_out" string="Gate Out" type="object" invisible="state not in ['gate_in', 'loaded', 'in_transit', 'discharged']"/>
+                    <button name="action_return" string="Return" type="object" invisible="state != 'gate_out'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="container_type"/>
+                            <field name="size"/>
+                            <field name="owner"/>
+                        </group>
+                        <group>
+                            <field name="booking_id"/>
+                            <field name="shipment_id"/>
+                            <field name="seal_number"/>
+                            <field name="vgm_weight"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Dates">
+                            <field name="gate_in_date"/>
+                            <field name="gate_out_date"/>
+                            <field name="return_date"/>
+                        </group>
+                        <group string="Condition">
+                            <field name="condition"/>
+                            <field name="damage_description" invisible="condition != 'damaged'"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Demurrage">
+                            <field name="free_time_days"/>
+                            <field name="free_time_expiry_date"/>
+                            <field name="demurrage_days"/>
+                            <field name="demurrage_rate" widget="monetary"/>
+                            <field name="demurrage_amount" widget="monetary"/>
+                        </group>
+                        <group string="Detention">
+                            <field name="detention_days"/>
+                            <field name="detention_rate" widget="monetary"/>
+                            <field name="detention_amount" widget="monetary"/>
+                            <field name="currency_id" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Freight Container Tree View -->
+    <record id="view_freight_container_tree" model="ir.ui.view">
+        <field name="name">freight.container.tree</field>
+        <field name="model">freight.container</field>
+        <field name="arch" type="xml">
+            <tree string="Containers">
+                <field name="name"/>
+                <field name="container_type"/>
+                <field name="booking_id"/>
+                <field name="shipment_id"/>
+                <field name="gate_in_date"/>
+                <field name="gate_out_date"/>
+                <field name="demurrage_amount" widget="monetary"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Freight Container Action -->
+    <record id="action_freight_container" model="ir.actions.act_window">
+        <field name="name">Containers</field>
+        <field name="res_model">freight.container</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

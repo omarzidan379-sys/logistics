@@ -1,0 +1,821 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Portal Layout -->
+    <template id="portal_my_home_menu_freight" name="Portal layout : freight menu entries" inherit_id="portal.portal_breadcrumbs" priority="40">
+        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+            <li t-if="page_name == 'shipment'" t-attf-class="breadcrumb-item #{'active ' if not shipment else ''}">
+                <a t-if="shipment" t-attf-href="/my/shipments?{{ keep_query() }}">Shipments</a>
+                <t t-else="">Shipments</t>
+            </li>
+            <li t-if="shipment" class="breadcrumb-item active">
+                <span t-field="shipment.name"/>
+            </li>
+            <li t-if="page_name == 'quotation'" t-attf-class="breadcrumb-item #{'active ' if not quotation else ''}">
+                <a t-if="quotation" t-attf-href="/my/quotations?{{ keep_query() }}">Quotations</a>
+                <t t-else="">Quotations</t>
+            </li>
+            <li t-if="quotation" class="breadcrumb-item active">
+                <span t-field="quotation.name"/>
+            </li>
+            <li t-if="page_name == 'booking'" t-attf-class="breadcrumb-item #{'active ' if not booking else ''}">
+                <a t-if="booking" t-attf-href="/my/bookings?{{ keep_query() }}">Bookings</a>
+                <t t-else="">Bookings</t>
+            </li>
+            <li t-if="booking" class="breadcrumb-item active">
+                <span t-field="booking.name"/>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_freight" name="Portal My Home : freight entries" inherit_id="portal.portal_my_home" priority="40">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Shipments</t>
+                <t t-set="url" t-value="'/my/shipments'"/>
+                <t t-set="placeholder_count" t-value="'shipment_count'"/>
+            </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Quotations</t>
+                <t t-set="url" t-value="'/my/quotations'"/>
+                <t t-set="placeholder_count" t-value="'quotation_count'"/>
+            </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Bookings</t>
+                <t t-set="url" t-value="'/my/bookings'"/>
+                <t t-set="placeholder_count" t-value="'booking_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+
+    <!-- Shipments List -->
+    <template id="portal_my_shipments" name="My Shipments">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Shipments</t>
+            </t>
+            <t t-if="not shipments">
+                <div class="alert alert-warning" role="alert">
+                    There are currently no shipments for your account.
+                </div>
+            </t>
+            <t t-if="shipments" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Shipment #</th>
+                        <th>Date</th>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                        <th>Status</th>
+                        <th class="text-end">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="shipments" t-as="shipment">
+                        <tr>
+                            <td><a t-att-href="'/my/shipments/%s' % shipment.id"><t t-esc="shipment.name"/></a></td>
+                            <td><span t-field="shipment.shipment_date"/></td>
+                            <td><span t-field="shipment.origin_location_id.name"/></td>
+                            <td><span t-field="shipment.destination_location_id.name"/></td>
+                            <td>
+                                <span t-if="shipment.state == 'draft'" class="badge badge-secondary">Draft</span>
+                                <span t-if="shipment.state == 'confirmed'" class="badge badge-info">Confirmed</span>
+                                <span t-if="shipment.state == 'in_transit'" class="badge badge-primary">In Transit</span>
+                                <span t-if="shipment.state == 'delivered'" class="badge badge-success">Delivered</span>
+                                <span t-if="shipment.state == 'cancelled'" class="badge badge-danger">Cancelled</span>
+                            </td>
+                            <td class="text-end"><span t-field="shipment.total_cost"/></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <!-- Shipment Detail -->
+    <template id="portal_my_shipment_detail" name="Shipment Detail">
+        <t t-call="portal.portal_layout">
+            <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman">
+                <t t-call="portal.portal_back_in_edit_mode">
+                    <t t-set="backend_url" t-value="'/web#model=freight.shipment&amp;id=%s&amp;view_type=form' % shipment.id"/>
+                </t>
+            </t>
+            <div class="container">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-12">
+                                <h4><span t-field="shipment.name"/></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <strong>Shipment Date:</strong> <span t-field="shipment.shipment_date"/>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Status:</strong>
+                                <span t-if="shipment.state == 'draft'" class="badge badge-secondary">Draft</span>
+                                <span t-if="shipment.state == 'confirmed'" class="badge badge-info">Confirmed</span>
+                                <span t-if="shipment.state == 'in_transit'" class="badge badge-primary">In Transit</span>
+                                <span t-if="shipment.state == 'delivered'" class="badge badge-success">Delivered</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h5>Origin</h5>
+                                <p><span t-field="shipment.origin_location_id.name"/></p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Destination</h5>
+                                <p><span t-field="shipment.destination_location_id.name"/></p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4" t-if="shipment.transport_leg_ids">
+                            <div class="col-12">
+                                <h5>Transport Legs</h5>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Sequence</th>
+                                            <th>Mode</th>
+                                            <th>Origin</th>
+                                            <th>Destination</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="shipment.transport_leg_ids" t-as="leg">
+                                            <tr>
+                                                <td><span t-field="leg.sequence"/></td>
+                                                <td><span t-field="leg.transport_mode"/></td>
+                                                <td><span t-field="leg.origin_location_id.name"/></td>
+                                                <td><span t-field="leg.destination_location_id.name"/></td>
+                                                <td>
+                                                    <span t-if="leg.status == 'pending'" class="badge badge-secondary">Pending</span>
+                                                    <span t-if="leg.status == 'in_progress'" class="badge badge-primary">In Progress</span>
+                                                    <span t-if="leg.status == 'completed'" class="badge badge-success">Completed</span>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4" t-if="shipment.document_ids">
+                            <div class="col-12">
+                                <h5>Documents</h5>
+                                <ul class="list-group">
+                                    <t t-foreach="shipment.document_ids" t-as="doc">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <span><t t-esc="doc.document_name"/> - <small><t t-esc="doc.document_type"/></small></span>
+                                            <a t-if="doc.document_file" t-att-href="'/my/shipments/%s/document/%s/download' % (shipment.id, doc.id)" class="btn btn-sm btn-primary">Download</a>
+                                        </li>
+                                    </t>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Total Weight:</strong> <span t-field="shipment.total_weight"/> kg
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Total Cost:</strong> <span t-field="shipment.total_cost"/>
+                            </div>
+                        </div>
+                        
+                        <!-- Message Section -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h5>Send Message</h5>
+                                <form method="post" t-att-action="'/my/shipments/%s/message' % shipment.id">
+                                    <div class="mb-3">
+                                        <textarea class="form-control" name="message" rows="3" placeholder="Type your message here..." required="required"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Send Message</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#requestDocModal">Request Document</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Request Document Modal -->
+                <div class="modal fade" id="requestDocModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Request Document</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="doc_type" class="form-label">Document Type</label>
+                                    <select class="form-control" id="doc_type" required="required">
+                                        <option value="">Select document type</option>
+                                        <option value="Bill of Lading">Bill of Lading</option>
+                                        <option value="Commercial Invoice">Commercial Invoice</option>
+                                        <option value="Packing List">Packing List</option>
+                                        <option value="Certificate of Origin">Certificate of Origin</option>
+                                        <option value="Insurance Certificate">Insurance Certificate</option>
+                                        <option value="Customs Declaration">Customs Declaration</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="doc_notes" class="form-label">Additional Notes</label>
+                                    <textarea class="form-control" id="doc_notes" rows="3"></textarea>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary" onclick="submitDocumentRequest()">Submit Request</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <script>
+                    function submitDocumentRequest() {
+                        const docType = document.getElementById('doc_type').value;
+                        const notes = document.getElementById('doc_notes').value;
+                        
+                        if (!docType) {
+                            alert('Please select a document type');
+                            return;
+                        }
+                        
+                        fetch('/my/shipments/<t t-esc="shipment.id"/>/request_document', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                jsonrpc: '2.0',
+                                method: 'call',
+                                params: {
+                                    shipment_id: <t t-esc="shipment.id"/>,
+                                    document_type: docType,
+                                    notes: notes
+                                }
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.result &amp;&amp; data.result.success) {
+                                alert('Document request submitted successfully');
+                                $('#requestDocModal').modal('hide');
+                            } else {
+                                alert('Error: ' + (data.result ? data.result.error : 'Unknown error'));
+                            }
+                        })
+                        .catch(error => {
+                            alert('Error submitting request');
+                            console.error('Error:', error);
+                        });
+                    }
+                </script>
+            </div>
+        </t>
+    </template>
+
+    <!-- Quotations List -->
+    <template id="portal_my_quotations" name="My Quotations">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Quotations</t>
+            </t>
+            <t t-if="not quotations">
+                <div class="alert alert-warning" role="alert">
+                    There are currently no quotations for your account.
+                </div>
+            </t>
+            <t t-if="quotations" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Quotation #</th>
+                        <th>Date</th>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                        <th>Valid Until</th>
+                        <th>Status</th>
+                        <th class="text-end">Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="quotations" t-as="quotation">
+                        <tr>
+                            <td><a t-att-href="'/my/quotations/%s' % quotation.id"><t t-esc="quotation.name"/></a></td>
+                            <td><span t-field="quotation.quotation_date"/></td>
+                            <td><span t-field="quotation.origin_location_id.name"/></td>
+                            <td><span t-field="quotation.destination_location_id.name"/></td>
+                            <td><span t-field="quotation.validity_date"/></td>
+                            <td>
+                                <span t-if="quotation.state == 'draft'" class="badge badge-secondary">Draft</span>
+                                <span t-if="quotation.state == 'sent'" class="badge badge-info">Sent</span>
+                                <span t-if="quotation.state == 'confirmed'" class="badge badge-success">Confirmed</span>
+                                <span t-if="quotation.state == 'cancelled'" class="badge badge-danger">Cancelled</span>
+                            </td>
+                            <td class="text-end"><span t-field="quotation.total_amount"/></td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <!-- Quotation Detail -->
+    <template id="portal_my_quotation_detail" name="Quotation Detail">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <t t-if="request.params.get('message') == 'accepted'">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        Quotation accepted successfully! We will contact you shortly.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </t>
+                <t t-if="request.params.get('message') == 'rejected'">
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        Quotation rejected. Thank you for your feedback.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </t>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-8">
+                                <h4><span t-field="quotation.name"/></h4>
+                            </div>
+                            <div class="col-4 text-end">
+                                <t t-if="quotation.state == 'sent'">
+                                    <a t-att-href="'/my/quotations/%s/accept' % quotation.id" class="btn btn-success me-2">Accept</a>
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal">Reject</button>
+                                </t>
+                                <a t-att-href="'/my/quotations/%s/download' % quotation.id" class="btn btn-primary">
+                                    <i class="fa fa-download"/> Download PDF
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <strong>Quotation Date:</strong> <span t-field="quotation.quotation_date"/>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Valid Until:</strong> <span t-field="quotation.validity_date"/>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h5>Origin</h5>
+                                <p><span t-field="quotation.origin_location_id.name"/></p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Destination</h5>
+                                <p><span t-field="quotation.destination_location_id.name"/></p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4" t-if="quotation.quotation_line_ids">
+                            <div class="col-12">
+                                <h5>Quotation Lines</h5>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Charge Type</th>
+                                            <th class="text-end">Unit Price</th>
+                                            <th class="text-end">Quantity</th>
+                                            <th class="text-end">Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="quotation.quotation_line_ids" t-as="line">
+                                            <tr>
+                                                <td><span t-field="line.description"/></td>
+                                                <td><span t-field="line.charge_type_id.name"/></td>
+                                                <td class="text-end"><span t-field="line.unit_price"/></td>
+                                                <td class="text-end"><span t-field="line.quantity"/></td>
+                                                <td class="text-end"><span t-field="line.subtotal"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                                            <td class="text-end"><strong><span t-field="quotation.total_amount"/></strong></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <strong>Notes:</strong>
+                                <p><span t-field="quotation.notes"/></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reject Modal -->
+                <div class="modal fade" id="rejectModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Reject Quotation</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <form method="get" t-att-action="'/my/quotations/%s/reject' % quotation.id">
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="reason" class="form-label">Reason for rejection (optional)</label>
+                                        <textarea class="form-control" id="reason" name="reason" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-danger">Confirm Rejection</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Bookings List -->
+    <template id="portal_my_bookings" name="My Bookings">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Bookings</t>
+            </t>
+            <t t-if="not bookings">
+                <div class="alert alert-warning" role="alert">
+                    There are currently no bookings for your account.
+                </div>
+            </t>
+            <t t-if="bookings" t-call="portal.portal_table">
+                <thead>
+                    <tr class="active">
+                        <th>Booking #</th>
+                        <th>Date</th>
+                        <th>Origin</th>
+                        <th>Destination</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <t t-foreach="bookings" t-as="booking">
+                        <tr>
+                            <td><a t-att-href="'/my/bookings/%s' % booking.id"><t t-esc="booking.name"/></a></td>
+                            <td><span t-field="booking.booking_date"/></td>
+                            <td><span t-field="booking.origin_location_id.name"/></td>
+                            <td><span t-field="booking.destination_location_id.name"/></td>
+                            <td>
+                                <span t-if="booking.state == 'draft'" class="badge badge-secondary">Draft</span>
+                                <span t-if="booking.state == 'confirmed'" class="badge badge-success">Confirmed</span>
+                                <span t-if="booking.state == 'cancelled'" class="badge badge-danger">Cancelled</span>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </t>
+        </t>
+    </template>
+
+    <!-- Booking Detail -->
+    <template id="portal_my_booking_detail" name="Booking Detail">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <t t-if="request.params.get('message') == 'cancelled'">
+                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                        Booking cancelled successfully.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </t>
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-8">
+                                <h4><span t-field="booking.name"/></h4>
+                            </div>
+                            <div class="col-4 text-end">
+                                <t t-if="booking.state in ['draft', 'confirmed']">
+                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#cancelModal">Cancel Booking</button>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <strong>Booking Date:</strong> <span t-field="booking.booking_date"/>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Status:</strong>
+                                <span t-if="booking.state == 'draft'" class="badge badge-secondary">Draft</span>
+                                <span t-if="booking.state == 'confirmed'" class="badge badge-success">Confirmed</span>
+                                <span t-if="booking.state == 'cancelled'" class="badge badge-danger">Cancelled</span>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h5>Origin</h5>
+                                <p><span t-field="booking.origin_location_id.name"/></p>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Destination</h5>
+                                <p><span t-field="booking.destination_location_id.name"/></p>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4" t-if="booking.container_ids">
+                            <div class="col-12">
+                                <h5>Containers</h5>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Container #</th>
+                                            <th>Type</th>
+                                            <th>Size</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="booking.container_ids" t-as="container">
+                                            <tr>
+                                                <td><span t-field="container.container_number"/></td>
+                                                <td><span t-field="container.container_type"/></td>
+                                                <td><span t-field="container.size"/></td>
+                                                <td><span t-field="container.status"/></td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <strong>Notes:</strong>
+                                <p><span t-field="booking.notes"/></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cancel Modal -->
+                <div class="modal fade" id="cancelModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Cancel Booking</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <form method="get" t-att-action="'/my/bookings/%s/cancel' % booking.id">
+                                <div class="modal-body">
+                                    <p>Are you sure you want to cancel this booking?</p>
+                                    <div class="mb-3">
+                                        <label for="reason" class="form-label">Reason for cancellation (optional)</label>
+                                        <textarea class="form-control" id="reason" name="reason" rows="3"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-danger">Confirm Cancellation</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <!-- Public Tracking Page -->
+    <template id="freight_tracking_page" name="Track Shipment" page="True">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="s_cover pt96 pb96" data-vcss="001" data-snippet="s_cover" data-name="Cover">
+                    <span class="s_cover_background" style="background-image: url('/web/image/website.s_cover_default_image');"/>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 offset-lg-2">
+                                <h1 class="text-center text-white">Track Your Shipment</h1>
+                                <p class="lead text-center text-white">Enter your tracking number to get real-time updates</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_text_block pt32 pb32" data-snippet="s_text_block" data-name="Text">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 offset-lg-2">
+                                <div class="card shadow">
+                                    <div class="card-body p-4">
+                                        <form id="tracking_form">
+                                            <div class="mb-3">
+                                                <label for="tracking_number" class="form-label">Tracking Number</label>
+                                                <input type="text" class="form-control form-control-lg" id="tracking_number" name="tracking_number" placeholder="Enter your tracking number" required="required"/>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary btn-lg w-100">Track Shipment</button>
+                                        </form>
+                                        <div id="tracking_result" class="mt-4" style="display:none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Public Quote Request Page -->
+    <template id="freight_quote_page" name="Request Quote" page="True">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section class="s_cover pt96 pb96" data-vcss="001" data-snippet="s_cover" data-name="Cover">
+                    <span class="s_cover_background" style="background-image: url('/web/image/website.s_cover_default_image');"/>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 offset-lg-2">
+                                <h1 class="text-center text-white">Request a Freight Quote</h1>
+                                <p class="lead text-center text-white">Get competitive rates for your shipping needs</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="s_text_block pt32 pb32" data-snippet="s_text_block" data-name="Text">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-8 offset-lg-2">
+                                <div class="card shadow">
+                                    <div class="card-body p-4">
+                                        <form id="quote_form">
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="partner_name" class="form-label">Name *</label>
+                                                    <input type="text" class="form-control" id="partner_name" name="partner_name" required="required"/>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="partner_email" class="form-label">Email *</label>
+                                                    <input type="email" class="form-control" id="partner_email" name="partner_email" required="required"/>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="partner_phone" class="form-label">Phone</label>
+                                                <input type="tel" class="form-control" id="partner_phone" name="partner_phone"/>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="origin_id" class="form-label">Origin *</label>
+                                                    <select class="form-control" id="origin_id" name="origin_id" required="required">
+                                                        <option value="">Select Origin</option>
+                                                        <t t-foreach="locations" t-as="location">
+                                                            <option t-att-value="location.id"><t t-esc="location.name"/></option>
+                                                        </t>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="destination_id" class="form-label">Destination *</label>
+                                                    <select class="form-control" id="destination_id" name="destination_id" required="required">
+                                                        <option value="">Select Destination</option>
+                                                        <t t-foreach="locations" t-as="location">
+                                                            <option t-att-value="location.id"><t t-esc="location.name"/></option>
+                                                        </t>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="cargo_type" class="form-label">Cargo Type</label>
+                                                <select class="form-control" id="cargo_type" name="cargo_type">
+                                                    <option value="general">General Cargo</option>
+                                                    <option value="container">Container</option>
+                                                    <option value="bulk">Bulk</option>
+                                                    <option value="hazardous">Hazardous</option>
+                                                    <option value="perishable">Perishable</option>
+                                                </select>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="weight" class="form-label">Weight (kg)</label>
+                                                    <input type="number" class="form-control" id="weight" name="weight" step="0.01"/>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label for="volume" class="form-label">Volume (m³)</label>
+                                                    <input type="number" class="form-control" id="volume" name="volume" step="0.01"/>
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary btn-lg w-100">Submit Request</button>
+                                        </form>
+                                        <div id="quote_result" class="mt-4" style="display:none;"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </t>
+    </template>
+
+    <!-- Freight Settings Page -->
+    <template id="portal_freight_settings" name="Freight Settings">
+        <t t-call="portal.portal_layout">
+            <div class="container">
+                <t t-if="request.params.get('saved') == '1'">
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        Settings saved successfully!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                </t>
+                <div class="card">
+                    <div class="card-header">
+                        <h4>Notification Preferences</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="/my/freight/settings/save">
+                            <h5>Email Notifications</h5>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="notify_quotation_sent" id="notify_quotation_sent" t-att-checked="'checked' if preference.notify_quotation_sent else None"/>
+                                <label class="form-check-label" for="notify_quotation_sent">
+                                    Quotation Sent
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="notify_booking_confirmed" id="notify_booking_confirmed" t-att-checked="'checked' if preference.notify_booking_confirmed else None"/>
+                                <label class="form-check-label" for="notify_booking_confirmed">
+                                    Booking Confirmed
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="notify_shipment_booked" id="notify_shipment_booked" t-att-checked="'checked' if preference.notify_shipment_booked else None"/>
+                                <label class="form-check-label" for="notify_shipment_booked">
+                                    Shipment Booked
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="notify_shipment_departed" id="notify_shipment_departed" t-att-checked="'checked' if preference.notify_shipment_departed else None"/>
+                                <label class="form-check-label" for="notify_shipment_departed">
+                                    Shipment Departed
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="notify_shipment_in_transit" id="notify_shipment_in_transit" t-att-checked="'checked' if preference.notify_shipment_in_transit else None"/>
+                                <label class="form-check-label" for="notify_shipment_in_transit">
+                                    Shipment In Transit
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="notify_shipment_arrived" id="notify_shipment_arrived" t-att-checked="'checked' if preference.notify_shipment_arrived else None"/>
+                                <label class="form-check-label" for="notify_shipment_arrived">
+                                    Shipment Arrived
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" name="notify_shipment_delivered" id="notify_shipment_delivered" t-att-checked="'checked' if preference.notify_shipment_delivered else None"/>
+                                <label class="form-check-label" for="notify_shipment_delivered">
+                                    Shipment Delivered
+                                </label>
+                            </div>
+                            <div class="form-check mb-4">
+                                <input class="form-check-input" type="checkbox" name="notify_document_uploaded" id="notify_document_uploaded" t-att-checked="'checked' if preference.notify_document_uploaded else None"/>
+                                <label class="form-check-label" for="notify_document_uploaded">
+                                    Document Uploaded
+                                </label>
+                            </div>
+                            
+                            <h5>Notification Frequency</h5>
+                            <div class="mb-3">
+                                <select class="form-control" name="digest_frequency">
+                                    <option value="realtime" t-att-selected="'selected' if preference.digest_frequency == 'realtime' else None">Real-time</option>
+                                    <option value="daily" t-att-selected="'selected' if preference.digest_frequency == 'daily' else None">Daily Digest</option>
+                                    <option value="weekly" t-att-selected="'selected' if preference.digest_frequency == 'weekly' else None">Weekly Digest</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Save Preferences</button>
+                            <a href="/my/home" class="btn btn-secondary">Cancel</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+</odoo>

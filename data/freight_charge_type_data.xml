@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Default Charge Types -->
+        <record id="charge_type_ocean_freight" model="freight.charge.type">
+            <field name="name">Ocean Freight</field>
+            <field name="code">OCEAN_FREIGHT</field>
+            <field name="charge_category">freight</field>
+            <field name="sequence">10</field>
+        </record>
+        
+        <record id="charge_type_air_freight" model="freight.charge.type">
+            <field name="name">Air Freight</field>
+            <field name="code">AIR_FREIGHT</field>
+            <field name="charge_category">freight</field>
+            <field name="sequence">20</field>
+        </record>
+        
+        <record id="charge_type_inland_transport" model="freight.charge.type">
+            <field name="name">Inland Transport</field>
+            <field name="code">INLAND_TRANSPORT</field>
+            <field name="charge_category">freight</field>
+            <field name="sequence">30</field>
+        </record>
+        
+        <record id="charge_type_customs_clearance" model="freight.charge.type">
+            <field name="name">Customs Clearance</field>
+            <field name="code">CUSTOMS_CLEARANCE</field>
+            <field name="charge_category">customs</field>
+            <field name="sequence">40</field>
+        </record>
+        
+        <record id="charge_type_documentation" model="freight.charge.type">
+            <field name="name">Documentation Fee</field>
+            <field name="code">DOCUMENTATION</field>
+            <field name="charge_category">documentation</field>
+            <field name="sequence">50</field>
+        </record>
+        
+        <record id="charge_type_handling" model="freight.charge.type">
+            <field name="name">Handling Charges</field>
+            <field name="code">HANDLING</field>
+            <field name="charge_category">handling</field>
+            <field name="sequence">60</field>
+        </record>
+        
+        <record id="charge_type_fuel_surcharge" model="freight.charge.type">
+            <field name="name">Fuel Surcharge</field>
+            <field name="code">FUEL_SURCHARGE</field>
+            <field name="charge_category">surcharge</field>
+            <field name="sequence">70</field>
+        </record>
+    </data>
+</odoo>

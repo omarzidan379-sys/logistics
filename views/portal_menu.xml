@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Add Freight menu items to portal -->
+    <template id="portal_my_home_menu_freight_items" name="Portal My Home: Freight Menu" inherit_id="portal.portal_my_home" priority="50">
+        <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Shipments</t>
+                <t t-set="url" t-value="'/my/shipments'"/>
+                <t t-set="placeholder_count" t-value="'shipment_count'"/>
+            </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Quotations</t>
+                <t t-set="url" t-value="'/my/quotations'"/>
+                <t t-set="placeholder_count" t-value="'quotation_count'"/>
+            </t>
+            <t t-call="portal.portal_docs_entry">
+                <t t-set="title">Bookings</t>
+                <t t-set="url" t-value="'/my/bookings'"/>
+                <t t-set="placeholder_count" t-value="'booking_count'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Website Footer Links (Theme-Independent) -->
+    <template id="freight_website_footer" name="Freight Footer Links" inherit_id="website.footer_custom" priority="50">
+        <xpath expr="//div[@id='footer']" position="inside">
+            <div class="col-lg-3 mb-3">
+                <h5>Freight Services</h5>
+                <ul class="list-unstyled">
+                    <li><a href="/freight/track" class="text-muted">Track Shipment</a></li>
+                    <li><a href="/freight/quote" class="text-muted">Request Quote</a></li>
+                    <li><a href="/my/shipments" class="text-muted">My Shipments</a></li>
+                </ul>
+            </div>
+        </xpath>
+    </template>
+
+</odoo>

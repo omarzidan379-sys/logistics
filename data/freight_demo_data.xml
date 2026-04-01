@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Demo Freight Locations -->
+        <record id="location_port_shanghai" model="freight.location">
+            <field name="name">Port of Shanghai</field>
+            <field name="code">CNSHA</field>
+            <field name="location_type">port</field>
+            <field name="city">Shanghai</field>
+            <field name="country_id" ref="base.cn"/>
+            <field name="latitude">31.2304</field>
+            <field name="longitude">121.4737</field>
+        </record>
+
+        <record id="location_port_losangeles" model="freight.location">
+            <field name="name">Port of Los Angeles</field>
+            <field name="code">USLAX</field>
+            <field name="location_type">port</field>
+            <field name="city">Los Angeles</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="latitude">33.7405</field>
+            <field name="longitude">-118.2720</field>
+        </record>
+
+        <record id="location_port_rotterdam" model="freight.location">
+            <field name="name">Port of Rotterdam</field>
+            <field name="code">NLRTM</field>
+            <field name="location_type">port</field>
+            <field name="city">Rotterdam</field>
+            <field name="country_id" ref="base.nl"/>
+            <field name="latitude">51.9225</field>
+            <field name="longitude">4.4792</field>
+        </record>
+
+        <record id="location_port_singapore" model="freight.location">
+            <field name="name">Port of Singapore</field>
+            <field name="code">SGSIN</field>
+            <field name="location_type">port</field>
+            <field name="city">Singapore</field>
+            <field name="country_id" ref="base.sg"/>
+            <field name="latitude">1.2644</field>
+            <field name="longitude">103.8220</field>
+        </record>
+
+        <record id="location_port_hamburg" model="freight.location">
+            <field name="name">Port of Hamburg</field>
+            <field name="code">DEHAM</field>
+            <field name="location_type">port</field>
+            <field name="city">Hamburg</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="latitude">53.5511</field>
+            <field name="longitude">9.9937</field>
+        </record>
+
+        <record id="location_airport_dubai" model="freight.location">
+            <field name="name">Dubai International Airport</field>
+            <field name="code">AEDXB</field>
+            <field name="location_type">airport</field>
+            <field name="city">Dubai</field>
+            <field name="country_id" ref="base.ae"/>
+            <field name="latitude">25.2532</field>
+            <field name="longitude">55.3657</field>
+        </record>
+
+        <record id="location_airport_frankfurt" model="freight.location">
+            <field name="name">Frankfurt Airport</field>
+            <field name="code">DEFRA</field>
+            <field name="location_type">airport</field>
+            <field name="city">Frankfurt</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="latitude">50.0379</field>
+            <field name="longitude">8.5622</field>
+        </record>
+
+        <!-- Demo Partners - Carriers -->
+        <record id="partner_maersk" model="res.partner">
+            <field name="name">Maersk Line</field>
+            <field name="is_carrier" eval="True"/>
+            <field name="is_company" eval="True"/>
+            <field name="email">booking@maersk.com</field>
+            <field name="phone">+45 33 63 33 63</field>
+            <field name="country_id" ref="base.dk"/>
+        </record>
+
+        <record id="partner_msc" model="res.partner">
+            <field name="name">MSC Mediterranean Shipping</field>
+            <field name="is_carrier" eval="True"/>
+            <field name="is_company" eval="True"/>
+            <field name="email">info@msc.com</field>
+            <field name="phone">+41 22 703 88 88</field>
+            <field name="country_id" ref="base.ch"/>
+        </record>
+
+        <record id="partner_cosco" model="res.partner">
+            <field name="name">COSCO Shipping Lines</field>
+            <field name="is_carrier" eval="True"/>
+            <field name="is_company" eval="True"/>
+            <field name="email">service@cosco.com</field>
+            <field name="phone">+86 21 6505 5555</field>
+            <field name="country_id" ref="base.cn"/>
+        </record>
+
+        <record id="partner_hapag" model="res.partner">
+            <field name="name">Hapag-Lloyd</field>
+            <field name="is_carrier" eval="True"/>
+            <field name="is_company" eval="True"/>
+            <field name="email">contact@hapag-lloyd.com</field>
+            <field name="phone">+49 40 3001 0</field>
+            <field name="country_id" ref="base.de"/>
+        </record>
+
+        <!-- Demo Partners - Customers -->
+        <record id="partner_customer_techcorp" model="res.partner">
+            <field name="name">TechCorp Industries</field>
+            <field name="is_shipper" eval="True"/>
+            <field name="is_consignee" eval="True"/>
+            <field name="is_company" eval="True"/>
+            <field name="email">logistics@techcorp.com</field>
+            <field name="phone">+1 555 123 4567</field>
+            <field name="street">1234 Tech Boulevard</field>
+            <field name="city">San Francisco</field>
+            <field name="zip">94102</field>
+            <field name="country_id" ref="base.us"/>
+            <field name="freight_customer_code">TC001</field>
+            <field name="credit_limit">100000</field>
+        </record>
+
+        <record id="partner_customer_globaltrading" model="res.partner">
+            <field name="name">Global Trading Co.</field>
+            <field name="is_shipper" eval="True"/>
+            <field name="is_consignee" eval="True"/>
+            <field name="is_company" eval="True"/>
+            <field name="email">shipping@globaltrading.com</field>
+            <field name="phone">+44 20 7123 4567</field>
+            <field name="street">456 Commerce Street</field>
+            <field name="city">London</field>
+            <field name="zip">EC1A 1BB</field>
+            <field name="country_id" ref="base.uk"/>
+            <field name="freight_customer_code">GT002</field>
+            <field name="credit_limit">150000</field>
+        </record>
+
+        <record id="partner_customer_europarts" model="res.partner">
+            <field name="name">EuroParts GmbH</field>
+            <field name="is_shipper" eval="True"/>
+            <field name="is_consignee" eval="True"/>
+            <field name="is_company" eval="True"/>
+            <field name="email">import@europarts.de</field>
+            <field name="phone">+49 40 1234 5678</field>
+            <field name="street">Industriestraße 100</field>
+            <field name="city">Hamburg</field>
+            <field name="zip">20095</field>
+            <field name="country_id" ref="base.de"/>
+            <field name="freight_customer_code">EP003</field>
+            <field name="credit_limit">200000</field>
+        </record>
+
+        <!-- Demo Freight Rates -->
+        <record id="rate_shanghai_losangeles_fcl" model="freight.rate">
+            <field name="name">Shanghai to LA - FCL 40HC</field>
+            <field name="carrier_id" ref="partner_maersk"/>
+            <field name="service_type">fcl</field>
+            <field name="container_type">40hc</field>
+            <field name="origin_port_id" ref="location_port_shanghai"/>
+            <field name="destination_port_id" ref="location_port_losangeles"/>
+            <field name="rate_type">contract</field>
+            <field name="rate_amount">2850.00</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="transit_time_days">18</field>
+            <field name="valid_from" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="valid_to" eval="(DateTime.now() + timedelta(days=60)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="rate_rotterdam_singapore_fcl" model="freight.rate">
+            <field name="name">Rotterdam to Singapore - FCL 40GP</field>
+            <field name="carrier_id" ref="partner_msc"/>
+            <field name="service_type">fcl</field>
+            <field name="container_type">40gp</field>
+            <field name="origin_port_id" ref="location_port_rotterdam"/>
+            <field name="destination_port_id" ref="location_port_singapore"/>
+            <field name="rate_type">standard</field>
+            <field name="rate_amount">1950.00</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="transit_time_days">25</field>
+            <field name="valid_from" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="valid_to" eval="(DateTime.now() + timedelta(days=60)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="rate_shanghai_hamburg_fcl" model="freight.rate">
+            <field name="name">Shanghai to Hamburg - FCL 40HC</field>
+            <field name="carrier_id" ref="partner_hapag"/>
+            <field name="service_type">fcl</field>
+            <field name="container_type">40hc</field>
+            <field name="origin_port_id" ref="location_port_shanghai"/>
+            <field name="destination_port_id" ref="location_port_hamburg"/>
+            <field name="rate_type">spot</field>
+            <field name="rate_amount">3200.00</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="transit_time_days">32</field>
+            <field name="valid_from" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="valid_to" eval="(DateTime.now() + timedelta(days=60)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <!-- Demo Surcharges -->
+        <record id="surcharge_bunker" model="freight.surcharge">
+            <field name="name">Bunker Adjustment Factor</field>
+            <field name="surcharge_type">fuel</field>
+            <field name="carrier_id" ref="partner_maersk"/>
+            <field name="service_type">fcl</field>
+            <field name="calculation_method">percentage</field>
+            <field name="percentage">15.0</field>
+            <field name="valid_from" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="valid_to" eval="(DateTime.now() + timedelta(days=90)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <record id="surcharge_peak_season" model="freight.surcharge">
+            <field name="name">Peak Season Surcharge</field>
+            <field name="surcharge_type">peak_season</field>
+            <field name="carrier_id" ref="partner_maersk"/>
+            <field name="service_type">fcl</field>
+            <field name="calculation_method">fixed</field>
+            <field name="amount">500.00</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="valid_from" eval="(DateTime.now() - timedelta(days=15)).strftime('%Y-%m-%d')"/>
+            <field name="valid_to" eval="(DateTime.now() + timedelta(days=45)).strftime('%Y-%m-%d')"/>
+        </record>
+
+        <!-- Demo Quotations -->
+        <record id="quotation_techcorp_001" model="freight.quotation">
+            <field name="name">FQ00001</field>
+            <field name="partner_id" ref="partner_customer_techcorp"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=25)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">import</field>
+            <field name="origin_port_id" ref="location_port_shanghai"/>
+            <field name="destination_port_id" ref="location_port_losangeles"/>
+            <field name="cargo_description">Electronics - Laptops and Computer Parts</field>
+            <field name="container_type">40hc</field>
+            <field name="container_qty">2</field>
+            <field name="total_weight">18000</field>
+            <field name="total_volume">65</field>
+            <field name="total_packages">450</field>
+            <field name="state">approved</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="quotation_line_001_freight" model="freight.quotation.line">
+            <field name="quotation_id" ref="quotation_techcorp_001"/>
+            <field name="charge_type_id" ref="charge_type_ocean_freight"/>
+            <field name="description">Ocean Freight - Shanghai to Los Angeles</field>
+            <field name="quantity">2</field>
+            <field name="unit_price">2850.00</field>
+            <field name="cost_price">2400.00</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="quotation_line_001_baf" model="freight.quotation.line">
+            <field name="quotation_id" ref="quotation_techcorp_001"/>
+            <field name="charge_type_id" ref="charge_type_fuel_surcharge"/>
+            <field name="description">Bunker Adjustment Factor (15%)</field>
+            <field name="quantity">2</field>
+            <field name="unit_price">427.50</field>
+            <field name="cost_price">360.00</field>
+            <field name="sequence">20</field>
+        </record>
+
+        <record id="quotation_line_001_doc" model="freight.quotation.line">
+            <field name="quotation_id" ref="quotation_techcorp_001"/>
+            <field name="charge_type_id" ref="charge_type_documentation"/>
+            <field name="description">Documentation Fee</field>
+            <field name="quantity">1</field>
+            <field name="unit_price">150.00</field>
+            <field name="cost_price">75.00</field>
+            <field name="sequence">30</field>
+        </record>
+
+        <record id="quotation_globaltrading_001" model="freight.quotation">
+            <field name="name">FQ00002</field>
+            <field name="partner_id" ref="partner_customer_globaltrading"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=27)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="origin_port_id" ref="location_port_rotterdam"/>
+            <field name="destination_port_id" ref="location_port_singapore"/>
+            <field name="cargo_description">Automotive Parts and Accessories</field>
+            <field name="container_type">40gp</field>
+            <field name="container_qty">1</field>
+            <field name="total_weight">22000</field>
+            <field name="total_volume">58</field>
+            <field name="total_packages">280</field>
+            <field name="state">sent</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="quotation_line_002_freight" model="freight.quotation.line">
+            <field name="quotation_id" ref="quotation_globaltrading_001"/>
+            <field name="charge_type_id" ref="charge_type_ocean_freight"/>
+            <field name="description">Ocean Freight - Rotterdam to Singapore</field>
+            <field name="quantity">1</field>
+            <field name="unit_price">1950.00</field>
+            <field name="cost_price">1650.00</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <record id="quotation_europarts_001" model="freight.quotation">
+            <field name="name">FQ00003</field>
+            <field name="partner_id" ref="partner_customer_europarts"/>
+            <field name="quotation_date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">import</field>
+            <field name="origin_port_id" ref="location_port_shanghai"/>
+            <field name="destination_port_id" ref="location_port_hamburg"/>
+            <field name="cargo_description">Industrial Machinery and Equipment</field>
+            <field name="container_type">40hc</field>
+            <field name="container_qty">3</field>
+            <field name="total_weight">45000</field>
+            <field name="total_volume">180</field>
+            <field name="total_packages">120</field>
+            <field name="state">draft</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="quotation_line_003_freight" model="freight.quotation.line">
+            <field name="quotation_id" ref="quotation_europarts_001"/>
+            <field name="charge_type_id" ref="charge_type_ocean_freight"/>
+            <field name="description">Ocean Freight - Shanghai to Hamburg</field>
+            <field name="quantity">3</field>
+            <field name="unit_price">3200.00</field>
+            <field name="cost_price">2800.00</field>
+            <field name="sequence">10</field>
+        </record>
+
+        <!-- Demo Bookings -->
+        <record id="booking_techcorp_001" model="freight.booking">
+            <field name="name">FB00001</field>
+            <field name="quotation_id" ref="quotation_techcorp_001"/>
+            <field name="partner_id" ref="partner_customer_techcorp"/>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="carrier_id" ref="partner_maersk"/>
+            <field name="vessel_name">MAERSK ESSEX</field>
+            <field name="voyage_number">ME2401</field>
+            <field name="booking_reference">MAEU123456789</field>
+            <field name="etd" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="eta" eval="(DateTime.now() + timedelta(days=25)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="container_type">40hc</field>
+            <field name="container_qty">2</field>
+            <field name="free_time_days">7</field>
+            <field name="demurrage_rate">150.00</field>
+            <field name="detention_rate">100.00</field>
+            <field name="state">allocated</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <!-- Demo Shipments -->
+        <record id="shipment_techcorp_001" model="freight.shipment">
+            <field name="name">FS00001</field>
+            <field name="quotation_id" ref="quotation_techcorp_001"/>
+            <field name="booking_id" ref="booking_techcorp_001"/>
+            <field name="partner_id" ref="partner_customer_techcorp"/>
+            <field name="shipper_id" ref="partner_customer_techcorp"/>
+            <field name="consignee_id" ref="partner_customer_techcorp"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">import</field>
+            <field name="carrier_id" ref="partner_maersk"/>
+            <field name="vessel_name">MAERSK ESSEX</field>
+            <field name="voyage_number">ME2401</field>
+            <field name="bl_number">MAEU123456789001</field>
+            <field name="origin_port_id" ref="location_port_shanghai"/>
+            <field name="destination_port_id" ref="location_port_losangeles"/>
+            <field name="cargo_description">Electronics - Laptops and Computer Parts</field>
+            <field name="total_weight">18000</field>
+            <field name="total_volume">65</field>
+            <field name="total_packages">450</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="(DateTime.now() + timedelta(days=25)).strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">7305.00</field>
+            <field name="actual_cost">6870.00</field>
+            <field name="state">in_transit</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <!-- Demo Containers -->
+        <record id="container_001" model="freight.container">
+            <field name="name">MAEU1234567</field>
+            <field name="container_type">40hc</field>
+            <field name="size">40</field>
+            <field name="owner">coc</field>
+            <field name="booking_id" ref="booking_techcorp_001"/>
+            <field name="shipment_id" ref="shipment_techcorp_001"/>
+            <field name="seal_number">SEAL123456</field>
+            <field name="vgm_weight">18500</field>
+            <field name="condition">good</field>
+            <field name="free_time_days">7</field>
+            <field name="demurrage_rate">150.00</field>
+            <field name="detention_rate">100.00</field>
+            <field name="state">loaded</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <record id="container_002" model="freight.container">
+            <field name="name">MAEU7654321</field>
+            <field name="container_type">40hc</field>
+            <field name="size">40</field>
+            <field name="owner">coc</field>
+            <field name="booking_id" ref="booking_techcorp_001"/>
+            <field name="shipment_id" ref="shipment_techcorp_001"/>
+            <field name="seal_number">SEAL789012</field>
+            <field name="vgm_weight">17800</field>
+            <field name="condition">good</field>
+            <field name="free_time_days">7</field>
+            <field name="demurrage_rate">150.00</field>
+            <field name="detention_rate">100.00</field>
+            <field name="state">loaded</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+    </data>
+</odoo>

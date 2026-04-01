@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Freight Booking Form View -->
+    <record id="view_freight_booking_form" model="ir.ui.view">
+        <field name="name">freight.booking.form</field>
+        <field name="model">freight.booking</field>
+        <field name="arch" type="xml">
+            <form string="Freight Booking" class="o_freight_booking_form">
+                <header>
+                    <button name="action_confirm" string="Confirm" type="object" class="oe_highlight" invisible="state != 'draft'" icon="fa-check"/>
+                    <button name="action_allocate_containers" string="Allocate Containers" type="object" class="oe_highlight" invisible="state != 'confirmed'" icon="fa-cube"/>
+                    <button name="action_create_shipment" string="Create Shipment" type="object" invisible="state != 'allocated'" icon="fa-ship"/>
+                    <button name="action_cancel" string="Cancel" type="object" invisible="state not in ['draft', 'confirmed']" icon="fa-times"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,allocated"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_containers" type="object" class="oe_stat_button" icon="fa-cube">
+                            <field name="container_count" widget="statinfo" string="Containers"/>
+                        </button>
+                        <button name="action_view_shipments" type="object" class="oe_stat_button" icon="fa-truck">
+                            <field name="shipment_count" widget="statinfo" string="Shipments"/>
+                        </button>
+                    </div>
+                    
+                    <widget name="web_ribbon" title="Confirmed" bg_color="text-bg-success" invisible="state != 'confirmed'"/>
+                    <widget name="web_ribbon" title="Allocated" bg_color="text-bg-info" invisible="state != 'allocated'"/>
+                    <widget name="web_ribbon" title="Cancelled" bg_color="text-bg-danger" invisible="state != 'cancelled'"/>
+                    
+                    <div class="oe_title">
+                        <h1 class="d-flex align-items-center">
+                            <i class="fa fa-calendar-check-o me-2 text-primary"/>
+                            <field name="name" readonly="1" class="text-break"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="📋 Booking Information" class="border-start border-primary border-3 ps-3">
+                            <field name="quotation_id"/>
+                            <field name="partner_id" widget="res_partner_many2one"/>
+                            <field name="booking_date" widget="date"/>
+                            <field name="service_type" widget="badge"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group string="🚢 Carrier Details" class="border-start border-info border-3 ps-3">
+                            <field name="carrier_id"/>
+                            <field name="vessel_name"/>
+                            <field name="voyage_number"/>
+                            <field name="booking_reference"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group string="📅 Schedule" class="bg-light p-3 rounded">
+                            <field name="etd" widget="datetime"/>
+                            <field name="eta" widget="datetime"/>
+                        </group>
+                        <group string="📦 Container Details" class="bg-light p-3 rounded">
+                            <field name="container_type"/>
+                            <field name="container_qty"/>
+                            <field name="teu" widget="float" decoration-bf="1"/>
+                        </group>
+                    </group>
+                    
+                    <group string="💰 Free Time &amp; Charges" class="border-start border-warning border-3 ps-3 mt-3">
+                        <group>
+                            <field name="free_time_days"/>
+                            <field name="demurrage_rate" widget="monetary"/>
+                        </group>
+                        <group>
+                            <field name="detention_rate" widget="monetary"/>
+                            <field name="currency_id" column_invisible="1"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <field name="notes" placeholder="Additional booking notes..." options="{'resizable': true}"/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Freight Booking Tree View -->
+    <record id="view_freight_booking_tree" model="ir.ui.view">
+        <field name="name">freight.booking.tree</field>
+        <field name="model">freight.booking</field>
+        <field name="arch" type="xml">
+            <tree string="Bookings" 
+                  decoration-info="state == 'draft'"
+                  decoration-success="state == 'allocated'"
+                  decoration-warning="state == 'confirmed'"
+                  sample="1">
+                <field name="name" decoration-bf="1"/>
+                <field name="booking_date" optional="show"/>
+                <field name="partner_id" widget="many2one_avatar"/>
+                <field name="carrier_id" optional="show"/>
+                <field name="vessel_name" optional="show"/>
+                <field name="etd" optional="show"/>
+                <field name="eta" optional="show"/>
+                <field name="state" widget="badge"
+                       decoration-info="state == 'draft'"
+                       decoration-success="state == 'allocated'"
+                       decoration-warning="state == 'confirmed'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Freight Booking Action -->
+    <record id="action_freight_booking" model="ir.actions.act_window">
+        <field name="name">Bookings</field>
+        <field name="res_model">freight.booking</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first booking
+            </p>
+        </field>
+    </record>
+</odoo>

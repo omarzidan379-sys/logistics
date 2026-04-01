@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Quotation Dashboard Action -->
+    <record id="action_freight_quotation_dashboard" model="ir.actions.client">
+        <field name="name">Quotation Dashboard</field>
+        <field name="tag">freight_quotation_dashboard</field>
+    </record>
+
+    <!-- Rate Calculator Action -->
+    <record id="action_freight_rate_calculator" model="ir.actions.client">
+        <field name="name">Rate Calculator</field>
+        <field name="tag">freight_rate_calculator</field>
+    </record>
+
+    <!-- Booking Wizard Action -->
+    <record id="action_freight_booking_wizard" model="ir.actions.client">
+        <field name="name">Create Booking</field>
+        <field name="tag">freight_booking_wizard</field>
+    </record>
+
+    <!-- Menu Items -->
+    <menuitem id="menu_freight_quotation_dashboard"
+              name="Dashboard"
+              parent="menu_freight_pricing"
+              action="action_freight_quotation_dashboard"
+              sequence="1"/>
+
+    <menuitem id="menu_freight_rate_calculator"
+              name="Rate Calculator"
+              parent="menu_freight_pricing"
+              action="action_freight_rate_calculator"
+              sequence="15"/>
+
+    <menuitem id="menu_freight_booking_wizard"
+              name="Quick Booking"
+              parent="menu_freight_operations"
+              action="action_freight_booking_wizard"
+              sequence="15"/>
+
+</odoo>

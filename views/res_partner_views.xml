@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Extend Partner Form View -->
+    <record id="view_partner_form_freight" model="ir.ui.view">
+        <field name="name">res.partner.form.freight</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <notebook position="inside">
+                <page string="Freight Information" name="freight_info">
+                    <group>
+                        <group string="Partner Types">
+                            <field name="is_carrier"/>
+                            <field name="is_shipper"/>
+                            <field name="is_consignee"/>
+                            <field name="is_agent"/>
+                            <field name="is_customs_broker"/>
+                        </group>
+                        <group string="Freight Details">
+                            <field name="freight_customer_code"/>
+                            <field name="credit_limit"/>
+                        </group>
+                    </group>
+                    <group string="Customs Broker Information" invisible="not is_customs_broker">
+                        <group>
+                            <field name="broker_license_number"/>
+                            <field name="broker_license_expiry"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
+</odoo>

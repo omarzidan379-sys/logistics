@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Freight Shipment Form View -->
+    <record id="view_freight_shipment_form" model="ir.ui.view">
+        <field name="name">freight.shipment.form</field>
+        <field name="model">freight.shipment</field>
+        <field name="arch" type="xml">
+            <form string="Freight Shipment" class="o_freight_shipment_form">
+                <header>
+                    <button name="action_book" string="Book" type="object" class="oe_highlight" invisible="state != 'draft'" icon="fa-check"/>
+                    <button name="action_start_operation" string="Start Operation" type="object" invisible="state != 'booked'" icon="fa-play"/>
+                    <button name="action_in_transit" string="In Transit" type="object" invisible="state != 'in_operation'" icon="fa-ship"/>
+                    <button name="action_arrived" string="Arrived" type="object" invisible="state != 'in_transit'" icon="fa-anchor"/>
+                    <button name="action_customs_clearance" string="Customs Clearance" type="object" invisible="state != 'arrived'" icon="fa-file-text"/>
+                    <button name="action_delivered" string="Delivered" type="object" invisible="state != 'customs_clearance'" icon="fa-truck"/>
+                    <button name="action_complete" string="Complete" type="object" invisible="state != 'delivered'" icon="fa-check-circle"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,booked,in_transit,delivered,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_legs" type="object" class="oe_stat_button" icon="fa-road" invisible="not is_multimodal">
+                            <field name="leg_count" widget="statinfo" string="Transport Legs"/>
+                        </button>
+                        <button name="action_view_containers" type="object" class="oe_stat_button" icon="fa-cube">
+                            <field name="container_count" widget="statinfo" string="Containers"/>
+                        </button>
+                        <button name="action_view_documents" type="object" class="oe_stat_button" icon="fa-file">
+                            <field name="document_count" widget="statinfo" string="Documents"/>
+                        </button>
+                        <button name="action_view_invoices" type="object" class="oe_stat_button" icon="fa-money">
+                            <field name="invoice_count" widget="statinfo" string="Invoices"/>
+                        </button>
+                    </div>
+                    
+                    <widget name="web_ribbon" title="Completed" bg_color="text-bg-success" invisible="state != 'completed'"/>
+                    <widget name="web_ribbon" title="In Transit" bg_color="text-bg-info" invisible="state != 'in_transit'"/>
+                    
+                    <div class="oe_title">
+                        <h1 class="d-flex align-items-center">
+                            <i class="fa fa-ship me-2 text-primary"/>
+                            <field name="name" readonly="1" class="text-break"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group string="📋 References" class="border-start border-primary border-3 ps-3">
+                            <field name="quotation_id"/>
+                            <field name="booking_id"/>
+                            <field name="partner_id" widget="res_partner_many2one"/>
+                            <field name="user_id" widget="many2one_avatar_user"/>
+                        </group>
+                        <group string="🚢 Service Details" class="border-start border-info border-3 ps-3">
+                            <field name="service_type" widget="badge"/>
+                            <field name="shipment_direction" widget="badge"/>
+                            <field name="carrier_id"/>
+                            <field name="incoterm_id"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="🚢 Transport Details" name="transport">
+                            <group>
+                                <group string="Vessel/Transport Information" class="bg-light p-3 rounded">
+                                    <field name="vessel_name"/>
+                                    <field name="voyage_number"/>
+                                    <field name="bl_number"/>
+                                    <field name="bl_type"/>
+                                </group>
+                                <group string="Bill of Lading" class="bg-light p-3 rounded">
+                                    <field name="hbl_number"/>
+                                    <field name="mbl_number"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="🚂 Multi-Modal Transport" name="multimodal" invisible="not is_multimodal">
+                            <div class="alert alert-info" role="alert" invisible="leg_count &gt; 0">
+                                <i class="fa fa-info-circle"/> This shipment is configured for multi-modal transport. Add transport legs below to define the complete route.
+                            </div>
+                            <group>
+                                <group>
+                                    <field name="is_multimodal" widget="boolean_toggle"/>
+                                    <field name="leg_count" readonly="1"/>
+                                    <field name="total_transit_days" readonly="1" string="Total Transit Time (Days)"/>
+                                </group>
+                                <group>
+                                    <field name="total_estimated_cost" readonly="1" widget="monetary"/>
+                                    <field name="total_actual_cost" readonly="1" widget="monetary"/>
+                                </group>
+                            </group>
+                            <div class="oe_button_box mt-3">
+                                <button name="action_add_leg" string="Add Leg" type="object" class="btn-primary" icon="fa-plus"/>
+                                <button name="action_view_legs" string="View All Legs" type="object" class="btn-secondary" icon="fa-list" invisible="leg_count == 0"/>
+                                <button name="action_optimize_route" string="Optimize Route" type="object" class="btn-info" icon="fa-magic" invisible="leg_count == 0"/>
+                            </div>
+                            <field name="leg_ids" invisible="leg_count == 0">
+                                <tree editable="bottom" decoration-info="state=='draft'" decoration-success="state=='completed'" decoration-warning="is_delayed==True">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="transport_mode" required="1"/>
+                                    <field name="origin_location_id" required="1"/>
+                                    <field name="destination_location_id" required="1"/>
+                                    <field name="carrier_id" required="1"/>
+                                    <field name="estimated_departure" required="1"/>
+                                    <field name="estimated_arrival" required="1"/>
+                                    <field name="estimated_transit_days" readonly="1" string="Transit (Days)"/>
+                                    <field name="estimated_cost" sum="Total Cost"/>
+                                    <field name="is_transshipment_point" readonly="1" string="Transshipment"/>
+                                    <field name="is_delayed" readonly="1" invisible="1"/>
+                                    <field name="state" widget="badge"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="👥 Parties &amp; Route" name="parties">
+                            <group>
+                                <group string="📍 Parties" class="border-start border-success border-3 ps-3">
+                                    <field name="shipper_id"/>
+                                    <field name="consignee_id"/>
+                                    <field name="notify_party_id"/>
+                                </group>
+                                <group string="🗺️ Route" class="border-start border-danger border-3 ps-3">
+                                    <field name="origin_port_id"/>
+                                    <field name="destination_port_id"/>
+                                    <field name="origin_address" placeholder="Pickup address..."/>
+                                    <field name="destination_address" placeholder="Delivery address..."/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="📦 Cargo" name="cargo">
+                            <group>
+                                <group string="Cargo Information" class="bg-light p-3 rounded">
+                                    <field name="cargo_description"/>
+                                    <field name="commodity_id"/>
+                                    <field name="hs_code"/>
+                                </group>
+                                <group string="Measurements" class="bg-light p-3 rounded">
+                                    <label for="total_weight"/>
+                                    <div class="o_row">
+                                        <field name="total_weight" class="oe_inline"/>
+                                        <span>KG</span>
+                                    </div>
+                                    <label for="total_volume"/>
+                                    <div class="o_row">
+                                        <field name="total_volume" class="oe_inline"/>
+                                        <span>CBM</span>
+                                    </div>
+                                    <label for="chargeable_weight"/>
+                                    <div class="o_row">
+                                        <field name="chargeable_weight" class="oe_inline"/>
+                                        <span>KG</span>
+                                    </div>
+                                    <field name="total_packages"/>
+                                </group>
+                            </group>
+                            
+                            <group string="⚠️ Special Cargo">
+                                <group>
+                                    <field name="is_dangerous_goods" widget="boolean_toggle"/>
+                                    <field name="is_temperature_controlled" widget="boolean_toggle"/>
+                                </group>
+                                <group>
+                                    <field name="special_instructions" placeholder="Special handling instructions..."/>
+                                </group>
+                            </group>
+                            
+                            <group string="🛡️ Insurance" invisible="not is_insured">
+                                <group>
+                                    <field name="is_insured" widget="boolean_toggle"/>
+                                    <field name="insurance_policy_number" invisible="not is_insured"/>
+                                    <field name="insurance_amount" invisible="not is_insured" widget="monetary"/>
+                                    <field name="currency_id" column_invisible="1"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="📅 Milestones" name="milestones">
+                            <group>
+                                <group string="Departure Milestones" class="border-start border-primary border-3 ps-3">
+                                    <field name="booking_date" widget="date"/>
+                                    <field name="gate_in_date" widget="date"/>
+                                    <field name="loading_date" widget="date"/>
+                                    <field name="sailing_date" widget="date"/>
+                                </group>
+                                <group string="Arrival Milestones" class="border-start border-success border-3 ps-3">
+                                    <field name="arrival_date" widget="date"/>
+                                    <field name="customs_clearance_date" widget="date"/>
+                                    <field name="delivery_date" widget="date"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="💰 Costs" name="costs">
+                            <group>
+                                <group string="Cost Analysis" class="bg-light p-3 rounded">
+                                    <field name="quoted_cost" widget="monetary"/>
+                                    <field name="actual_cost" widget="monetary"/>
+                                </group>
+                                <group string="Variance" class="bg-light p-3 rounded">
+                                    <field name="cost_variance" widget="monetary" decoration-danger="cost_variance &gt; 0" decoration-success="cost_variance &lt; 0"/>
+                                    <field name="cost_variance_percentage" decoration-danger="cost_variance_percentage &gt; 0" decoration-success="cost_variance_percentage &lt; 0"/>
+                                </group>
+                            </group>
+                        </page>
+                        
+                        <page string="📍 Tracking" name="tracking">
+                            <group>
+                                <group string="Shipment Progress">
+                                    <field name="id" widget="shipment_tracking" nolabel="1"/>
+                                </group>
+                                <group string="Route Map">
+                                    <field name="id" widget="freight_map" nolabel="1"/>
+                                </group>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Freight Shipment Tree View -->
+    <record id="view_freight_shipment_tree" model="ir.ui.view">
+        <field name="name">freight.shipment.tree</field>
+        <field name="model">freight.shipment</field>
+        <field name="arch" type="xml">
+            <tree string="Shipments" 
+                  decoration-info="state in ['draft', 'booked']"
+                  decoration-warning="state == 'in_transit'"
+                  decoration-success="state == 'completed'"
+                  sample="1">
+                <field name="name" decoration-bf="1"/>
+                <field name="partner_id" widget="many2one_avatar"/>
+                <field name="origin_port_id" optional="show"/>
+                <field name="destination_port_id" optional="show"/>
+                <field name="service_type" widget="badge" optional="show"/>
+                <field name="carrier_id" optional="show"/>
+                <field name="sailing_date" optional="show"/>
+                <field name="arrival_date" optional="show"/>
+                <field name="state" widget="badge" 
+                       decoration-info="state in ['draft', 'booked']"
+                       decoration-warning="state == 'in_transit'"
+                       decoration-success="state == 'completed'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Freight Shipment Action -->
+    <record id="action_freight_shipment" model="ir.actions.act_window">
+        <field name="name">Shipments</field>
+        <field name="res_model">freight.shipment</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first shipment
+            </p>
+        </field>
+    </record>
+</odoo>
