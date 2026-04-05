@@ -2,6 +2,7 @@
 <odoo>
     <!-- Quotation Email Template -->
     <record id="email_template_quotation" model="mail.template">
+
         <field name="name">Freight Quotation</field>
         <field name="model_id" ref="model_freight_quotation"/>
         <field name="subject">Freight Quotation ${object.name}</field>
