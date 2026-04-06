@@ -49,6 +49,15 @@
         'data/email_templates.xml',
         'data/freight_cron.xml',
         
+        # ==========================================
+        # PARENT MENUS - Load FIRST (referenced by menuitems)
+        # ==========================================
+        'views/freight_parent_menus.xml',
+        
+        # ==========================================
+        # VIEWS - Load ALL views with actions
+        # ==========================================
+        
         # Views - Core
         'views/freight_location_views.xml',
         'views/res_partner_views.xml',
@@ -71,24 +80,29 @@
         # Reports
         'reports/quotation_report.xml',
         
-        # Portal
-        'views/portal_templates.xml',
-        'views/portal_menu.xml',
+        # ==========================================
+        # MENUITEMS - Load LAST (reference actions from views)
+        # ==========================================
+        'views/freight_menuitems.xml',
         
-        # Menus
-        'views/freight_menu.xml',
+        # Portal
+        # 'views/portal_templates.xml',
+        'views/portal_menu.xml',
     ],
     'assets': {
         'web.assets_backend': [
             'freight_management/static/src/css/freight_management.css',
+            'freight_management/static/src/css/freight_dashboard_enhanced.css',
             'freight_management/static/src/js/freight_background_animations.js',
             'freight_management/static/src/js/freight_quotation.js',
+            'freight_management/static/src/js/freight_dashboard_enhanced.js',
             'freight_management/static/src/js/freight_shipment_tracking.js',
             'freight_management/static/src/js/freight_rate_calculator.js',
             'freight_management/static/src/js/freight_container_tracker.js',
             'freight_management/static/src/js/freight_booking_wizard.js',
             'freight_management/static/src/js/freight_map_widget.js',
             'freight_management/static/src/xml/freight_templates.xml',
+            'freight_management/static/src/xml/freight_dashboard_enhanced.xml',
         ],
         'web.assets_frontend': [
             'freight_management/static/src/css/freight_management.css',

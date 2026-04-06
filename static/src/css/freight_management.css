@@ -1350,3 +1350,1024 @@ button i.fa {
         transform: translateY(0);
     }
 }
+
+/* ============================================
+   ENHANCED FORM VIEW DESIGNS - ALL FEATURES
+   ============================================ */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   QUOTATION FORM - Premium Design
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_freight_quotation_form {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.o_freight_quotation_form .oe_title h1 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+    font-size: 2rem;
+    text-shadow: none;
+    letter-spacing: -0.5px;
+}
+
+.o_freight_quotation_form .oe_title h1 i {
+    -webkit-text-fill-color: #667eea;
+    font-size: 1.8rem;
+    animation: pulse-icon 2s ease-in-out infinite;
+}
+
+@keyframes pulse-icon {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+/* Group Headers with Icons */
+.o_freight_quotation_form .o_group .o_group_title,
+.o_freight_quotation_form group[class*="string"] {
+    font-weight: 700;
+    color: #2d3748;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+/* Enhanced Border Groups */
+.o_freight_quotation_form .border-start {
+    background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    transition: all 0.3s ease;
+}
+
+.o_freight_quotation_form .border-start:hover {
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+    transform: translateY(-2px);
+}
+
+.o_freight_quotation_form .border-primary {
+    border-color: #667eea !important;
+    border-left-width: 4px !important;
+}
+
+.o_freight_quotation_form .border-info {
+    border-color: #4facfe !important;
+    border-left-width: 4px !important;
+}
+
+.o_freight_quotation_form .border-success {
+    border-color: #43e97b !important;
+    border-left-width: 4px !important;
+}
+
+.o_freight_quotation_form .border-danger {
+    border-color: #f5576c !important;
+    border-left-width: 4px !important;
+}
+
+/* Page Tabs Enhancement */
+.o_freight_quotation_form .o_notebook .nav-tabs {
+    border-bottom: 2px solid #e2e8f0;
+    margin-bottom: 20px;
+}
+
+.o_freight_quotation_form .o_notebook .nav-link {
+    font-weight: 600;
+    color: #718096;
+    padding: 12px 24px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    border-radius: 8px 8px 0 0;
+}
+
+.o_freight_quotation_form .o_notebook .nav-link:hover {
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
+}
+
+.o_freight_quotation_form .o_notebook .nav-link.active {
+    color: #667eea;
+    background: white;
+    border-bottom-color: #667eea;
+    box-shadow: 0 -2px 10px rgba(102, 126, 234, 0.1);
+}
+
+/* Tree View Inside Forms */
+.o_freight_quotation_form .o_field_x2many .o_list_table {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.o_freight_quotation_form .o_field_x2many .o_list_table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.o_freight_quotation_form .o_field_x2many .o_list_table thead th {
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    padding: 14px;
+    border: none;
+}
+
+/* Total Table Styling */
+.o_freight_quotation_form .o_total_table {
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.o_freight_quotation_form .o_total_table tr:last-child {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #667eea;
+}
+
+.o_freight_quotation_form .oe_subtotal_footer_separator {
+    font-weight: 800;
+    color: #667eea;
+    font-size: 1.3rem;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHIPMENT FORM - Modern Logistics Design
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_freight_shipment_form {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.o_freight_shipment_form .oe_title h1 {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+    font-size: 2rem;
+}
+
+.o_freight_shipment_form .oe_title h1 i {
+    -webkit-text-fill-color: #4facfe;
+    font-size: 1.8rem;
+}
+
+/* Shipment Status Ribbon */
+.o_freight_shipment_form .o_form_sheet .ribbon-top-right {
+    animation: slideInRight 0.5s ease-out;
+}
+
+/* Transport Timeline */
+.o_freight_shipment_form .o_field_x2many .o_list_table tbody tr {
+    transition: all 0.3s ease;
+}
+
+.o_freight_shipment_form .o_field_x2many .o_list_table tbody tr:hover {
+    background: linear-gradient(90deg, rgba(79, 172, 254, 0.05) 0%, transparent 100%);
+    transform: scale(1.01);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BOOKING FORM - Clean Reservation Design
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_freight_booking_form {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.o_freight_booking_form .oe_title h1 {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+    font-size: 2rem;
+}
+
+.o_freight_booking_form .oe_title h1 i {
+    -webkit-text-fill-color: #43e97b;
+    font-size: 1.8rem;
+}
+
+/* Schedule Section Highlight */
+.o_freight_booking_form group:has(field[name="etd"]) {
+    background: linear-gradient(135deg, #fff5eb 0%, #ffecd2 100%);
+    border-radius: 12px;
+    border-left: 4px solid #f5af19 !important;
+}
+
+/* Container Details Highlight */
+.o_freight_booking_form group:has(field[name="container_type"]) {
+    background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+    border-radius: 12px;
+    border-left: 4px solid #00bcd4 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CONTAINER FORM - Industrial Tracking Design
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_freight_container_form .oe_title h1,
+o_form_view.o_freight_container_form h1 {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+}
+
+/* Demurrage Alert */
+.o_freight_container_form .o_field_widget[name="demurrage_days"]:has(.o_field_integer:not([value="0"])) {
+    color: #e74c3c;
+    font-weight: 700;
+}
+
+/* Container Status Badges */
+.o_freight_container_form .o_field_widget[name="state"] .o_status {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ENHANCED TREE/LIST VIEWS - All Models
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Global Tree View Enhancements */
+.o_list_view {
+    background: white;
+}
+
+.o_list_view .o_list_table {
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.o_list_view .o_list_table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.o_list_view .o_list_table thead th {
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    padding: 16px;
+    border: none;
+}
+
+.o_list_view .o_list_table thead th:hover {
+    background: rgba(255,255,255,0.1);
+}
+
+/* Tree Row Hover Effects */
+.o_list_view .o_list_table tbody tr {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.o_list_view .o_list_table tbody tr:hover {
+    background: linear-gradient(90deg, rgba(102, 126, 234, 0.03) 0%, transparent 100%);
+    transform: scale(1.005);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    z-index: 1;
+    position: relative;
+}
+
+/* Status Decorations */
+.o_list_view .o_list_table tbody tr.o_decoration_info {
+    background: linear-gradient(90deg, rgba(79, 172, 254, 0.08) 0%, transparent 100%);
+    border-left: 3px solid #4facfe;
+}
+
+.o_list_view .o_list_table tbody tr.o_decoration_success {
+    background: linear-gradient(90deg, rgba(67, 233, 123, 0.08) 0%, transparent 100%);
+    border-left: 3px solid #43e97b;
+}
+
+.o_list_view .o_list_table tbody tr.o_decoration_warning {
+    background: linear-gradient(90deg, rgba(250, 112, 154, 0.08) 0%, transparent 100%);
+    border-left: 3px solid #fa709a;
+}
+
+.o_list_view .o_list_table tbody tr.o_decoration_danger {
+    background: linear-gradient(90deg, rgba(245, 87, 108, 0.08) 0%, transparent 100%);
+    border-left: 3px solid #f5576c;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   KANBAN VIEW ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_kanban_view .o_kanban_record {
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: none;
+    overflow: hidden;
+    background: white;
+}
+
+.o_kanban_view .o_kanban_record:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 16px 40px rgba(102, 126, 234, 0.2);
+}
+
+/* Kanban Card Header */
+.o_kanban_view .o_kanban_record .o_kanban_header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 15px;
+    margin: -16px -16px 15px -16px;
+}
+
+/* Status Badge in Kanban */
+.o_kanban_view .o_kanban_record .o_field_widget.o_badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STATUS BAR ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_statusbar_status {
+    background: linear-gradient(180deg, #f8fafc 0%, #edf2f7 100%);
+    border-radius: 30px;
+    padding: 5px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.06);
+}
+
+.o_statusbar_status .o_statusbar_status_button {
+    border-radius: 25px;
+    padding: 10px 24px;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+    border: none;
+    margin: 0 3px;
+}
+
+.o_statusbar_status .o_statusbar_status_button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* Draft State */
+.o_statusbar_status button[data-value="draft"] {
+    background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e0 100%);
+    color: #4a5568;
+}
+
+/* Sent/Confirmed State */
+.o_statusbar_status button[data-value="sent"],
+.o_statusbar_status button[data-value="confirmed"] {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+/* Approved State */
+.o_statusbar_status button[data-value="approved"] {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    color: white;
+}
+
+/* Transit State */
+.o_statusbar_status button[data-value="in_transit"],
+.o_statusbar_status button[data-value="in_operation"] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+/* Completed State */
+.o_statusbar_status button[data-value="completed"],
+.o_statusbar_status button[data-value="delivered"] {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+/* Cancelled State */
+.o_statusbar_status button[data-value="cancelled"] {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    color: #8e44ad;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STAT BUTTONS ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.oe_stat_button {
+    background: linear-gradient(135deg, #ffffff 0%, #f7fafc 100%);
+    border-radius: 12px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 10px 15px;
+    margin: 0 5px 5px 0;
+}
+
+.oe_stat_button:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: transparent;
+    color: white;
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+}
+
+.oe_stat_button:hover .o_stat_info,
+.oe_stat_button:hover .o_stat_value {
+    color: white;
+}
+
+.oe_stat_button .o_button_icon {
+    color: #667eea;
+    font-size: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.oe_stat_button:hover .o_button_icon {
+    color: white;
+    transform: scale(1.2);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FORM BUTTONS ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_form_view .oe_highlight {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 10px 24px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.o_form_view .oe_highlight:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.o_form_view button[type="object"]:not(.oe_highlight) {
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    padding: 8px 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.o_form_view button[type="object"]:not(.oe_highlight):hover {
+    border-color: #667eea;
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BADGE ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    border: none;
+}
+
+.o_badge.bg-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.o_badge.bg-success {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%) !important;
+}
+
+.o_badge.bg-info {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+}
+
+.o_badge.bg-warning {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+    color: white !important;
+}
+
+.o_badge.bg-danger {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FIELD WIDGET ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* Monetary Fields */
+.o_field_monetary {
+    font-weight: 700;
+    color: #2d3748;
+}
+
+.o_field_monetary .o_field_widget {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.5px;
+}
+
+/* Date Fields */
+.o_field_date input,
+.o_field_datetime input {
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+    padding: 8px 12px;
+    transition: all 0.3s ease;
+}
+
+.o_field_date input:focus,
+.o_field_datetime input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Many2one Fields */
+.o_field_many2one .o_input_dropdown {
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+    transition: all 0.3s ease;
+}
+
+.o_field_many2one .o_input_dropdown:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+/* Boolean Toggle */
+.o_field_boolean_toggle .custom-control-input:checked ~ .custom-control-label::before {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    border-color: #43e97b;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CHATTER ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_chatter {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border-top: 3px solid transparent;
+    border-image: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    border-image-slice: 1;
+    padding-top: 25px;
+    margin-top: 30px;
+}
+
+.o_chatter .o_chatter_header {
+    background: white;
+    border-radius: 12px;
+    padding: 15px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RIBBON ENHANCEMENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_ribbon {
+    animation: slideInRight 0.5s ease-out;
+}
+
+.o_ribbon span {
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 0.75rem;
+    padding: 8px 40px;
+}
+
+.o_ribbon.ribbon-top-right span {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.o_ribbon.ribbon-top-right[data-bg-color="text-bg-success"] span {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.o_ribbon.ribbon-top-right[data-bg-color="text-bg-danger"] span {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+}
+
+.o_ribbon.ribbon-top-right[data-bg-color="text-bg-warning"] span {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   RESPONSIVE ADJUSTMENTS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    .o_form_view .oe_title h1 {
+        font-size: 1.5rem;
+    }
+    
+    .oe_stat_button {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+    
+    .o_statusbar_status .o_statusbar_status_button {
+        padding: 8px 16px;
+        font-size: 0.7rem;
+    }
+    
+    .o_list_view .o_list_table thead th {
+        padding: 12px;
+        font-size: 0.7rem;
+    }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ANIMATIONS
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Apply animations to form elements */
+.o_form_sheet {
+    animation: fadeInUp 0.4s ease-out;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   ENHANCED KANBAN CARD STYLES - Quotation Cards
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_freight_quotation_card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+    position: relative;
+}
+
+.o_freight_quotation_card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+}
+
+.o_freight_quotation_card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+}
+
+.o_kanban_quotation_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.o_kanban_state_badge .o_badge {
+    font-size: 0.65rem;
+    padding: 4px 10px;
+}
+
+.o_kanban_amount {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #667eea;
+    font-family: 'Courier New', monospace;
+}
+
+.o_freight_quotation_card .o_kanban_body {
+    padding: 20px;
+}
+
+.o_freight_quotation_card .o_kanban_record_title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #2d3748;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.o_kanban_partner {
+    color: #718096;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.o_kanban_route {
+    margin: 15px 0;
+    padding: 12px;
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    border-radius: 10px;
+}
+
+.o_route_origin,
+.o_route_destination {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.o_route_arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 8px 0;
+    position: relative;
+}
+
+.o_route_arrow i {
+    font-size: 1.2rem;
+}
+
+.o_service_type {
+    position: absolute;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.o_kanban_stats {
+    display: flex;
+    gap: 15px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed #e2e8f0;
+}
+
+.o_stat_item {
+    font-size: 0.8rem;
+    color: #718096;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.o_stat_item i {
+    font-size: 0.9rem;
+}
+
+.o_freight_quotation_card .o_kanban_footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    font-size: 0.8rem;
+    color: #a0aec0;
+}
+
+.o_freight_quotation_card .oe_kanban_bottom_left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TRANSPORT LEG FORM STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_freight_leg_form {
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+}
+
+.o_freight_leg_form .oe_title h1 {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+    font-size: 1.8rem;
+}
+
+.o_freight_leg_form .oe_title h1 i {
+    -webkit-text-fill-color: #4facfe;
+}
+
+.o_freight_leg_form .oe_title h5 {
+    font-size: 1rem;
+    opacity: 0.8;
+}
+
+/* Schedule comparison styling */
+.o_freight_leg_form group:has(field[name="estimated_departure"]) {
+    background: linear-gradient(135deg, #e0f7fa 0%, #b2ebf2 100%);
+    border-radius: 12px;
+    padding: 15px;
+    border-left: 4px solid #00bcd4 !important;
+}
+
+.o_freight_leg_form group:has(field[name="actual_departure"]) {
+    background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+    border-radius: 12px;
+    padding: 15px;
+    border-left: 4px solid #9c27b0 !important;
+}
+
+/* Cost groups styling */
+.o_freight_leg_form group:has(field[name="freight_charge"]) {
+    background: linear-gradient(135deg, #fff8e1 0%, #ffecb3 100%);
+    border-radius: 12px;
+    padding: 15px;
+    border-left: 4px solid #ffc107 !important;
+}
+
+.o_freight_leg_form group:has(field[name="actual_cost"]) {
+    background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+    border-radius: 12px;
+    padding: 15px;
+    border-left: 4px solid #4caf50 !important;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SHIPMENT KANBAN CARD STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_freight_shipment_card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+    position: relative;
+}
+
+.o_freight_shipment_card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(79, 172, 254, 0.2);
+}
+
+.o_freight_shipment_card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.o_kanban_shipment_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.o_kanban_service {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #4facfe;
+    background: rgba(79, 172, 254, 0.1);
+    padding: 4px 12px;
+    border-radius: 12px;
+}
+
+.o_freight_shipment_card .o_carrier {
+    position: absolute;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BOOKING KANBAN CARD STYLES
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+.o_freight_booking_card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+    position: relative;
+}
+
+.o_freight_booking_card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(67, 233, 123, 0.2);
+}
+
+.o_freight_booking_card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.o_kanban_booking_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #f8fafc 0%, #edf2f7 100%);
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.o_kanban_containers {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #43e97b;
+    background: rgba(67, 233, 123, 0.1);
+    padding: 4px 12px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.o_kanban_vessel {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 12px 0;
+    padding: 10px;
+    background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+    border-radius: 10px;
+    font-size: 0.9rem;
+}
+
+.o_vessel_name {
+    margin-left: 8px;
+    padding-left: 8px;
+    border-left: 1px solid #e2e8f0;
+    color: #718096;
+    font-size: 0.85rem;
+}
+
+.o_etd_eta {
+    font-size: 0.75rem;
+    color: #a0aec0;
+}

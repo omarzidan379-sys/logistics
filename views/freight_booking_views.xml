@@ -111,11 +111,81 @@
         </field>
     </record>
 
+    <!-- Freight Booking Kanban View -->
+    <record id="view_freight_booking_kanban" model="ir.ui.view">
+        <field name="name">freight.booking.kanban</field>
+        <field name="model">freight.booking</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile o_freight_kanban" default_group_by="state" default_order="booking_date desc">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="carrier_id"/>
+                <field name="vessel_name"/>
+                <field name="state"/>
+                <field name="booking_date"/>
+                <field name="etd"/>
+                <field name="eta"/>
+                <field name="container_qty"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_freight_booking_card">
+                            <!-- Header -->
+                            <div class="o_kanban_header o_kanban_booking_header">
+                                <span class="o_kanban_state_badge">
+                                    <field name="state" widget="badge"
+                                           decoration-info="state == 'draft'"
+                                           decoration-success="state == 'allocated'"
+                                           decoration-warning="state == 'confirmed'"/>
+                                </span>
+                                <span t-if="record.container_qty.raw_value" class="o_kanban_containers">
+                                    <i class="fa fa-cube"/>
+                                    <t t-esc="record.container_qty.raw_value"/>
+                                </span>
+                            </div>
+                            
+                            <!-- Body -->
+                            <div class="o_kanban_body">
+                                <div class="o_kanban_title_section">
+                                    <strong class="o_kanban_record_title"><field name="name"/></strong>
+                                    <div class="o_kanban_partner">
+                                        <i class="fa fa-user-o text-muted"/>
+                                        <field name="partner_id"/>
+                                    </div>
+                                </div>
+                                
+                                <!-- Vessel Info -->
+                                <div class="o_kanban_vessel">
+                                    <i class="fa fa-ship text-info"/>
+                                    <field name="carrier_id"/>
+                                    <span class="o_vessel_name"><field name="vessel_name"/></span>
+                                </div>
+                            </div>
+                            
+                            <!-- Footer -->
+                            <div class="o_kanban_footer">
+                                <div class="oe_kanban_bottom_left">
+                                    <i class="fa fa-calendar text-muted"/>
+                                    <field name="booking_date"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <span class="o_etd_eta">
+                                        <i class="fa fa-clock-o text-muted"/>
+                                        <field name="etd"/> - <field name="eta"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
     <!-- Freight Booking Action -->
     <record id="action_freight_booking" model="ir.actions.act_window">
         <field name="name">Bookings</field>
         <field name="res_model">freight.booking</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">tree,kanban,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first booking

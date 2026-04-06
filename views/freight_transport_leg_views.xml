@@ -33,22 +33,22 @@
         <field name="name">freight.transport.leg.form</field>
         <field name="model">freight.transport.leg</field>
         <field name="arch" type="xml">
-            <form string="Transport Leg">
+            <form string="Transport Leg" class="o_freight_leg_form">
                 <header>
                     <button name="action_book" string="Book" type="object" 
-                            invisible="state != 'draft'" class="oe_highlight"/>
+                            invisible="state != 'draft'" class="oe_highlight" icon="fa-check-circle"/>
                     <button name="action_load" string="Load Cargo" type="object" 
-                            invisible="state != 'booked'"/>
+                            invisible="state != 'booked'" icon="fa-upload"/>
                     <button name="action_depart" string="Depart" type="object" 
-                            invisible="state != 'loaded'" class="oe_highlight"/>
+                            invisible="state != 'loaded'" class="oe_highlight" icon="fa-plane"/>
                     <button name="action_arrive" string="Arrive" type="object" 
-                            invisible="state != 'in_transit'" class="oe_highlight"/>
+                            invisible="state != 'in_transit'" class="oe_highlight" icon="fa-flag-checkered"/>
                     <button name="action_discharge" string="Discharge" type="object" 
-                            invisible="state != 'arrived'"/>
+                            invisible="state != 'arrived'" icon="fa-download"/>
                     <button name="action_complete" string="Complete" type="object" 
-                            invisible="state != 'discharged'" class="oe_highlight"/>
+                            invisible="state != 'discharged'" class="oe_highlight" icon="fa-check"/>
                     <button name="action_cancel" string="Cancel" type="object" 
-                            invisible="state in ['completed', 'cancelled']"/>
+                            invisible="state in ['completed', 'cancelled']" icon="fa-times"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,booked,loaded,in_transit,arrived,discharged,completed"/>
                 </header>
                 <sheet>
@@ -61,24 +61,31 @@
                         </button>
                     </div>
                     
+                    <widget name="web_ribbon" title="Delayed" bg_color="text-bg-warning" invisible="not is_delayed"/>
+                    <widget name="web_ribbon" title="Completed" bg_color="text-bg-success" invisible="state != 'completed'"/>
+                    
                     <div class="oe_title">
-                        <h1>
-                            <field name="name" readonly="1"/>
+                        <h1 class="d-flex align-items-center">
+                            <i class="fa fa-road me-2 text-info"/>
+                            <field name="name" readonly="1" class="text-break"/>
                         </h1>
+                        <h5 class="text-muted mt-2">
+                            <i class="fa fa-link me-1"/>
+                            <field name="shipment_id" readonly="1"/>
+                        </h5>
                     </div>
                     
                     <group>
-                        <group name="basic_info">
-                            <field name="shipment_id" readonly="1"/>
-                            <field name="sequence"/>
-                            <field name="transport_mode" widget="radio"/>
+                        <group string="🚛 Transport Mode" class="border-start border-primary border-3 ps-3">
+                            <field name="transport_mode" widget="radio" options="{'horizontal': true}"/>
                             <field name="carrier_id"/>
+                            <field name="sequence"/>
                         </group>
-                        <group name="status_info">
+                        <group string="⏱️ Status" class="border-start border-warning border-3 ps-3">
                             <field name="is_transshipment_point" readonly="1"/>
                             <field name="is_delayed" readonly="1"/>
-                            <field name="delay_hours" invisible="not is_delayed" readonly="1"/>
-                            <field name="affects_next_leg" invisible="not is_delayed" readonly="1"/>
+                            <field name="delay_hours" invisible="not is_delayed" readonly="1" class="text-danger font-weight-bold"/>
+                            <field name="affects_next_leg" invisible="not is_delayed"/>
                         </group>
                     </group>
                     

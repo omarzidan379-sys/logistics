@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Portal Layout -->
-    <template id="portal_my_home_menu_freight" name="Portal layout : freight menu entries" inherit_id="portal.portal_breadcrumbs" priority="40">
-        <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+    <data>
+        <!-- Portal Layout -->
+        <template id="portal_my_home_menu_freight" name="Portal layout : freight menu entries" inherit_id="portal.portal_breadcrumbs" priority="40">
+            <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'shipment'" t-attf-class="breadcrumb-item #{'active ' if not shipment else ''}">
                 <a t-if="shipment" t-attf-href="/my/shipments?{{ keep_query() }}">Shipments</a>
                 <t t-else="">Shipments</t>
@@ -251,7 +252,7 @@
                             return;
                         }
                         
-                        fetch('/my/shipments/<t t-esc="shipment.id"/>/request_document', {
+                        fetch('/my/shipments/' + <t t-esc="shipment.id"/> + '/request_document', {
                             method: 'POST',
                             headers: {
                                 'Content-Type': 'application/json',
@@ -818,4 +819,5 @@
         </t>
     </template>
 
+    </data>
 </odoo>
