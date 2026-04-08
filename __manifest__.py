@@ -49,21 +49,11 @@
         'data/email_templates.xml',
         'data/freight_cron.xml',
         
-        # ==========================================
-        # PARENT MENUS - Load FIRST (referenced by menuitems)
-        # ==========================================
-        'views/freight_parent_menus.xml',
-        
-        # ==========================================
-        # VIEWS - Load ALL views with actions
-        # ==========================================
-        
         # Views - Core
         'views/freight_location_views.xml',
         'views/res_partner_views.xml',
         'views/freight_charge_type_views.xml',
         'views/freight_config_views.xml',
-        'views/freight_dashboard_views.xml',
         
         # Views - Pricing
         'views/freight_rate_views.xml',
@@ -80,13 +70,13 @@
         # Reports
         'reports/quotation_report.xml',
         
-        # ==========================================
-        # MENUITEMS - Load LAST (reference actions from views)
-        # ==========================================
-        'views/freight_menuitems.xml',
+        # Menus (load after all views with actions but before dashboard)
+        'views/freight_menu.xml',
+        
+        # Dashboard (references menu items, must load after menus)
+        'views/freight_dashboard_views.xml',
         
         # Portal
-        # 'views/portal_templates.xml',
         'views/portal_menu.xml',
     ],
     'assets': {

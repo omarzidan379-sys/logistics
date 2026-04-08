@@ -1,0 +1,77 @@
+.o_freight_dashboard {
+    padding: 20px;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+}
+
+.o_freight_dashboard .card {
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 10px;
+}
+
+.o_freight_dashboard .card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.o_freight_dashboard .card-body {
+    padding: 25px;
+}
+
+.o_freight_dashboard .card-title {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    opacity: 0.9;
+}
+
+.o_freight_dashboard .card-text {
+    font-size: 36px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.o_freight_dashboard h2 {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.o_freight_dashboard h4 {
+    color: #34495e;
+    font-weight: 500;
+    border-bottom: 2px solid #3498db;
+    padding-bottom: 10px;
+}
+
+.o_freight_dashboard .bg-info {
+    background-color: #3498db !important;
+}
+
+.o_freight_dashboard .bg-warning {
+    background-color: #f39c12 !important;
+}
+
+.o_freight_dashboard .bg-success {
+    background-color: #27ae60 !important;
+}
+
+.o_freight_dashboard .bg-primary {
+    background-color: #2980b9 !important;
+}
+
+.o_freight_dashboard .bg-secondary {
+    background-color: #95a5a6 !important;
+}
+
+.o_freight_dashboard .row {
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+.o_freight_dashboard .row > [class*='col-'] {
+    padding-left: 10px;
+    padding-right: 10px;
+}

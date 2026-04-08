@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="freight_management.DashboardEnhanced">
+        <div class="o_freight_dashboard">
+            <div class="container-fluid">
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h2 class="mb-3">
+                            <i class="fa fa-ship me-2"/>
+                            Freight Management Dashboard
+                        </h2>
+                    </div>
+                </div>
+
+                <!-- Quotations Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h4 class="mb-3">
+                            <i class="fa fa-file-text-o me-2"/>
+                            Quotations
+                        </h4>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-info text-white" t-on-click="() => this.openQuotations('draft')">
+                            <div class="card-body">
+                                <h5 class="card-title">Draft</h5>
+                                <h2 class="card-text"><t t-esc="state.quotations.draft"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-warning text-white" t-on-click="() => this.openQuotations('sent')">
+                            <div class="card-body">
+                                <h5 class="card-title">Sent</h5>
+                                <h2 class="card-text"><t t-esc="state.quotations.sent"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-success text-white" t-on-click="() => this.openQuotations('approved')">
+                            <div class="card-body">
+                                <h5 class="card-title">Approved</h5>
+                                <h2 class="card-text"><t t-esc="state.quotations.approved"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-primary text-white" t-on-click="() => this.openQuotations()">
+                            <div class="card-body">
+                                <h5 class="card-title">Total Amount</h5>
+                                <h2 class="card-text">$<t t-esc="state.quotations.total_amount"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Shipments Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h4 class="mb-3">
+                            <i class="fa fa-truck me-2"/>
+                            Shipments
+                        </h4>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-secondary text-white" t-on-click="() => this.openShipments('draft')">
+                            <div class="card-body">
+                                <h5 class="card-title">Draft</h5>
+                                <h2 class="card-text"><t t-esc="state.shipments.draft"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-info text-white" t-on-click="() => this.openShipments('confirmed')">
+                            <div class="card-body">
+                                <h5 class="card-title">Confirmed</h5>
+                                <h2 class="card-text"><t t-esc="state.shipments.confirmed"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-warning text-white" t-on-click="() => this.openShipments('in_transit')">
+                            <div class="card-body">
+                                <h5 class="card-title">In Transit</h5>
+                                <h2 class="card-text"><t t-esc="state.shipments.in_transit"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card bg-success text-white" t-on-click="() => this.openShipments('delivered')">
+                            <div class="card-body">
+                                <h5 class="card-title">Delivered</h5>
+                                <h2 class="card-text"><t t-esc="state.shipments.delivered"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bookings Section -->
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <h4 class="mb-3">
+                            <i class="fa fa-calendar-check-o me-2"/>
+                            Bookings
+                        </h4>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-info text-white" t-on-click="() => this.openBookings('draft')">
+                            <div class="card-body">
+                                <h5 class="card-title">Draft</h5>
+                                <h2 class="card-text"><t t-esc="state.bookings.draft"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-success text-white" t-on-click="() => this.openBookings('confirmed')">
+                            <div class="card-body">
+                                <h5 class="card-title">Confirmed</h5>
+                                <h2 class="card-text"><t t-esc="state.bookings.confirmed"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card bg-primary text-white" t-on-click="() => this.openBookings()">
+                            <div class="card-body">
+                                <h5 class="card-title">Total</h5>
+                                <h2 class="card-text"><t t-esc="state.bookings.total"/></h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>
