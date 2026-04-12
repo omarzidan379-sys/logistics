@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- ============================================ -->
+        <!-- SHIPMENTS IN VARIOUS STATES (15 TOTAL) -->
+        <!-- ============================================ -->
+        
+        <!-- DRAFT SHIPMENTS (3) -->
+        <record id="shipment_draft_001" model="freight.shipment">
+            <field name="name">FS2024-001</field>
+            <field name="partner_id" ref="partner_alfuttaim"/>
+            <field name="shipper_id" ref="partner_alfuttaim"/>
+            <field name="consignee_id" ref="partner_maersk_egypt"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="carrier_id" ref="partner_emirates_shipping"/>
+            <field name="vessel_name">EVER GIVEN</field>
+            <field name="voyage_number">EG2401</field>
+            <field name="bl_number">EVGN2024001</field>
+            <field name="origin_port_id" ref="location_port_jebel_ali"/>
+            <field name="destination_port_id" ref="location_port_alexandria"/>
+            <field name="cargo_description">Electronics - LED TVs 55 inch (Samsung)</field>
+            <field name="total_weight">42000</field>
+            <field name="total_volume">168</field>
+            <field name="total_packages">800</field>
+            <field name="booking_date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() + timedelta(days=7)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="(DateTime.now() + timedelta(days=19)).strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">5550.00</field>
+            <field name="state">draft</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="shipment_draft_002" model="freight.shipment">
+            <field name="name">FS2024-002</field>
+            <field name="partner_id" ref="partner_dhl_egypt"/>
+            <field name="shipper_id" ref="partner_dhl_egypt"/>
+            <field name="consignee_id" ref="partner_agility"/>
+            <field name="service_type">air</field>
+            <field name="shipment_direction">export</field>
+            <field name="carrier_id" ref="partner_gulf_air_cargo"/>
+            <field name="vessel_name">GF 456</field>
+            <field name="voyage_number">GF456</field>
+            <field name="bl_number">GF2024002</field>
+            <field name="origin_port_id" ref="location_airport_cairo"/>
+            <field name="destination_port_id" ref="location_airport_kuwait"/>
+            <field name="cargo_description">Pharmaceuticals - Antibiotics and Vaccines</field>
+            <field name="total_weight">1800</field>
+            <field name="total_volume">12</field>
+            <field name="total_packages">95</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="(DateTime.now() + timedelta(days=4)).strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">6300.00</field>
+            <field name="state">draft</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="shipment_draft_003" model="freight.shipment">
+            <field name="name">FS2024-003</field>
+            <field name="partner_id" ref="partner_aramco"/>
+            <field name="shipper_id" ref="partner_aramco"/>
+            <field name="consignee_id" ref="partner_dhl_egypt"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="carrier_id" ref="partner_maersk_egypt"/>
+            <field name="vessel_name">MAERSK ATLANTA</field>
+            <field name="voyage_number">MA2401</field>
+            <field name="bl_number">MAEU2024003</field>
+            <field name="origin_port_id" ref="location_port_jeddah"/>
+            <field name="destination_port_id" ref="location_port_alexandria"/>
+            <field name="cargo_description">Industrial Equipment - Drilling Equipment Parts</field>
+            <field name="total_weight">65000</field>
+            <field name="total_volume">220</field>
+            <field name="total_packages">180</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() + timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="(DateTime.now() + timedelta(days=18)).strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">4350.00</field>
+            <field name="state">draft</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <!-- CONFIRMED SHIPMENTS (3) -->
+        <record id="shipment_confirmed_001" model="freight.shipment">
+            <field name="name">FS2024-004</field>
+            <field name="booking_id" ref="booking_001"/>
+            <field name="quotation_id" ref="quotation_approved_001"/>
+            <field name="partner_id" ref="partner_dhl_egypt"/>
+            <field name="shipper_id" ref="partner_dhl_egypt"/>
+            <field name="consignee_id" ref="partner_aramco"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="carrier_id" ref="partner_emirates_shipping"/>
+            <field name="vessel_name">MSC MEDITERRANEAN</field>
+            <field name="voyage_number">MS2401E</field>
+            <field name="bl_number">MSCU2024004</field>
+            <field name="origin_port_id" ref="location_port_alexandria"/>
+            <field name="destination_port_id" ref="location_port_jeddah"/>
+            <field name="cargo_description">Construction Materials - Ceramic Tiles Premium Grade</field>
+            <field name="total_weight">138000</field>
+            <field name="total_volume">360</field>
+            <field name="total_packages">2800</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=8)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() + timedelta(days=5)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="(DateTime.now() + timedelta(days=13)).strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">8880.00</field>
+            <field name="actual_cost">8650.00</field>
+            <field name="state">booked</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="shipment_confirmed_002" model="freight.shipment">
+            <field name="name">FS2024-005</field>
+            <field name="partner_id" ref="partner_agility"/>
+            <field name="shipper_id" ref="partner_agility"/>
+            <field name="consignee_id" ref="partner_alfuttaim"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">import</field>
+            <field name="carrier_id" ref="partner_maersk_egypt"/>
+            <field name="vessel_name">COSCO GLORY</field>
+            <field name="voyage_number">CG2401</field>
+            <field name="bl_number">COSU2024005</field>
+            <field name="origin_port_id" ref="location_port_shuwaikh"/>
+            <field name="destination_port_id" ref="location_port_jebel_ali"/>
+            <field name="cargo_description">Food Products - Dates and Dried Fruits Premium</field>
+            <field name="total_weight">48000</field>
+            <field name="total_volume">192</field>
+            <field name="total_packages">1200</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=6)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() + timedelta(days=4)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="(DateTime.now() + timedelta(days=9)).strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">3200.00</field>
+            <field name="state">booked</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="shipment_confirmed_003" model="freight.shipment">
+            <field name="name">FS2024-006</field>
+            <field name="partner_id" ref="partner_maersk_egypt"/>
+            <field name="shipper_id" ref="partner_maersk_egypt"/>
+            <field name="consignee_id" ref="partner_dhl_egypt"/>
+            <field name="service_type">lcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="carrier_id" ref="partner_emirates_shipping"/>
+            <field name="vessel_name">HAPAG EXPRESS</field>
+            <field name="voyage_number">HE2401</field>
+            <field name="bl_number">HLCU2024006</field>
+            <field name="origin_port_id" ref="location_port_alexandria"/>
+            <field name="destination_port_id" ref="location_port_jebel_ali"/>
+            <field name="cargo_description">Textiles - Egyptian Cotton Fabrics</field>
+            <field name="total_weight">8500</field>
+            <field name="total_volume">35</field>
+            <field name="total_packages">340</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=7)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() + timedelta(days=6)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="(DateTime.now() + timedelta(days=18)).strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">2975.00</field>
+            <field name="state">booked</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+        <!-- IN TRANSIT SHIPMENTS (3) -->
+        <record id="shipment_transit_001" model="freight.shipment">
+            <field name="name">FS2024-007</field>
+            <field name="partner_id" ref="partner_alfuttaim"/>
+            <field name="shipper_id" ref="partner_alfuttaim"/>
+            <field name="consignee_id" ref="partner_agility"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="carrier_id" ref="partner_maersk_egypt"/>
+            <field name="vessel_name">MAERSK ESSEX</field>
+            <field name="voyage_number">ME2403</field>
+            <field name="bl_number">MAEU2024007</field>
+            <field name="origin_port_id" ref="location_port_jebel_ali"/>
+            <field name="destination_port_id" ref="location_port_shuwaikh"/>
+            <field name="cargo_description">Automotive Parts - Toyota Genuine Parts</field>
+            <field name="total_weight">52000</field>
+            <field name="total_volume">208</field>
+            <field name="total_packages">980</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=15)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">4160.00</field>
+            <field name="actual_cost">4050.00</field>
+            <field name="state">in_transit</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="shipment_transit_002" model="freight.shipment">
+            <field name="name">FS2024-008</field>
+            <field name="partner_id" ref="partner_dhl_egypt"/>
+            <field name="shipper_id" ref="partner_dhl_egypt"/>
+            <field name="consignee_id" ref="partner_aramco"/>
+            <field name="service_type">air</field>
+            <field name="shipment_direction">export</field>
+            <field name="carrier_id" ref="partner_gulf_air_cargo"/>
+            <field name="vessel_name">GF 789</field>
+            <field name="voyage_number">GF789</field>
+            <field name="bl_number">GF2024008</field>
+            <field name="origin_port_id" ref="location_airport_cairo"/>
+            <field name="destination_port_id" ref="location_airport_riyadh"/>
+            <field name="cargo_description">Medical Equipment - Surgical Instruments</field>
+            <field name="total_weight">950</field>
+            <field name="total_volume">8</field>
+            <field name="total_packages">42</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">3325.00</field>
+            <field name="actual_cost">3280.00</field>
+            <field name="state">in_transit</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="shipment_transit_003" model="freight.shipment">
+            <field name="name">FS2024-009</field>
+            <field name="partner_id" ref="partner_aramco"/>
+            <field name="shipper_id" ref="partner_aramco"/>
+            <field name="consignee_id" ref="partner_maersk_egypt"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="carrier_id" ref="partner_emirates_shipping"/>
+            <field name="vessel_name">ONE INNOVATION</field>
+            <field name="voyage_number">OI2401</field>
+            <field name="bl_number">ONEU2024009</field>
+            <field name="origin_port_id" ref="location_port_jeddah"/>
+            <field name="destination_port_id" ref="location_port_alexandria"/>
+            <field name="cargo_description">Chemicals - Industrial Lubricants Class 3</field>
+            <field name="total_weight">72000</field>
+            <field name="total_volume">240</field>
+            <field name="total_packages">320</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=12)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() - timedelta(days=4)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="(DateTime.now() + timedelta(days=4)).strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">5760.00</field>
+            <field name="actual_cost">5680.00</field>
+            <field name="state">in_transit</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <!-- DELIVERED SHIPMENTS (2) -->
+        <record id="shipment_delivered_001" model="freight.shipment">
+            <field name="name">FS2024-010</field>
+            <field name="partner_id" ref="partner_agility"/>
+            <field name="shipper_id" ref="partner_agility"/>
+            <field name="consignee_id" ref="partner_alfuttaim"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">import</field>
+            <field name="carrier_id" ref="partner_maersk_egypt"/>
+            <field name="vessel_name">MAERSK ATLANTA</field>
+            <field name="voyage_number">MA2402</field>
+            <field name="bl_number">MAEU2024010</field>
+            <field name="origin_port_id" ref="location_port_shuwaikh"/>
+            <field name="destination_port_id" ref="location_port_jebel_ali"/>
+            <field name="cargo_description">Consumer Goods - Home Appliances (Refrigerators)</field>
+            <field name="total_weight">58000</field>
+            <field name="total_volume">232</field>
+            <field name="total_packages">145</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=25)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() - timedelta(days=18)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="(DateTime.now() - timedelta(days=12)).strftime('%Y-%m-%d')"/>
+            <field name="delivery_date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">4640.00</field>
+            <field name="actual_cost">4580.00</field>
+            <field name="state">delivered</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="pod_received" eval="True"/>
+            <field name="pod_date" eval="(DateTime.now() - timedelta(days=3)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <record id="shipment_delivered_002" model="freight.shipment">
+            <field name="name">FS2024-011</field>
+            <field name="partner_id" ref="partner_maersk_egypt"/>
+            <field name="shipper_id" ref="partner_maersk_egypt"/>
+            <field name="consignee_id" ref="partner_dhl_egypt"/>
+            <field name="service_type">air</field>
+            <field name="shipment_direction">import</field>
+            <field name="carrier_id" ref="partner_gulf_air_cargo"/>
+            <field name="vessel_name">GF 234</field>
+            <field name="voyage_number">GF234</field>
+            <field name="bl_number">GF2024011</field>
+            <field name="origin_port_id" ref="location_airport_dubai"/>
+            <field name="destination_port_id" ref="location_airport_cairo"/>
+            <field name="cargo_description">Electronics - Mobile Phones (Apple iPhone)</field>
+            <field name="total_weight">1200</field>
+            <field name="total_volume">6</field>
+            <field name="total_packages">240</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() - timedelta(days=8)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="(DateTime.now() - timedelta(days=7)).strftime('%Y-%m-%d')"/>
+            <field name="delivery_date" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">4200.00</field>
+            <field name="actual_cost">4150.00</field>
+            <field name="state">delivered</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="pod_received" eval="True"/>
+            <field name="pod_date" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <!-- CANCELLED SHIPMENT (1) -->
+        <record id="shipment_cancelled_001" model="freight.shipment">
+            <field name="name">FS2024-012</field>
+            <field name="partner_id" ref="partner_dhl_egypt"/>
+            <field name="shipper_id" ref="partner_dhl_egypt"/>
+            <field name="consignee_id" ref="partner_agility"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="carrier_id" ref="partner_emirates_shipping"/>
+            <field name="vessel_name">MSC OSCAR</field>
+            <field name="voyage_number">MO2401</field>
+            <field name="bl_number">MSCU2024012</field>
+            <field name="origin_port_id" ref="location_port_alexandria"/>
+            <field name="destination_port_id" ref="location_port_shuwaikh"/>
+            <field name="cargo_description">Furniture - Office Furniture Sets</field>
+            <field name="total_weight">32000</field>
+            <field name="total_volume">128</field>
+            <field name="total_packages">480</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=20)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() - timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="(DateTime.now() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">2560.00</field>
+            <field name="state">draft</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <!-- ARRIVED SHIPMENTS (3) -->
+        <record id="shipment_arrived_001" model="freight.shipment">
+            <field name="name">FS2024-013</field>
+            <field name="partner_id" ref="partner_alfuttaim"/>
+            <field name="shipper_id" ref="partner_alfuttaim"/>
+            <field name="consignee_id" ref="partner_maersk_egypt"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="carrier_id" ref="partner_emirates_shipping"/>
+            <field name="vessel_name">CMA CGM BOUGAINVILLE</field>
+            <field name="voyage_number">CB2401</field>
+            <field name="bl_number">CMDU2024013</field>
+            <field name="origin_port_id" ref="location_port_jebel_ali"/>
+            <field name="destination_port_id" ref="location_port_alexandria"/>
+            <field name="cargo_description">Building Materials - Aluminum Profiles</field>
+            <field name="total_weight">88000</field>
+            <field name="total_volume">352</field>
+            <field name="total_packages">1760</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=18)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() - timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">7040.00</field>
+            <field name="actual_cost">6950.00</field>
+            <field name="state">arrived</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="shipment_arrived_002" model="freight.shipment">
+            <field name="name">FS2024-014</field>
+            <field name="partner_id" ref="partner_aramco"/>
+            <field name="shipper_id" ref="partner_aramco"/>
+            <field name="consignee_id" ref="partner_dhl_egypt"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="carrier_id" ref="partner_maersk_egypt"/>
+            <field name="vessel_name">MAERSK ESSEX</field>
+            <field name="voyage_number">ME2404</field>
+            <field name="bl_number">MAEU2024014</field>
+            <field name="origin_port_id" ref="location_port_jeddah"/>
+            <field name="destination_port_id" ref="location_port_alexandria"/>
+            <field name="cargo_description">Petrochemicals - Polyethylene Resin</field>
+            <field name="total_weight">96000</field>
+            <field name="total_volume">320</field>
+            <field name="total_packages">400</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=16)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() - timedelta(days=9)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">7680.00</field>
+            <field name="actual_cost">7600.00</field>
+            <field name="state">arrived</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="shipment_arrived_003" model="freight.shipment">
+            <field name="name">FS2024-015</field>
+            <field name="partner_id" ref="partner_agility"/>
+            <field name="shipper_id" ref="partner_agility"/>
+            <field name="consignee_id" ref="partner_alfuttaim"/>
+            <field name="service_type">air</field>
+            <field name="shipment_direction">import</field>
+            <field name="carrier_id" ref="partner_gulf_air_cargo"/>
+            <field name="vessel_name">GF 567</field>
+            <field name="voyage_number">GF567</field>
+            <field name="bl_number">GF2024015</field>
+            <field name="origin_port_id" ref="location_airport_kuwait"/>
+            <field name="destination_port_id" ref="location_airport_dubai"/>
+            <field name="cargo_description">Documents - Legal and Financial Documents</field>
+            <field name="total_weight">85</field>
+            <field name="total_volume">1</field>
+            <field name="total_packages">12</field>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="sailing_date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <field name="arrival_date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+            <field name="quoted_cost">297.50</field>
+            <field name="actual_cost">285.00</field>
+            <field name="state">arrived</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+    </data>
+</odoo>

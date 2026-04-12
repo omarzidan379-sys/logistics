@@ -1,0 +1,669 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- ============================================ -->
+        <!-- REALISTIC MIDDLE EASTERN COMPANIES -->
+        <!-- ============================================ -->
+        
+        <!-- 1. Al Futtaim Logistics LLC (Dubai, UAE) - Large Enterprise -->
+        <record id="partner_alfuttaim" model="res.partner">
+            <field name="name">Al Futtaim Logistics LLC</field>
+            <field name="is_company" eval="True"/>
+            <field name="is_shipper" eval="True"/>
+            <field name="is_consignee" eval="True"/>
+            <field name="street">Al Futtaim Tower, Festival City</field>
+            <field name="city">Dubai</field>
+            <field name="zip">Dubai 00000</field>
+            <field name="country_id" ref="base.ae"/>
+            <field name="phone">+971 4 232 1111</field>
+            <field name="email">logistics@alfuttaim.com</field>
+            <field name="website">www.alfuttaim.com</field>
+            <field name="freight_customer_code">AFL001</field>
+            <field name="credit_limit">500000</field>
+            <field name="vat">100123456700003</field>
+        </record>
+        
+        <!-- Al Futtaim Contacts -->
+        <record id="contact_alfuttaim_ahmed" model="res.partner">
+            <field name="name">Ahmed Al Mansouri</field>
+            <field name="parent_id" ref="partner_alfuttaim"/>
+            <field name="type">contact</field>
+            <field name="function">Logistics Manager</field>
+            <field name="phone">+971 50 123 4567</field>
+            <field name="email">ahmed.almansouri@alfuttaim.com</field>
+        </record>
+        
+        <record id="contact_alfuttaim_fatima" model="res.partner">
+            <field name="name">Fatima Al Zaabi</field>
+            <field name="parent_id" ref="partner_alfuttaim"/>
+            <field name="type">contact</field>
+            <field name="function">Supply Chain Director</field>
+            <field name="phone">+971 50 234 5678</field>
+            <field name="email">fatima.alzaabi@alfuttaim.com</field>
+        </record>
+        
+        <record id="contact_alfuttaim_omar" model="res.partner">
+            <field name="name">Omar Hassan</field>
+            <field name="parent_id" ref="partner_alfuttaim"/>
+            <field name="type">contact</field>
+            <field name="function">Operations Coordinator</field>
+            <field name="phone">+971 50 345 6789</field>
+            <field name="email">omar.hassan@alfuttaim.com</field>
+        </record>
+        
+        <!-- 2. Maersk Egypt S.A.E. (Alexandria) - Freight Forwarder -->
+        <record id="partner_maersk_egypt" model="res.partner">
+            <field name="name">Maersk Egypt S.A.E.</field>
+            <field name="is_company" eval="True"/>
+            <field name="is_carrier" eval="True"/>
+            <field name="is_shipper" eval="True"/>
+            <field name="is_consignee" eval="True"/>
+            <field name="street">Maersk Building, Port Area</field>
+            <field name="city">Alexandria</field>
+            <field name="zip">21500</field>
+            <field name="country_id" ref="base.eg"/>
+            <field name="phone">+20 3 480 1234</field>
+            <field name="email">egypt@maersk.com</field>
+            <field name="website">www.maersk.com</field>
+            <field name="freight_customer_code">MAE001</field>
+            <field name="credit_limit">750000</field>
+        </record>
+        
+        <!-- Maersk Contacts -->
+        <record id="contact_maersk_mohamed" model="res.partner">
+            <field name="name">Mohamed Abdel Rahman</field>
+            <field name="parent_id" ref="partner_maersk_egypt"/>
+            <field name="type">contact</field>
+            <field name="function">Branch Manager</field>
+            <field name="phone">+20 10 1234 5678</field>
+            <field name="email">mohamed.abdelrahman@maersk.com</field>
+        </record>
+        
+        <record id="contact_maersk_layla" model="res.partner">
+            <field name="name">Layla Ibrahim</field>
+            <field name="parent_id" ref="partner_maersk_egypt"/>
+            <field name="type">contact</field>
+            <field name="function">Customer Service Manager</field>
+            <field name="phone">+20 10 2345 6789</field>
+            <field name="email">layla.ibrahim@maersk.com</field>
+        </record>
+        
+        <!-- 3. DHL Supply Chain Egypt (Cairo) - 3PL Provider -->
+        <record id="partner_dhl_egypt" model="res.partner">
+            <field name="name">DHL Supply Chain Egypt</field>
+            <field name="is_company" eval="True"/>
+            <field name="is_carrier" eval="True"/>
+            <field name="is_shipper" eval="True"/>
+            <field name="is_consignee" eval="True"/>
+            <field name="street">Smart Village, Km 28 Cairo-Alexandria Desert Road</field>
+            <field name="city">Cairo</field>
+            <field name="zip">12577</field>
+            <field name="country_id" ref="base.eg"/>
+            <field name="phone">+20 2 3536 1000</field>
+            <field name="email">egypt@dhl.com</field>
+            <field name="website">www.dhl.com</field>
+            <field name="freight_customer_code">DHL001</field>
+            <field name="credit_limit">600000</field>
+        </record>
+        
+        <!-- DHL Contacts -->
+        <record id="contact_dhl_khaled" model="res.partner">
+            <field name="name">Khaled Mahmoud</field>
+            <field name="parent_id" ref="partner_dhl_egypt"/>
+            <field name="type">contact</field>
+            <field name="function">Operations Director</field>
+            <field name="phone">+20 10 3456 7890</field>
+            <field name="email">khaled.mahmoud@dhl.com</field>
+        </record>
+        
+        <record id="contact_dhl_sara" model="res.partner">
+            <field name="name">Sara El Sayed</field>
+            <field name="parent_id" ref="partner_dhl_egypt"/>
+            <field name="type">contact</field>
+            <field name="function">Account Manager</field>
+            <field name="phone">+20 10 4567 8901</field>
+            <field name="email">sara.elsayed@dhl.com</field>
+        </record>
+        
+        <!-- 4. Saudi Aramco Distribution (Riyadh, KSA) - Oil & Gas Logistics -->
+        <record id="partner_aramco" model="res.partner">
+            <field name="name">Saudi Aramco Distribution</field>
+            <field name="is_company" eval="True"/>
+            <field name="is_shipper" eval="True"/>
+            <field name="is_consignee" eval="True"/>
+            <field name="street">Aramco Headquarters, Dhahran</field>
+            <field name="city">Riyadh</field>
+            <field name="zip">11564</field>
+            <field name="country_id" ref="base.sa"/>
+            <field name="phone">+966 13 872 3000</field>
+            <field name="email">distribution@aramco.com</field>
+            <field name="website">www.aramco.com</field>
+            <field name="freight_customer_code">ARA001</field>
+            <field name="credit_limit">1000000</field>
+        </record>
+        
+        <!-- Aramco Contacts -->
+        <record id="contact_aramco_abdullah" model="res.partner">
+            <field name="name">Abdullah Al Qahtani</field>
+            <field name="parent_id" ref="partner_aramco"/>
+            <field name="type">contact</field>
+            <field name="function">Logistics Director</field>
+            <field name="phone">+966 50 123 4567</field>
+            <field name="email">abdullah.alqahtani@aramco.com</field>
+        </record>
+        
+        <record id="contact_aramco_noura" model="res.partner">
+            <field name="name">Noura Al Mutairi</field>
+            <field name="parent_id" ref="partner_aramco"/>
+            <field name="type">contact</field>
+            <field name="function">Supply Chain Manager</field>
+            <field name="phone">+966 50 234 5678</field>
+            <field name="email">noura.almutairi@aramco.com</field>
+        </record>
+        
+        <!-- 5. Agility Logistics (Kuwait City) - Regional Distributor -->
+        <record id="partner_agility" model="res.partner">
+            <field name="name">Agility Logistics</field>
+            <field name="is_company" eval="True"/>
+            <field name="is_carrier" eval="True"/>
+            <field name="is_shipper" eval="True"/>
+            <field name="is_consignee" eval="True"/>
+            <field name="street">Agility Tower, Sharq</field>
+            <field name="city">Kuwait City</field>
+            <field name="zip">13001</field>
+            <field name="country_id" ref="base.kw"/>
+            <field name="phone">+965 2228 6000</field>
+            <field name="email">kuwait@agility.com</field>
+            <field name="website">www.agility.com</field>
+            <field name="freight_customer_code">AGL001</field>
+            <field name="credit_limit">450000</field>
+        </record>
+        
+        <!-- Agility Contacts -->
+        <record id="contact_agility_yousef" model="res.partner">
+            <field name="name">Yousef Al Sabah</field>
+            <field name="parent_id" ref="partner_agility"/>
+            <field name="type">contact</field>
+            <field name="function">Regional Manager</field>
+            <field name="phone">+965 9999 1234</field>
+            <field name="email">yousef.alsabah@agility.com</field>
+        </record>
+        
+        <record id="contact_agility_maha" model="res.partner">
+            <field name="name">Maha Al Rashid</field>
+            <field name="parent_id" ref="partner_agility"/>
+            <field name="type">contact</field>
+            <field name="function">Operations Manager</field>
+            <field name="phone">+965 9999 2345</field>
+            <field name="email">maha.alrashid@agility.com</field>
+        </record>
+        
+        <!-- Additional Carriers -->
+        <record id="partner_emirates_shipping" model="res.partner">
+            <field name="name">Emirates Shipping Line</field>
+            <field name="is_company" eval="True"/>
+            <field name="is_carrier" eval="True"/>
+            <field name="city">Dubai</field>
+            <field name="country_id" ref="base.ae"/>
+            <field name="phone">+971 4 345 6789</field>
+            <field name="email">operations@emiratesshipping.ae</field>
+        </record>
+        
+        <record id="partner_gulf_air_cargo" model="res.partner">
+            <field name="name">Gulf Air Cargo</field>
+            <field name="is_company" eval="True"/>
+            <field name="is_carrier" eval="True"/>
+            <field name="city">Manama</field>
+            <field name="country_id" ref="base.bh"/>
+            <field name="phone">+973 1733 3333</field>
+            <field name="email">cargo@gulfair.com</field>
+        </record>
+        
+        <!-- ============================================ -->
+        <!-- ADDITIONAL LOCATIONS -->
+        <!-- ============================================ -->
+        
+        <record id="location_port_jebel_ali" model="freight.location">
+            <field name="name">Jebel Ali Port</field>
+            <field name="code">AEJEA</field>
+            <field name="location_type">port</field>
+            <field name="city">Dubai</field>
+            <field name="country_id" ref="base.ae"/>
+            <field name="latitude">24.9857</field>
+            <field name="longitude">55.0272</field>
+        </record>
+        
+        <record id="location_port_alexandria" model="freight.location">
+            <field name="name">Port of Alexandria</field>
+            <field name="code">EGALY</field>
+            <field name="location_type">port</field>
+            <field name="city">Alexandria</field>
+            <field name="country_id" ref="base.eg"/>
+            <field name="latitude">31.2001</field>
+            <field name="longitude">29.9187</field>
+        </record>
+        
+        <record id="location_port_jeddah" model="freight.location">
+            <field name="name">Jeddah Islamic Port</field>
+            <field name="code">SAJED</field>
+            <field name="location_type">port</field>
+            <field name="city">Jeddah</field>
+            <field name="country_id" ref="base.sa"/>
+            <field name="latitude">21.4858</field>
+            <field name="longitude">39.1925</field>
+        </record>
+        
+        <record id="location_port_shuwaikh" model="freight.location">
+            <field name="name">Shuwaikh Port</field>
+            <field name="code">KWSWK</field>
+            <field name="location_type">port</field>
+            <field name="city">Kuwait City</field>
+            <field name="country_id" ref="base.kw"/>
+            <field name="latitude">29.3475</field>
+            <field name="longitude">47.9297</field>
+        </record>
+        
+        <record id="location_airport_dubai" model="freight.location">
+            <field name="name">Dubai International Airport</field>
+            <field name="code">AEDXB</field>
+            <field name="location_type">airport</field>
+            <field name="city">Dubai</field>
+            <field name="country_id" ref="base.ae"/>
+            <field name="latitude">25.2532</field>
+            <field name="longitude">55.3657</field>
+        </record>
+        
+        <record id="location_airport_cairo" model="freight.location">
+            <field name="name">Cairo International Airport</field>
+            <field name="code">EGCAI</field>
+            <field name="location_type">airport</field>
+            <field name="city">Cairo</field>
+            <field name="country_id" ref="base.eg"/>
+            <field name="latitude">30.1219</field>
+            <field name="longitude">31.4056</field>
+        </record>
+        
+        <record id="location_airport_riyadh" model="freight.location">
+            <field name="name">King Khalid International Airport</field>
+            <field name="code">SARUH</field>
+            <field name="location_type">airport</field>
+            <field name="city">Riyadh</field>
+            <field name="country_id" ref="base.sa"/>
+            <field name="latitude">24.9576</field>
+            <field name="longitude">46.6988</field>
+        </record>
+        
+        <record id="location_airport_kuwait" model="freight.location">
+            <field name="name">Kuwait International Airport</field>
+            <field name="code">KWKWI</field>
+            <field name="location_type">airport</field>
+            <field name="city">Kuwait City</field>
+            <field name="country_id" ref="base.kw"/>
+            <field name="latitude">29.2267</field>
+            <field name="longitude">47.9689</field>
+        </record>
+        
+        <!-- ============================================ -->
+        <!-- REALISTIC FREIGHT RATES -->
+        <!-- ============================================ -->
+        
+        <record id="rate_dubai_cairo_fcl" model="freight.rate">
+            <field name="name">Dubai to Cairo - FCL 40HC</field>
+            <field name="carrier_id" ref="partner_maersk_egypt"/>
+            <field name="service_type">fcl</field>
+            <field name="container_type">40hc</field>
+            <field name="origin_port_id" ref="location_port_jebel_ali"/>
+            <field name="destination_port_id" ref="location_port_alexandria"/>
+            <field name="rate_type">contract</field>
+            <field name="rate_amount">1850.00</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="transit_time_days">12</field>
+            <field name="valid_from" eval="(DateTime.now() - timedelta(days=60)).strftime('%Y-%m-%d')"/>
+            <field name="valid_to" eval="(DateTime.now() + timedelta(days=120)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <record id="rate_alexandria_jeddah_fcl" model="freight.rate">
+            <field name="name">Alexandria to Jeddah - FCL 40GP</field>
+            <field name="carrier_id" ref="partner_emirates_shipping"/>
+            <field name="service_type">fcl</field>
+            <field name="container_type">40gp</field>
+            <field name="origin_port_id" ref="location_port_alexandria"/>
+            <field name="destination_port_id" ref="location_port_jeddah"/>
+            <field name="rate_type">standard</field>
+            <field name="rate_amount">1450.00</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="transit_time_days">8</field>
+            <field name="valid_from" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="valid_to" eval="(DateTime.now() + timedelta(days=90)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <record id="rate_dubai_kuwait_air" model="freight.rate">
+            <field name="name">Dubai to Kuwait - Air Freight</field>
+            <field name="carrier_id" ref="partner_gulf_air_cargo"/>
+            <field name="service_type">air</field>
+            <field name="origin_port_id" ref="location_airport_dubai"/>
+            <field name="destination_port_id" ref="location_airport_kuwait"/>
+            <field name="rate_type">standard</field>
+            <field name="rate_amount">3.50</field>
+            <field name="currency_id" ref="base.USD"/>
+            <field name="transit_time_days">2</field>
+            <field name="valid_from" eval="(DateTime.now() - timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="valid_to" eval="(DateTime.now() + timedelta(days=90)).strftime('%Y-%m-%d')"/>
+        </record>
+        
+        <!-- ============================================ -->
+        <!-- REALISTIC QUOTATIONS (15 TOTAL) -->
+        <!-- ============================================ -->
+        
+        <!-- DRAFT QUOTATIONS (3) -->
+        <record id="quotation_draft_001" model="freight.quotation">
+            <field name="name">FQ2024-001</field>
+            <field name="partner_id" ref="partner_alfuttaim"/>
+            <field name="contact_id" ref="contact_alfuttaim_ahmed"/>
+            <field name="quotation_date" eval="DateTime.now().strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=30)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="origin_port_id" ref="location_port_jebel_ali"/>
+            <field name="destination_port_id" ref="location_port_alexandria"/>
+            <field name="cargo_description">Electronics - LED TVs and Home Appliances (Samsung, LG)</field>
+            <field name="container_type">40hc</field>
+            <field name="container_qty">3</field>
+            <field name="total_weight">45000</field>
+            <field name="total_volume">180</field>
+            <field name="total_packages">850</field>
+            <field name="state">draft</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="quotation_line_draft_001_freight" model="freight.quotation.line">
+            <field name="quotation_id" ref="quotation_draft_001"/>
+            <field name="charge_type_id" ref="freight_management.charge_type_ocean_freight"/>
+            <field name="description">Ocean Freight - Dubai to Alexandria (40HC x3)</field>
+            <field name="quantity">3</field>
+            <field name="unit_price">1850.00</field>
+            <field name="cost_price">1600.00</field>
+            <field name="sequence">10</field>
+        </record>
+        
+        <record id="quotation_draft_002" model="freight.quotation">
+            <field name="name">FQ2024-002</field>
+            <field name="partner_id" ref="partner_dhl_egypt"/>
+            <field name="contact_id" ref="contact_dhl_khaled"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=1)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=29)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">air</field>
+            <field name="shipment_direction">import</field>
+            <field name="origin_port_id" ref="location_airport_dubai"/>
+            <field name="destination_port_id" ref="location_airport_cairo"/>
+            <field name="cargo_description">Pharmaceuticals - Temperature Controlled Medicine</field>
+            <field name="total_weight">2500</field>
+            <field name="total_volume">15</field>
+            <field name="total_packages">120</field>
+            <field name="is_temperature_controlled" eval="True"/>
+            <field name="state">draft</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="quotation_draft_003" model="freight.quotation">
+            <field name="name">FQ2024-003</field>
+            <field name="partner_id" ref="partner_aramco"/>
+            <field name="contact_id" ref="contact_aramco_abdullah"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=2)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=28)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="origin_port_id" ref="location_port_jeddah"/>
+            <field name="destination_port_id" ref="location_port_alexandria"/>
+            <field name="cargo_description">Industrial Equipment - Oil Field Machinery Parts</field>
+            <field name="container_type">40fr</field>
+            <field name="container_qty">2</field>
+            <field name="total_weight">38000</field>
+            <field name="total_volume">140</field>
+            <field name="total_packages">45</field>
+            <field name="state">draft</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <!-- SENT QUOTATIONS (3) -->
+        <record id="quotation_sent_001" model="freight.quotation">
+            <field name="name">FQ2024-004</field>
+            <field name="partner_id" ref="partner_agility"/>
+            <field name="contact_id" ref="contact_agility_yousef"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=25)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">import</field>
+            <field name="origin_port_id" ref="location_port_jebel_ali"/>
+            <field name="destination_port_id" ref="location_port_shuwaikh"/>
+            <field name="cargo_description">Food Products - Frozen Meat and Poultry</field>
+            <field name="container_type">40rf</field>
+            <field name="container_qty">5</field>
+            <field name="total_weight">95000</field>
+            <field name="total_volume">200</field>
+            <field name="total_packages">2400</field>
+            <field name="is_temperature_controlled" eval="True"/>
+            <field name="state">sent</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="quotation_line_sent_001_freight" model="freight.quotation.line">
+            <field name="quotation_id" ref="quotation_sent_001"/>
+            <field name="charge_type_id" ref="freight_management.charge_type_ocean_freight"/>
+            <field name="description">Reefer Container Freight - Dubai to Kuwait (40RF x5)</field>
+            <field name="quantity">5</field>
+            <field name="unit_price">2450.00</field>
+            <field name="cost_price">2100.00</field>
+            <field name="sequence">10</field>
+        </record>
+        
+        <record id="quotation_line_sent_001_reefer" model="freight.quotation.line">
+            <field name="quotation_id" ref="quotation_sent_001"/>
+            <field name="charge_type_id" ref="freight_management.charge_type_fuel_surcharge"/>
+            <field name="description">Reefer Monitoring and Power</field>
+            <field name="quantity">5</field>
+            <field name="unit_price">350.00</field>
+            <field name="cost_price">280.00</field>
+            <field name="sequence">20</field>
+        </record>
+        
+        <record id="quotation_sent_002" model="freight.quotation">
+            <field name="name">FQ2024-005</field>
+            <field name="partner_id" ref="partner_maersk_egypt"/>
+            <field name="contact_id" ref="contact_maersk_mohamed"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=7)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=23)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">lcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="origin_port_id" ref="location_port_alexandria"/>
+            <field name="destination_port_id" ref="location_port_jebel_ali"/>
+            <field name="cargo_description">Textiles - Cotton Fabrics and Garments</field>
+            <field name="total_weight">8500</field>
+            <field name="total_volume">35</field>
+            <field name="total_packages">340</field>
+            <field name="state">sent</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="quotation_sent_003" model="freight.quotation">
+            <field name="name">FQ2024-006</field>
+            <field name="partner_id" ref="partner_alfuttaim"/>
+            <field name="contact_id" ref="contact_alfuttaim_fatima"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=4)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=26)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">import</field>
+            <field name="origin_port_id" ref="freight_management.location_port_shanghai"/>
+            <field name="destination_port_id" ref="location_port_jebel_ali"/>
+            <field name="cargo_description">Automotive Parts - Car Spare Parts and Accessories</field>
+            <field name="container_type">40hc</field>
+            <field name="container_qty">4</field>
+            <field name="total_weight">72000</field>
+            <field name="total_volume">240</field>
+            <field name="total_packages">1200</field>
+            <field name="state">sent</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <!-- APPROVED QUOTATIONS (3) -->
+        <record id="quotation_approved_001" model="freight.quotation">
+            <field name="name">FQ2024-007</field>
+            <field name="partner_id" ref="partner_dhl_egypt"/>
+            <field name="contact_id" ref="contact_dhl_sara"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=12)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=18)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="origin_port_id" ref="location_port_alexandria"/>
+            <field name="destination_port_id" ref="location_port_jeddah"/>
+            <field name="cargo_description">Construction Materials - Ceramic Tiles and Sanitary Ware</field>
+            <field name="container_type">40gp</field>
+            <field name="container_qty">6</field>
+            <field name="total_weight">138000</field>
+            <field name="total_volume">360</field>
+            <field name="total_packages">2800</field>
+            <field name="state">approved</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="quotation_line_approved_001_freight" model="freight.quotation.line">
+            <field name="quotation_id" ref="quotation_approved_001"/>
+            <field name="charge_type_id" ref="freight_management.charge_type_ocean_freight"/>
+            <field name="description">Ocean Freight - Alexandria to Jeddah (40GP x6)</field>
+            <field name="quantity">6</field>
+            <field name="unit_price">1450.00</field>
+            <field name="cost_price">1250.00</field>
+            <field name="sequence">10</field>
+        </record>
+        
+        <record id="quotation_line_approved_001_doc" model="freight.quotation.line">
+            <field name="quotation_id" ref="quotation_approved_001"/>
+            <field name="charge_type_id" ref="freight_management.charge_type_documentation"/>
+            <field name="description">Documentation and BL Fees</field>
+            <field name="quantity">1</field>
+            <field name="unit_price">180.00</field>
+            <field name="cost_price">90.00</field>
+            <field name="sequence">20</field>
+        </record>
+        
+        <record id="quotation_approved_002" model="freight.quotation">
+            <field name="name">FQ2024-008</field>
+            <field name="partner_id" ref="partner_aramco"/>
+            <field name="contact_id" ref="contact_aramco_noura"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=15)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=15)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">import</field>
+            <field name="origin_port_id" ref="freight_management.location_port_singapore"/>
+            <field name="destination_port_id" ref="location_port_jeddah"/>
+            <field name="cargo_description">Chemicals - Industrial Lubricants and Additives</field>
+            <field name="container_type">20gp</field>
+            <field name="container_qty">8</field>
+            <field name="total_weight">144000</field>
+            <field name="total_volume">160</field>
+            <field name="total_packages">640</field>
+            <field name="is_dangerous_goods" eval="True"/>
+            <field name="state">approved</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="quotation_approved_003" model="freight.quotation">
+            <field name="name">FQ2024-009</field>
+            <field name="partner_id" ref="partner_agility"/>
+            <field name="contact_id" ref="contact_agility_maha"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=20)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">air</field>
+            <field name="shipment_direction">import</field>
+            <field name="origin_port_id" ref="freight_management.location_airport_frankfurt"/>
+            <field name="destination_port_id" ref="location_airport_kuwait"/>
+            <field name="cargo_description">Electronics - Computer Servers and Networking Equipment</field>
+            <field name="total_weight">3200</field>
+            <field name="total_volume">22</field>
+            <field name="total_packages">85</field>
+            <field name="state">approved</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <!-- EXPIRED QUOTATIONS (2) -->
+        <record id="quotation_expired_001" model="freight.quotation">
+            <field name="name">FQ2024-010</field>
+            <field name="partner_id" ref="partner_maersk_egypt"/>
+            <field name="contact_id" ref="contact_maersk_layla"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=45)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="origin_port_id" ref="location_port_alexandria"/>
+            <field name="destination_port_id" ref="freight_management.location_port_rotterdam"/>
+            <field name="cargo_description">Agricultural Products - Fresh Fruits and Vegetables</field>
+            <field name="container_type">40rf</field>
+            <field name="container_qty">3</field>
+            <field name="total_weight">54000</field>
+            <field name="total_volume">180</field>
+            <field name="total_packages">1800</field>
+            <field name="state">expired</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="quotation_expired_002" model="freight.quotation">
+            <field name="name">FQ2024-011</field>
+            <field name="partner_id" ref="partner_alfuttaim"/>
+            <field name="contact_id" ref="contact_alfuttaim_omar"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=50)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() - timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">lcl</field>
+            <field name="shipment_direction">import</field>
+            <field name="origin_port_id" ref="freight_management.location_port_hamburg"/>
+            <field name="destination_port_id" ref="location_port_jebel_ali"/>
+            <field name="cargo_description">Machinery - Industrial Pumps and Valves</field>
+            <field name="total_weight">12000</field>
+            <field name="total_volume">48</field>
+            <field name="total_packages">180</field>
+            <field name="state">expired</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <!-- CANCELLED QUOTATIONS (2) -->
+        <record id="quotation_cancelled_001" model="freight.quotation">
+            <field name="name">FQ2024-012</field>
+            <field name="partner_id" ref="partner_dhl_egypt"/>
+            <field name="contact_id" ref="contact_dhl_khaled"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=20)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="shipment_direction">export</field>
+            <field name="origin_port_id" ref="location_port_alexandria"/>
+            <field name="destination_port_id" ref="location_port_jebel_ali"/>
+            <field name="cargo_description">Furniture - Office Furniture and Fixtures</field>
+            <field name="container_type">40hc</field>
+            <field name="container_qty">2</field>
+            <field name="total_weight">28000</field>
+            <field name="total_volume">120</field>
+            <field name="total_packages">450</field>
+            <field name="state">cancelled</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <record id="quotation_cancelled_002" model="freight.quotation">
+            <field name="name">FQ2024-013</field>
+            <field name="partner_id" ref="partner_aramco"/>
+            <field name="contact_id" ref="contact_aramco_abdullah"/>
+            <field name="quotation_date" eval="(DateTime.now() - timedelta(days=18)).strftime('%Y-%m-%d')"/>
+            <field name="validity_date" eval="(DateTime.now() + timedelta(days=12)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">air</field>
+            <field name="shipment_direction">export</field>
+            <field name="origin_port_id" ref="location_airport_riyadh"/>
+            <field name="destination_port_id" ref="location_airport_cairo"/>
+            <field name="cargo_description">Documents - Urgent Business Documents</field>
+            <field name="total_weight">150</field>
+            <field name="total_volume">2</field>
+            <field name="total_packages">15</field>
+            <field name="state">cancelled</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+    </data>
+
+</odoo>

@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Enhanced Quotation Detail with Modern UI -->
+    <template id="portal_my_quotation_detail_enhanced" name="Quotation Detail Enhanced">
+        <t t-call="portal.portal_layout">
+            <t t-set="additional_title">Quotation <t t-esc="quotation.name"/></t>
+            
+            <!-- Custom CSS for Modern Design -->
+            <xpath expr="//head" position="inside">
+                <link rel="stylesheet" href="/freight_management/static/src/css/portal_quotation_enhanced.css"/>
+            </xpath>
+            
+            <div class="container freight-quotation-container">
+                <!-- Alert Messages -->
+                <div id="alertContainer"></div>
+                
+                <!-- Main Card -->
+                <div class="freight-card">
+                    <!-- Header -->
+                    <div class="freight-card-header">
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <h2 class="quotation-title">
+                                    <i class="fa fa-file-text-o me-2"></i>
+                                    <span t-field="quotation.name"/>
+                                </h2>
+                                <p class="quotation-subtitle mb-0">
+                                    <span t-field="quotation.origin_port_id.code"/> → <span t-field="quotation.destination_port_id.code"/>
+                                </p>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <!-- Status Badge -->
+                                <span t-if="quotation.state == 'draft'" class="status-badge status-draft">
+                                    <i class="fa fa-pencil"></i> Draft
+                                </span>
+                                <span t-elif="quotation.state == 'quoted'" class="status-badge status-quoted">
+                                    <i class="fa fa-clock-o"></i> Awaiting Response
+                                </span>
+                                <span t-elif="quotation.state == 'accepted'" class="status-badge status-accepted">
+                                    <i class="fa fa-check-circle"></i> Accepted
+                                </span>
+                                <span t-elif="quotation.state == 'rejected'" class="status-badge status-rejected">
+                                    <i class="fa fa-times-circle"></i> Rejected
+                                </span>
+                                <span t-elif="quotation.state == 'expired'" class="status-badge status-expired">
+                                    <i class="fa fa-calendar-times-o"></i> Expired
+                                </span>
+                                <span t-elif="quotation.state == 'cancelled'" class="status-badge status-cancelled">
+                                    <i class="fa fa-ban"></i> Cancelled
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Body -->
+                    <div class="freight-card-body">
+                        <!-- Action Buttons (Only for Quoted state) -->
+                        <div t-if="quotation.state == 'quoted'" class="action-buttons-container">
+                            <div class="row">
+                                <div class="col-md-6 mb-3 mb-md-0">
+                                    <button type="button" class="btn-action btn-accept" onclick="acceptQuotation()">
+                                        <i class="fa fa-check-circle"></i>
+                                        <span>Accept Quotation</span>
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="button" class="btn-action btn-reject" data-bs-toggle="modal" data-bs-target="#rejectModal">
+                                        <i class="fa fa-times-circle"></i>
+                                        <span>Reject Quotation</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Customer Action Info -->
+                        <div t-if="quotation.customer_action_date" class="customer-action-info">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>Action Date:</strong>
+                                    <span t-field="quotation.customer_action_date" t-options='{"widget": "datetime"}'/>
+                                </div>
+                                <div t-if="quotation.rejection_reason" class="col-md-6">
+                                    <strong>Rejection Reason:</strong>
+                                    <p class="mb-0"><t t-esc="quotation.rejection_reason"/></p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Key Information Grid -->
+                        <div class="info-grid">
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <div class="info-content">
+                                    <div class="info-label">Quotation Date</div>
+                                    <div class="info-value"><span t-field="quotation.quotation_date"/></div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fa fa-clock-o"></i>
+                                </div>
+                                <div class="info-content">
+                                    <div class="info-label">Valid Until</div>
+                                    <div class="info-value"><span t-field="quotation.validity_date"/></div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fa fa-ship"></i>
+                                </div>
+                                <div class="info-content">
+                                    <div class="info-label">Service Type</div>
+                                    <div class="info-value"><span t-field="quotation.service_type"/></div>
+                                </div>
+                            </div>
+                            
+                            <div class="info-card">
+                                <div class="info-icon">
+                                    <i class="fa fa-exchange"></i>
+                                </div>
+                                <div class="info-content">
+                                    <div class="info-label">Direction</div>
+                                    <div class="info-value"><span t-field="quotation.shipment_direction"/></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Route Information -->
+                        <div class="section-container">
+                            <h3 class="section-title">
+                                <i class="fa fa-map-marker"></i> Route Information
+                            </h3>
+                            <div class="route-display">
+                                <div class="route-point">
+                                    <div class="route-icon route-origin">
+                                        <i class="fa fa-circle"></i>
+                                    </div>
+                                    <div class="route-details">
+                                        <div class="route-label">Origin</div>
+                                        <div class="route-location"><span t-field="quotation.origin_port_id.name"/></div>
+                                        <div t-if="quotation.origin_address" class="route-address">
+                                            <span t-field="quotation.origin_address"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="route-connector">
+                                    <i class="fa fa-long-arrow-right"></i>
+                                </div>
+                                
+                                <div class="route-point">
+                                    <div class="route-icon route-destination">
+                                        <i class="fa fa-map-marker"></i>
+                                    </div>
+                                    <div class="route-details">
+                                        <div class="route-label">Destination</div>
+                                        <div class="route-location"><span t-field="quotation.destination_port_id.name"/></div>
+                                        <div t-if="quotation.destination_address" class="route-address">
+                                            <span t-field="quotation.destination_address"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Cargo Details -->
+                        <div class="section-container">
+                            <h3 class="section-title">
+                                <i class="fa fa-cube"></i> Cargo Details
+                            </h3>
+                            <div class="cargo-details">
+                                <div class="row">
+                                    <div class="col-md-12 mb-3">
+                                        <strong>Description:</strong>
+                                        <p><span t-field="quotation.cargo_description"/></p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3 col-6 mb-3" t-if="quotation.container_type">
+                                        <div class="cargo-stat">
+                                            <div class="cargo-stat-label">Container Type</div>
+                                            <div class="cargo-stat-value"><span t-field="quotation.container_type"/></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-6 mb-3" t-if="quotation.container_qty">
+                                        <div class="cargo-stat">
+                                            <div class="cargo-stat-label">Quantity</div>
+                                            <div class="cargo-stat-value"><span t-field="quotation.container_qty"/></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-6 mb-3" t-if="quotation.total_weight">
+                                        <div class="cargo-stat">
+                                            <div class="cargo-stat-label">Weight</div>
+                                            <div class="cargo-stat-value"><span t-field="quotation.total_weight"/> KG</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-6 mb-3" t-if="quotation.total_volume">
+                                        <div class="cargo-stat">
+                                            <div class="cargo-stat-label">Volume</div>
+                                            <div class="cargo-stat-value"><span t-field="quotation.total_volume"/> CBM</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Special Cargo Indicators -->
+                                <div t-if="quotation.is_dangerous_goods or quotation.is_temperature_controlled" class="special-cargo-badges">
+                                    <span t-if="quotation.is_dangerous_goods" class="badge-special badge-danger">
+                                        <i class="fa fa-warning"></i> Dangerous Goods
+                                    </span>
+                                    <span t-if="quotation.is_temperature_controlled" class="badge-special badge-cold">
+                                        <i class="fa fa-snowflake-o"></i> Temperature Controlled
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Pricing Details -->
+                        <div class="section-container">
+                            <h3 class="section-title">
+                                <i class="fa fa-money"></i> Pricing Details
+                            </h3>
+                            <div class="pricing-table-container">
+                                <table class="pricing-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Description</th>
+                                            <th>Charge Type</th>
+                                            <th class="text-end">Unit Price</th>
+                                            <th class="text-center">Qty</th>
+                                            <th class="text-end">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <t t-foreach="quotation.line_ids" t-as="line">
+                                            <tr>
+                                                <td><span t-field="line.description"/></td>
+                                                <td><span t-field="line.charge_type_id.name"/></td>
+                                                <td class="text-end">
+                                                    <span t-field="line.unit_price" t-options='{"widget": "monetary", "display_currency": quotation.currency_id}'/>
+                                                </td>
+                                                <td class="text-center"><span t-field="line.quantity"/></td>
+                                                <td class="text-end">
+                                                    <span t-field="line.subtotal" t-options='{"widget": "monetary", "display_currency": quotation.currency_id}'/>
+                                                </td>
+                                            </tr>
+                                        </t>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr class="subtotal-row">
+                                            <td colspan="4" class="text-end"><strong>Subtotal:</strong></td>
+                                            <td class="text-end">
+                                                <strong><span t-field="quotation.subtotal_amount" t-options='{"widget": "monetary", "display_currency": quotation.currency_id}'/></strong>
+                                            </td>
+                                        </tr>
+                                        <tr t-if="quotation.tax_amount > 0" class="tax-row">
+                                            <td colspan="4" class="text-end">Tax:</td>
+                                            <td class="text-end">
+                                                <span t-field="quotation.tax_amount" t-options='{"widget": "monetary", "display_currency": quotation.currency_id}'/>
+                                            </td>
+                                        </tr>
+                                        <tr class="total-row">
+                                            <td colspan="4" class="text-end"><strong>Total Amount:</strong></td>
+                                            <td class="text-end">
+                                                <strong class="total-amount">
+                                                    <span t-field="quotation.total_amount" t-options='{"widget": "monetary", "display_currency": quotation.currency_id}'/>
+                                                </strong>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Terms and Conditions -->
+                        <div t-if="quotation.notes" class="section-container">
+                            <h3 class="section-title">
+                                <i class="fa fa-file-text"></i> Terms &amp; Conditions
+                            </h3>
+                            <div class="terms-content">
+                                <span t-field="quotation.notes"/>
+                            </div>
+                        </div>
+                        
+                        <!-- Download Button -->
+                        <div class="download-section">
+                            <a t-att-href="'/my/quotations/%s/download' % quotation.id" class="btn-download">
+                                <i class="fa fa-download"></i>
+                                Download PDF
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Reject Modal -->
+                <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content freight-modal">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="rejectModalLabel">
+                                    <i class="fa fa-times-circle text-danger"></i>
+                                    Reject Quotation
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p class="mb-3">Please provide a reason for rejecting this quotation (optional):</p>
+                                <div class="mb-3">
+                                    <label for="rejection_reason" class="form-label">Reason</label>
+                                    <textarea class="form-control" id="rejection_reason" rows="4" placeholder="e.g., Price too high, delivery time not suitable, found alternative supplier..."></textarea>
+                                </div>
+                                <div class="alert alert-info mb-0">
+                                    <i class="fa fa-info-circle"></i>
+                                    Your feedback helps us improve our service and provide better quotes in the future.
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-danger" onclick="rejectQuotation()">
+                                    <i class="fa fa-times-circle"></i>
+                                    Confirm Rejection
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- JavaScript -->
+            <script type="text/javascript">
+                const quotationId = <t t-esc="quotation.id"/>;
+                
+                function showAlert(message, type = 'success') {
+                    const alertContainer = document.getElementById('alertContainer');
+                    const alertHtml = `
+                        &lt;div class="alert alert-${type} alert-dismissible fade show" role="alert"&gt;
+                            &lt;i class="fa fa-${type === 'success' ? 'check-circle' : 'exclamation-triangle'}"&gt;&lt;/i&gt;
+                            ${message}
+                            &lt;button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"&gt;&lt;/button&gt;
+                        &lt;/div&gt;
+                    `;
+                    alertContainer.innerHTML = alertHtml;
+                    
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // Auto-dismiss after 5 seconds
+                    setTimeout(() => {
+                        const alert = alertContainer.querySelector('.alert');
+                        if (alert) {
+                            alert.classList.remove('show');
+                            setTimeout(() => alert.remove(), 150);
+                        }
+                    }, 5000);
+                }
+                
+                function acceptQuotation() {
+                    if (!confirm('Are you sure you want to accept this quotation?')) {
+                        return;
+                    }
+                    
+                    // Disable button and show loading
+                    const btn = event.target.closest('button');
+                    const originalHtml = btn.innerHTML;
+                    btn.disabled = true;
+                    btn.innerHTML = '&lt;i class="fa fa-spinner fa-spin"&gt;&lt;/i&gt; Processing...';
+                    
+                    fetch(`/my/quotations/${quotationId}/accept`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            jsonrpc: '2.0',
+                            method: 'call',
+                            params: {}
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.result &amp;&amp; data.result.success) {
+                            showAlert(data.result.message, 'success');
+                            // Reload page after 2 seconds
+                            setTimeout(() => location.reload(), 2000);
+                        } else {
+                            showAlert(data.result?.error || 'An error occurred', 'danger');
+                            btn.disabled = false;
+                            btn.innerHTML = originalHtml;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showAlert('An error occurred while processing your request', 'danger');
+                        btn.disabled = false;
+                        btn.innerHTML = originalHtml;
+                    });
+                }
+                
+                function rejectQuotation() {
+                    const reason = document.getElementById('rejection_reason').value;
+                    
+                    // Close modal
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('rejectModal'));
+                    modal.hide();
+                    
+                    // Show loading state
+                    showAlert('Processing rejection...', 'info');
+                    
+                    fetch(`/my/quotations/${quotationId}/reject`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            jsonrpc: '2.0',
+                            method: 'call',
+                            params: {
+                                reason: reason
+                            }
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.result &amp;&amp; data.result.success) {
+                            showAlert(data.result.message, 'info');
+                            // Reload page after 2 seconds
+                            setTimeout(() => location.reload(), 2000);
+                        } else {
+                            showAlert(data.result?.error || 'An error occurred', 'danger');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        showAlert('An error occurred while processing your request', 'danger');
+                    });
+                }
+            </script>
+        </t>
+    </template>
+</odoo>

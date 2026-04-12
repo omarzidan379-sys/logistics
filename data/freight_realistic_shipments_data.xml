@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- ============================================ -->
+        <!-- REALISTIC BOOKINGS -->
+        <!-- ============================================ -->
+        
+        <!-- Booking 1: Confirmed -->
+        <record id="booking_001" model="freight.booking">
+            <field name="name">FB2024-001</field>
+            <field name="quotation_id" ref="quotation_approved_001"/>
+            <field name="partner_id" ref="partner_dhl_egypt"/>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=8)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="carrier_id" ref="partner_emirates_shipping"/>
+            <field name="vessel_name">MSC MEDITERRANEAN</field>
+            <field name="voyage_number">MS2401E</field>
+            <field name="booking_reference">MSCU987654321</field>
+            <field name="etd" eval="(DateTime.now() + timedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="eta" eval="(DateTime.now() + timedelta(days=13)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="container_type">40gp</field>
+            <field name="container_qty">6</field>
+            <field name="free_time_days">7</field>
+            <field name="demurrage_rate">120.00</field>
+            <field name="detention_rate">80.00</field>
+            <field name="state">confirmed</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <!-- Booking 2: Allocated -->
+        <record id="booking_002" model="freight.booking">
+            <field name="name">FB2024-002</field>
+            <field name="quotation_id" ref="quotation_approved_002"/>
+            <field name="partner_id" ref="partner_aramco"/>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=10)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">fcl</field>
+            <field name="carrier_id" ref="partner_maersk_egypt"/>
+            <field name="vessel_name">MAERSK ESSEX</field>
+            <field name="voyage_number">ME2402</field>
+            <field name="booking_reference">MAEU456789123</field>
+            <field name="etd" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="eta" eval="(DateTime.now() + timedelta(days=28)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="container_type">20gp</field>
+            <field name="container_qty">8</field>
+            <field name="free_time_days">10</field>
+            <field name="demurrage_rate">100.00</field>
+            <field name="detention_rate">75.00</field>
+            <field name="state">allocated</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+        
+        <!-- Booking 3: Draft -->
+        <record id="booking_003" model="freight.booking">
+            <field name="name">FB2024-003</field>
+            <field name="quotation_id" ref="quotation_approved_003"/>
+            <field name="partner_id" ref="partner_agility"/>
+            <field name="booking_date" eval="(DateTime.now() - timedelta(days=5)).strftime('%Y-%m-%d')"/>
+            <field name="service_type">air</field>
+            <field name="carrier_id" ref="partner_gulf_air_cargo"/>
+            <field name="vessel_name">GF 123</field>
+            <field name="voyage_number">GF123</field>
+            <field name="booking_reference">GF987654</field>
+            <field name="etd" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="eta" eval="(DateTime.now() + timedelta(days=3)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="free_time_days">3</field>
+            <field name="state">draft</field>
+            <field name="currency_id" ref="base.USD"/>
+        </record>
+
+    </data>
+</odoo>

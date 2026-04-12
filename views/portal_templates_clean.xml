@@ -1,0 +1,559 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Portal Breadcrumbs -->
+        <template id="portal_my_home_menu_freight" name="Portal Freight Menu" inherit_id="portal.portal_breadcrumbs" priority="40">
+            <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+                <li t-if="page_name == 'shipment'" t-attf-class="breadcrumb-item #{'active' if not shipment else ''}">
+                    <a t-if="shipment" t-attf-href="/my/shipments?{{ keep_query() }}">Shipments</a>
+                    <t t-else="">Shipments</t>
+                </li>
+                <li t-if="shipment" class="breadcrumb-item active">
+                    <span t-field="shipment.name"/>
+                </li>
+                <li t-if="page_name == 'quotation'" t-attf-class="breadcrumb-item #{'active' if not quotation else ''}">
+                    <a t-if="quotation" t-attf-href="/my/quotations?{{ keep_query() }}">Quotations</a>
+                    <t t-else="">Quotations</t>
+                </li>
+                <li t-if="quotation" class="breadcrumb-item active">
+                    <span t-field="quotation.name"/>
+                </li>
+            </xpath>
+        </template>
+
+        <!-- Portal My Home -->
+        <template id="portal_my_home_freight" name="Portal My Home Freight" inherit_id="portal.portal_my_home" priority="40">
+            <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="title">Shipments</t>
+                    <t t-set="url" t-value="'/my/shipments'"/>
+                    <t t-set="placeholder_count" t-value="'shipment_count'"/>
+                </t>
+                <t t-call="portal.portal_docs_entry">
+                    <t t-set="title">Quotations</t>
+                    <t t-set="url" t-value="'/my/quotations'"/>
+                    <t t-set="placeholder_count" t-value="'quotation_count'"/>
+                </t>
+            </xpath>
+        </template>
+
+        <!-- Unified Freight Dashboard -->
+        <template id="portal_freight_dashboard" name="Freight Dashboard">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Freight Dashboard</t>
+                </t>
+                <div class="container mt-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3>Welcome to Your Freight Portal</h3>
+                            <p class="text-muted">Manage your shipments, quotations, and more.</p>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-ship fa-3x text-primary mb-3"/>
+                                    <h5>Shipments</h5>
+                                    <p class="text-muted"><t t-esc="shipment_count"/> Active</p>
+                                    <a href="/my/shipments" class="btn btn-primary btn-sm">View All</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-file-text-o fa-3x text-success mb-3"/>
+                                    <h5>Quotations</h5>
+                                    <p class="text-muted"><t t-esc="quotation_count"/> Total</p>
+                                    <a href="/my/quotations" class="btn btn-success btn-sm">View All</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card border-primary">
+                                <div class="card-body text-center">
+                                    <i class="fa fa-plus-circle fa-3x text-primary mb-3"/>
+                                    <h5>Request Quote</h5>
+                                    <p class="text-muted">Get a new quote</p>
+                                    <a href="/my/request-quote" class="btn btn-primary btn-sm">
+                                        <i class="fa fa-paper-plane me-1"/>Request Now
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Shipments List -->
+        <template id="portal_my_shipments" name="My Shipments">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Shipments</t>
+                </t>
+                <t t-if="not shipments">
+                    <div class="alert alert-info">
+                        There are currently no shipments for your account.
+                    </div>
+                </t>
+                <t t-if="shipments" t-call="portal.portal_table">
+                    <thead>
+                        <tr>
+                            <th>Reference</th>
+                            <th>Origin</th>
+                            <th>Destination</th>
+                            <th>Status</th>
+                            <th>Booking Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="shipments" t-as="shipment">
+                            <tr>
+                                <td><a t-attf-href="/my/shipments/#{shipment.id}"><t t-esc="shipment.name"/></a></td>
+                                <td><t t-esc="shipment.origin_port_id.name"/></td>
+                                <td><t t-esc="shipment.destination_port_id.name"/></td>
+                                <td><span t-field="shipment.state"/></td>
+                                <td><span t-field="shipment.booking_date"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+            </t>
+        </template>
+
+        <!-- Shipment Detail -->
+        <template id="portal_my_shipment_detail" name="Shipment Detail">
+            <t t-call="portal.portal_layout">
+                <t t-set="o_portal_fullwidth_alert" groups="sales_team.group_sale_salesman">
+                    <t t-call="portal.portal_back_in_edit_mode">
+                        <t t-set="backend_url" t-value="'/web#model=freight.shipment&amp;id=%s&amp;view_type=form' % shipment.id"/>
+                    </t>
+                </t>
+                <div class="container">
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h4><t t-esc="shipment.name"/></h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Origin:</strong> <t t-esc="shipment.origin_port_id.name"/></p>
+                                    <p><strong>Destination:</strong> <t t-esc="shipment.destination_port_id.name"/></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Status:</strong> <span t-field="shipment.state"/></p>
+                                    <p><strong>Booking Date:</strong> <span t-field="shipment.booking_date"/></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Quotations List -->
+        <template id="portal_my_quotations" name="My Quotations">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Quotations</t>
+                </t>
+                <t t-if="not quotations">
+                    <div class="alert alert-info">
+                        There are currently no quotations for your account.
+                    </div>
+                </t>
+                <t t-if="quotations" t-call="portal.portal_table">
+                    <thead>
+                        <tr>
+                            <th>Reference</th>
+                            <th>Date</th>
+                            <th>Origin</th>
+                            <th>Destination</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <t t-foreach="quotations" t-as="quotation">
+                            <tr>
+                                <td><a t-attf-href="/my/quotations/#{quotation.id}"><t t-esc="quotation.name"/></a></td>
+                                <td><span t-field="quotation.quotation_date"/></td>
+                                <td><t t-esc="quotation.origin_port_id.name"/></td>
+                                <td><t t-esc="quotation.destination_port_id.name"/></td>
+                                <td><span t-field="quotation.total_amount"/></td>
+                                <td><span t-field="quotation.state"/></td>
+                            </tr>
+                        </t>
+                    </tbody>
+                </t>
+            </t>
+        </template>
+
+        <!-- Quotation Detail -->
+        <template id="portal_my_quotation_detail" name="Quotation Detail">
+            <t t-call="portal.portal_layout">
+                <div class="container">
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h4><t t-esc="quotation.name"/></h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Origin:</strong> <t t-esc="quotation.origin_port_id.name"/></p>
+                                    <p><strong>Destination:</strong> <t t-esc="quotation.destination_port_id.name"/></p>
+                                </div>
+                                <div class="col-md-6">
+                                    <p><strong>Status:</strong> <span t-field="quotation.state"/></p>
+                                    <p><strong>Total:</strong> <span t-field="quotation.total_amount"/></p>
+                                </div>
+                            </div>
+                            <t t-if="quotation.state == 'sent'">
+                                <div class="mt-3">
+                                    <a t-attf-href="/my/quotations/#{quotation.id}/accept" class="btn btn-success">Accept</a>
+                                    <a t-attf-href="/my/quotations/#{quotation.id}/reject" class="btn btn-danger">Reject</a>
+                                </div>
+                            </t>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Freight Settings Page -->
+        <template id="portal_freight_settings" name="Freight Settings">
+            <t t-call="portal.portal_layout">
+                <div class="container mt-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3>Notification Settings</h3>
+                            <p class="text-muted">Manage your freight notification preferences</p>
+                        </div>
+                    </div>
+                    
+                    <t t-if="request.params.get('saved')">
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fa fa-check-circle me-2"/>Your notification preferences have been saved successfully.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    </t>
+                    
+                    <div class="row mt-4">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0"><i class="fa fa-bell me-2"/>Email Notifications</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" action="/my/freight/settings/save">
+                                        <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                        
+                                        <div class="mb-4">
+                                            <h6 class="text-primary">Quotations</h6>
+                                            <div class="form-check form-switch mb-2">
+                                                <input type="checkbox" name="notify_quotation_sent" id="notify_quotation_sent" class="form-check-input" t-att-checked="'checked' if preference.notify_quotation_sent else None"/>
+                                                <label for="notify_quotation_sent" class="form-check-label">
+                                                    Quotation Sent - Receive notifications when a new quotation is sent to you
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <h6 class="text-primary">Bookings</h6>
+                                            <div class="form-check form-switch mb-2">
+                                                <input type="checkbox" name="notify_booking_confirmed" id="notify_booking_confirmed" class="form-check-input" t-att-checked="'checked' if preference.notify_booking_confirmed else None"/>
+                                                <label for="notify_booking_confirmed" class="form-check-label">
+                                                    Booking Confirmed - Receive notifications when your booking is confirmed
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <h6 class="text-primary">Shipments</h6>
+                                            <div class="form-check form-switch mb-2">
+                                                <input type="checkbox" name="notify_shipment_booked" id="notify_shipment_booked" class="form-check-input" t-att-checked="'checked' if preference.notify_shipment_booked else None"/>
+                                                <label for="notify_shipment_booked" class="form-check-label">
+                                                    Shipment Booked - Receive notifications when shipment is booked
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-switch mb-2">
+                                                <input type="checkbox" name="notify_shipment_departed" id="notify_shipment_departed" class="form-check-input" t-att-checked="'checked' if preference.notify_shipment_departed else None"/>
+                                                <label for="notify_shipment_departed" class="form-check-label">
+                                                    Shipment Departed - Receive notifications when shipment departs
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-switch mb-2">
+                                                <input type="checkbox" name="notify_shipment_in_transit" id="notify_shipment_in_transit" class="form-check-input" t-att-checked="'checked' if preference.notify_shipment_in_transit else None"/>
+                                                <label for="notify_shipment_in_transit" class="form-check-label">
+                                                    Shipment In Transit - Receive notifications for transit updates
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-switch mb-2">
+                                                <input type="checkbox" name="notify_shipment_arrived" id="notify_shipment_arrived" class="form-check-input" t-att-checked="'checked' if preference.notify_shipment_arrived else None"/>
+                                                <label for="notify_shipment_arrived" class="form-check-label">
+                                                    Shipment Arrived - Receive notifications when shipment arrives at destination
+                                                </label>
+                                            </div>
+                                            <div class="form-check form-switch mb-2">
+                                                <input type="checkbox" name="notify_shipment_delivered" id="notify_shipment_delivered" class="form-check-input" t-att-checked="'checked' if preference.notify_shipment_delivered else None"/>
+                                                <label for="notify_shipment_delivered" class="form-check-label">
+                                                    Shipment Delivered - Receive notifications when shipment is delivered
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <h6 class="text-primary">Documents</h6>
+                                            <div class="form-check form-switch mb-2">
+                                                <input type="checkbox" name="notify_document_uploaded" id="notify_document_uploaded" class="form-check-input" t-att-checked="'checked' if preference.notify_document_uploaded else None"/>
+                                                <label for="notify_document_uploaded" class="form-check-label">
+                                                    Document Uploaded - Receive notifications when new documents are available
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-4">
+                                            <h6 class="text-primary">Notification Frequency</h6>
+                                            <select name="digest_frequency" id="digest_frequency" class="form-select">
+                                                <option value="realtime" t-att-selected="'selected' if preference.digest_frequency == 'realtime' else None">
+                                                    Real-time (Immediate notifications)
+                                                </option>
+                                                <option value="daily" t-att-selected="'selected' if preference.digest_frequency == 'daily' else None">
+                                                    Daily Digest (Once per day)
+                                                </option>
+                                                <option value="weekly" t-att-selected="'selected' if preference.digest_frequency == 'weekly' else None">
+                                                    Weekly Digest (Once per week)
+                                                </option>
+                                            </select>
+                                            <small class="form-text text-muted">
+                                                Choose how often you want to receive notifications
+                                            </small>
+                                        </div>
+                                        
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fa fa-save me-2"/>Save Preferences
+                                            </button>
+                                            <a href="/my/freight" class="btn btn-secondary">Back to Dashboard</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-lg-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h6><i class="fa fa-info-circle me-2"/>About Notifications</h6>
+                                    <p class="small">
+                                        Stay informed about your shipments with our notification system. 
+                                        You can customize which events trigger notifications and how often you receive them.
+                                    </p>
+                                    <hr/>
+                                    <h6>Notification Types</h6>
+                                    <ul class="small">
+                                        <li><strong>Real-time:</strong> Instant notifications as events occur</li>
+                                        <li><strong>Daily Digest:</strong> Summary of all events once per day</li>
+                                        <li><strong>Weekly Digest:</strong> Summary of all events once per week</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+
+        <!-- Request Quote Form -->
+        <template id="portal_request_quote_form" name="Request Quote Form">
+            <t t-call="portal.portal_layout">
+                <div class="container mt-4">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3>Request a Quotation</h3>
+                            <p class="text-muted">Fill out the form below and we'll send you a quote within 24 hours.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="row mt-4">
+                        <div class="col-lg-8">
+                            <div class="card">
+                                <div class="card-body">
+                                    <form method="POST" action="/my/request-quote">
+                                        <!-- Service Type -->
+                                        <div class="mb-3">
+                                            <label for="service_type" class="form-label">Service Type *</label>
+                                            <select name="service_type" id="service_type" class="form-select" required="required">
+                                                <option value="fcl">FCL (Full Container Load)</option>
+                                                <option value="lcl">LCL (Less than Container Load)</option>
+                                                <option value="air">Air Freight</option>
+                                                <option value="road">Road Transport</option>
+                                                <option value="rail">Rail Transport</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- Direction -->
+                                        <div class="mb-3">
+                                            <label for="shipment_direction" class="form-label">Direction *</label>
+                                            <select name="shipment_direction" id="shipment_direction" class="form-select" required="required">
+                                                <option value="export">Export</option>
+                                                <option value="import">Import</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- Origin Port -->
+                                        <div class="mb-3">
+                                            <label for="origin_port_id" class="form-label">Origin Port *</label>
+                                            <select name="origin_port_id" id="origin_port_id" class="form-select" required="required">
+                                                <option value="">Select Origin Port</option>
+                                                <t t-foreach="locations" t-as="location">
+                                                    <option t-att-value="location.id">
+                                                        <t t-esc="location.name"/> (<t t-esc="location.code"/>)
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- Destination Port -->
+                                        <div class="mb-3">
+                                            <label for="destination_port_id" class="form-label">Destination Port *</label>
+                                            <select name="destination_port_id" id="destination_port_id" class="form-select" required="required">
+                                                <option value="">Select Destination Port</option>
+                                                <t t-foreach="locations" t-as="location">
+                                                    <option t-att-value="location.id">
+                                                        <t t-esc="location.name"/> (<t t-esc="location.code"/>)
+                                                    </option>
+                                                </t>
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- Cargo Description -->
+                                        <div class="mb-3">
+                                            <label for="cargo_description" class="form-label">Cargo Description *</label>
+                                            <textarea name="cargo_description" id="cargo_description" class="form-control" rows="3" required="required" placeholder="Describe your cargo..."></textarea>
+                                        </div>
+                                        
+                                        <!-- Container Type (shown only for FCL) -->
+                                        <div class="mb-3" id="container_type_group">
+                                            <label for="container_type" class="form-label">Container Type</label>
+                                            <select name="container_type" id="container_type" class="form-select">
+                                                <option value="20gp">20' GP (General Purpose)</option>
+                                                <option value="40gp">40' GP (General Purpose)</option>
+                                                <option value="40hc">40' HC (High Cube)</option>
+                                                <option value="45hc">45' HC (High Cube)</option>
+                                                <option value="20rf">20' Reefer (Refrigerated)</option>
+                                                <option value="40rf">40' Reefer (Refrigerated)</option>
+                                                <option value="20ot">20' Open Top</option>
+                                                <option value="40ot">40' Open Top</option>
+                                                <option value="20fr">20' Flat Rack</option>
+                                                <option value="40fr">40' Flat Rack</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <!-- Container Quantity (shown only for FCL) -->
+                                        <div class="mb-3" id="container_qty_group">
+                                            <label for="container_qty" class="form-label">Container Quantity</label>
+                                            <input type="number" name="container_qty" id="container_qty" class="form-control" value="1" min="1"/>
+                                        </div>
+                                        
+                                        <!-- Weight and Volume -->
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                <label for="total_weight" class="form-label">Total Weight (KG)</label>
+                                                <input type="number" name="total_weight" id="total_weight" class="form-control" step="0.01" placeholder="0.00"/>
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <label for="total_volume" class="form-label">Total Volume (CBM)</label>
+                                                <input type="number" name="total_volume" id="total_volume" class="form-control" step="0.001" placeholder="0.000"/>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Special Requirements -->
+                                        <div class="mb-3">
+                                            <div class="form-check">
+                                                <input type="checkbox" name="is_dangerous_goods" id="is_dangerous_goods" class="form-check-input"/>
+                                                <label for="is_dangerous_goods" class="form-check-label">Dangerous Goods</label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input type="checkbox" name="is_temperature_controlled" id="is_temperature_controlled" class="form-check-input"/>
+                                                <label for="is_temperature_controlled" class="form-check-label">Temperature Controlled</label>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Special Instructions -->
+                                        <div class="mb-3">
+                                            <label for="special_instructions" class="form-label">Special Instructions</label>
+                                            <textarea name="special_instructions" id="special_instructions" class="form-control" rows="3" placeholder="Any special handling requirements..."></textarea>
+                                        </div>
+                                        
+                                        <!-- Submit Button -->
+                                        <div class="d-grid gap-2">
+                                            <button type="submit" class="btn btn-primary btn-lg">
+                                                <i class="fa fa-paper-plane me-2"/>Submit Quote Request
+                                            </button>
+                                            <a href="/my/quotations" class="btn btn-secondary">Cancel</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Help Sidebar -->
+                        <div class="col-lg-4">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h5 class="card-title"><i class="fa fa-info-circle me-2"/>Need Help?</h5>
+                                    <p class="card-text">Our team will review your request and send you a detailed quotation within 24 hours.</p>
+                                    <hr/>
+                                    <h6>What happens next?</h6>
+                                    <ol class="small">
+                                        <li>We review your request</li>
+                                        <li>We calculate the best rates</li>
+                                        <li>You receive a quotation</li>
+                                        <li>Accept and we arrange shipment</li>
+                                    </ol>
+                                    <hr/>
+                                    <p class="small mb-0">
+                                        <strong>Questions?</strong><br/>
+                                        Contact us at:<br/>
+                                        <i class="fa fa-phone me-1"/>+1-555-555-5555<br/>
+                                        <i class="fa fa-envelope me-1"/>info@yourcompany.com
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- JavaScript for dynamic form -->
+                <script type="text/javascript">
+                    document.addEventListener('DOMContentLoaded', function() {
+                        var serviceType = document.getElementById('service_type');
+                        var containerTypeGroup = document.getElementById('container_type_group');
+                        var containerQtyGroup = document.getElementById('container_qty_group');
+                        
+                        function toggleContainerFields() {
+                            if (serviceType.value === 'fcl') {
+                                containerTypeGroup.style.display = 'block';
+                                containerQtyGroup.style.display = 'block';
+                            } else {
+                                containerTypeGroup.style.display = 'none';
+                                containerQtyGroup.style.display = 'none';
+                            }
+                        }
+                        
+                        serviceType.addEventListener('change', toggleContainerFields);
+                        toggleContainerFields();
+                    });
+                </script>
+            </t>
+        </template>
+
+    </data>
+</odoo>
