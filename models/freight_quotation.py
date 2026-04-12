@@ -168,11 +168,16 @@ class FreightQuotation(models.Model):
     # State Management
     state = fields.Selection([
         ('draft', 'Draft'),
-        ('sent', 'Sent'),
-        ('approved', 'Approved'),
+        ('quoted', 'Quoted'),
+        ('accepted', 'Accepted'),
+        ('rejected', 'Rejected'),
         ('expired', 'Expired'),
         ('cancelled', 'Cancelled')
     ], string='Status', default='draft', required=True, tracking=True)
+    
+    # Customer Action Fields
+    customer_action_date = fields.Datetime(string='Customer Action Date', readonly=True, tracking=True)
+    rejection_reason = fields.Text(string='Rejection Reason', readonly=True)
     
     # Additional Info
     incoterm_id = fields.Many2one('account.incoterms', string='Incoterm')
@@ -307,13 +312,19 @@ class FreightQuotation(models.Model):
                 f'({self.minimum_profit_margin:.2f}%). Please adjust pricing or get manager approval.'
             )
         
-        self.state = 'sent'
+        self.state = 'quoted'
         self._send_quotation_email()
         return True
     
     def _send_quotation_email(self):
         """Send quotation email to customer with portal access"""
         self.ensure_one()
+        
+        # Check notification preferences
+        preference = self.env['freight.notification.preference'].sudo().get_or_create_preference(self.partner_id.id)
+        if not preference.should_notify('quotation_sent'):
+            return False
+        
         template = self.env.ref('freight_management.email_template_quotation', raise_if_not_found=False)
         if template:
             template.send_mail(self.id, force_send=True)
@@ -322,15 +333,98 @@ class FreightQuotation(models.Model):
     def action_confirm(self):
         """Confirm quotation from portal"""
         self.ensure_one()
-        if self.state != 'sent':
-            raise ValidationError('Only sent quotations can be confirmed.')
-        self.state = 'approved'
+        if self.state != 'quoted':
+            raise ValidationError('Only quoted quotations can be confirmed.')
+        self.state = 'accepted'
         self._send_confirmation_email()
+        return True
+    
+    def action_customer_accept(self):
+        """Customer accepts quotation via portal"""
+        self.ensure_one()
+        
+        if self.state != 'quoted':
+            raise ValidationError('Only quoted quotations can be accepted.')
+        
+        # Check if user is authorized
+        if not self.env.user.partner_id or self.env.user.partner_id.commercial_partner_id != self.partner_id.commercial_partner_id:
+            raise AccessError('You are not authorized to accept this quotation.')
+        
+        self.write({
+            'state': 'accepted',
+            'customer_action_date': fields.Datetime.now()
+        })
+        
+        # Log activity
+        self.message_post(
+            body=f"Quotation accepted by {self.env.user.partner_id.name} via customer portal.",
+            message_type='notification',
+            subtype_xmlid='mail.mt_note'
+        )
+        
+        # Send notification to sales team
+        self._send_acceptance_notification()
+        
+        return True
+    
+    def action_customer_reject(self, reason=None):
+        """Customer rejects quotation via portal"""
+        self.ensure_one()
+        
+        if self.state != 'quoted':
+            raise ValidationError('Only quoted quotations can be rejected.')
+        
+        # Check if user is authorized
+        if not self.env.user.partner_id or self.env.user.partner_id.commercial_partner_id != self.partner_id.commercial_partner_id:
+            raise AccessError('You are not authorized to reject this quotation.')
+        
+        self.write({
+            'state': 'rejected',
+            'customer_action_date': fields.Datetime.now(),
+            'rejection_reason': reason or ''
+        })
+        
+        # Log activity
+        rejection_msg = f"Quotation rejected by {self.env.user.partner_id.name} via customer portal."
+        if reason:
+            rejection_msg += f"\n\nReason: {reason}"
+        
+        self.message_post(
+            body=rejection_msg,
+            message_type='notification',
+            subtype_xmlid='mail.mt_note'
+        )
+        
+        # Send notification to sales team
+        self._send_rejection_notification(reason)
+        
+        return True
+    
+    def _send_acceptance_notification(self):
+        """Send email notification to sales team when customer accepts"""
+        self.ensure_one()
+        
+        template = self.env.ref('freight_management.email_template_quotation_accepted', raise_if_not_found=False)
+        if template:
+            template.send_mail(self.id, force_send=True)
+        return True
+    
+    def _send_rejection_notification(self, reason=None):
+        """Send email notification to sales team when customer rejects"""
+        self.ensure_one()
+        
+        template = self.env.ref('freight_management.email_template_quotation_rejected', raise_if_not_found=False)
+        if template:
+            # Add reason to context for email template
+            ctx = dict(self.env.context, rejection_reason=reason or 'No reason provided')
+            template.with_context(ctx).send_mail(self.id, force_send=True)
         return True
     
     def _send_confirmation_email(self):
         """Send confirmation email to sales team"""
         self.ensure_one()
+        
+        # Always send to sales team (internal notification)
         template = self.env.ref('freight_management.email_template_quotation_confirmed', raise_if_not_found=False)
         if template:
             template.send_mail(self.id, force_send=True)
@@ -367,7 +461,7 @@ class FreightQuotation(models.Model):
                     f'This Quote: {self.total_amount:.2f}'
                 )
         
-        self.state = 'approved'
+        self.state = 'accepted'
         return True
     
     def action_cancel(self):
@@ -412,8 +506,8 @@ class FreightQuotation(models.Model):
         """Create booking from approved quotation"""
         self.ensure_one()
         
-        if self.state != 'approved':
-            raise ValidationError('Only approved quotations can be converted to bookings.')
+        if self.state != 'accepted':
+            raise ValidationError('Only accepted quotations can be converted to bookings.')
         
         # Check if booking already exists
         existing_booking = self.env['freight.booking'].search([
@@ -453,7 +547,7 @@ class FreightQuotation(models.Model):
         """Scheduled action to mark expired quotations"""
         today = fields.Date.today()
         expired_quotations = self.search([
-            ('state', 'in', ['draft', 'sent']),
+            ('state', 'in', ['draft', 'quoted']),
             ('validity_date', '<', today)
         ])
         
@@ -470,14 +564,14 @@ class FreightQuotation(models.Model):
     def get_dashboard_data(self):
         """Get dashboard statistics for quotations"""
         draft_count = self.search_count([('state', '=', 'draft')])
-        sent_count = self.search_count([('state', '=', 'sent')])
-        approved_count = self.search_count([('state', '=', 'approved')])
+        quoted_count = self.search_count([('state', '=', 'quoted')])
+        accepted_count = self.search_count([('state', '=', 'accepted')])
         
-        total_amount = sum(self.search([('state', '=', 'approved')]).mapped('total_amount'))
+        total_amount = sum(self.search([('state', '=', 'accepted')]).mapped('total_amount'))
         
         return {
             'draft': draft_count,
-            'sent': sent_count,
-            'approved': approved_count,
+            'quoted': quoted_count,
+            'accepted': accepted_count,
             'total_amount': total_amount,
         }

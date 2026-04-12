@@ -80,6 +80,137 @@
         </field>
     </record>
 
+    <!-- Email Template: Quotation Accepted by Customer -->
+    <record id="email_template_quotation_accepted" model="mail.template">
+        <field name="name">Freight Quotation - Accepted by Customer</field>
+        <field name="model_id" ref="model_freight_quotation"/>
+        <field name="subject">✅ Quotation ${object.name} Accepted by Customer</field>
+        <field name="email_from">${user.email_formatted | safe}</field>
+        <field name="email_to">${object.user_id.email | safe}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+                <div style="background: linear-gradient(135deg, #10B981 0%, #059669 100%); padding: 30px; text-align: center;">
+                    <h1 style="color: #ffffff; margin: 0; font-size: 28px;">✅ Quotation Accepted!</h1>
+                    <p style="color: #ffffff; margin: 10px 0 0 0; opacity: 0.9;">${object.name}</p>
+                </div>
+                <div style="padding: 30px; background: #ffffff;">
+                    <p style="font-size: 16px; color: #212121; margin-bottom: 20px;">
+                        Great news! The customer has accepted the quotation.
+                    </p>
+                    <div style="background: #f0fdf4; border-left: 4px solid #10B981; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                        <h3 style="margin: 0 0 15px 0; color: #212121; font-size: 18px;">Customer Information</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 8px 0; color: #616161; font-size: 14px;">Customer:</td>
+                                <td style="padding: 8px 0; color: #212121; font-weight: 600; text-align: right;">${object.partner_id.name}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #616161; font-size: 14px;">Route:</td>
+                                <td style="padding: 8px 0; color: #212121; font-weight: 600; text-align: right;">${object.origin_port_id.code} → ${object.destination_port_id.code}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #616161; font-size: 14px;">Accepted On:</td>
+                                <td style="padding: 8px 0; color: #212121; font-weight: 600; text-align: right;">${format_datetime(object.customer_action_date)}</td>
+                            </tr>
+                            <tr style="border-top: 2px solid #d1fae5;">
+                                <td style="padding: 12px 0 0 0; color: #212121; font-size: 16px; font-weight: 700;">Total Amount:</td>
+                                <td style="padding: 12px 0 0 0; color: #10B981; font-weight: 700; font-size: 20px; text-align: right;">${format_amount(object.total_amount, object.currency_id)}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <p style="font-size: 16px; color: #424242; line-height: 1.6; margin: 20px 0;">
+                        <strong>Next Steps:</strong><br/>
+                        1. Create a booking for this quotation<br/>
+                        2. Coordinate with operations team<br/>
+                        3. Send booking confirmation to customer
+                    </p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="/web#id=${object.id}&amp;model=freight.quotation&amp;view_type=form" 
+                           style="display: inline-block; padding: 15px 40px; background: #10B981; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px;">
+                            View Quotation
+                        </a>
+                    </div>
+                </div>
+                <div style="background: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+                    <p style="margin: 0; color: #757575; font-size: 12px;">
+                        This is an automated notification from ${object.company_id.name}
+                    </p>
+                </div>
+            </div>
+        </field>
+    </record>
+
+    <!-- Email Template: Quotation Rejected by Customer -->
+    <record id="email_template_quotation_rejected" model="mail.template">
+        <field name="name">Freight Quotation - Rejected by Customer</field>
+        <field name="model_id" ref="model_freight_quotation"/>
+        <field name="subject">❌ Quotation ${object.name} Rejected by Customer</field>
+        <field name="email_from">${user.email_formatted | safe}</field>
+        <field name="email_to">${object.user_id.email | safe}</field>
+        <field name="body_html" type="html">
+            <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff;">
+                <div style="background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); padding: 30px; text-align: center;">
+                    <h1 style="color: #ffffff; margin: 0; font-size: 28px;">❌ Quotation Rejected</h1>
+                    <p style="color: #ffffff; margin: 10px 0 0 0; opacity: 0.9;">${object.name}</p>
+                </div>
+                <div style="padding: 30px; background: #ffffff;">
+                    <p style="font-size: 16px; color: #212121; margin-bottom: 20px;">
+                        The customer has rejected the quotation.
+                    </p>
+                    <div style="background: #fef2f2; border-left: 4px solid #EF4444; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                        <h3 style="margin: 0 0 15px 0; color: #212121; font-size: 18px;">Rejection Details</h3>
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="padding: 8px 0; color: #616161; font-size: 14px;">Customer:</td>
+                                <td style="padding: 8px 0; color: #212121; font-weight: 600; text-align: right;">${object.partner_id.name}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #616161; font-size: 14px;">Route:</td>
+                                <td style="padding: 8px 0; color: #212121; font-weight: 600; text-align: right;">${object.origin_port_id.code} → ${object.destination_port_id.code}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #616161; font-size: 14px;">Rejected On:</td>
+                                <td style="padding: 8px 0; color: #212121; font-weight: 600; text-align: right;">${format_datetime(object.customer_action_date)}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px 0; color: #616161; font-size: 14px;">Amount:</td>
+                                <td style="padding: 8px 0; color: #212121; font-weight: 600; text-align: right;">${format_amount(object.total_amount, object.currency_id)}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    % if object.rejection_reason:
+                    <div style="background: #fff7ed; border: 2px solid #f59e0b; padding: 20px; margin: 20px 0; border-radius: 8px;">
+                        <h4 style="margin: 0 0 10px 0; color: #212121; font-size: 16px;">
+                            <span style="color: #f59e0b;">💬</span> Customer Feedback:
+                        </h4>
+                        <p style="margin: 0; color: #424242; font-size: 14px; line-height: 1.6; font-style: italic;">
+                            "${object.rejection_reason}"
+                        </p>
+                    </div>
+                    % endif
+                    <p style="font-size: 16px; color: #424242; line-height: 1.6; margin: 20px 0;">
+                        <strong>Recommended Actions:</strong><br/>
+                        1. Review the rejection reason<br/>
+                        2. Contact the customer to understand their concerns<br/>
+                        3. Consider revising the quotation if appropriate<br/>
+                        4. Update your pricing strategy if needed
+                    </p>
+                    <div style="text-align: center; margin: 30px 0;">
+                        <a href="/web#id=${object.id}&amp;model=freight.quotation&amp;view_type=form" 
+                           style="display: inline-block; padding: 15px 40px; background: #EF4444; color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; text-transform: uppercase; letter-spacing: 0.5px;">
+                            View Quotation
+                        </a>
+                    </div>
+                </div>
+                <div style="background: #f5f5f5; padding: 20px; text-align: center; border-top: 1px solid #e0e0e0;">
+                    <p style="margin: 0; color: #757575; font-size: 12px;">
+                        This is an automated notification from ${object.company_id.name}
+                    </p>
+                </div>
+            </div>
+        </field>
+    </record>
+
     <!-- Booking Confirmed Email Template -->
     <record id="email_template_booking_confirmed" model="mail.template">
         <field name="name">Freight Booking Confirmed</field>

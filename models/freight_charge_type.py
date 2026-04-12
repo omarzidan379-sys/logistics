@@ -21,6 +21,14 @@ class FreightChargeType(models.Model):
     description = fields.Text(string='Description', translate=True)
     active = fields.Boolean(string='Active', default=True)
     
+    # Default pricing for auto-population
+    default_price = fields.Monetary(string='Default Price', currency_field='currency_id',
+                                     help='Default selling price for this charge type')
+    default_cost = fields.Monetary(string='Default Cost', currency_field='currency_id',
+                                    help='Default cost for this charge type')
+    currency_id = fields.Many2one('res.currency', string='Currency', required=True,
+                                   default=lambda self: self.env.company.currency_id)
+    
     _sql_constraints = [
         ('code_unique', 'unique(code)', 'Charge code must be unique!')
     ]

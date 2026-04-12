@@ -34,3 +34,26 @@ class FreightShipmentDocument(models.Model):
         if self.document_type:
             type_names = dict(self._fields['document_type'].selection)
             self.name = type_names.get(self.document_type, '')
+    
+    @api.model
+    def create(self, vals):
+        """Override create to send notification when document is uploaded"""
+        document = super(FreightShipmentDocument, self).create(vals)
+        
+        # Send notification to customer
+        if document.shipment_id and document.shipment_id.partner_id:
+            preference = self.env['freight.notification.preference'].sudo().get_or_create_preference(
+                document.shipment_id.partner_id.id
+            )
+            
+            if preference.should_notify('document_uploaded'):
+                # Post message to shipment
+                document.shipment_id.message_post(
+                    body=f"New document uploaded: {document.name}",
+                    subject="New Document Available",
+                    partner_ids=[document.shipment_id.partner_id.id],
+                    message_type='notification',
+                    subtype_xmlid='mail.mt_comment'
+                )
+        
+        return document

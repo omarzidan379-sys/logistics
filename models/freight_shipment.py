@@ -318,6 +318,8 @@ class FreightShipment(models.Model):
             if all(leg.state != 'draft' for leg in self.leg_ids):
                 self.state = 'booked'
         
+        # Send notification
+        self._send_status_update_notification('shipment_booked')
         return True
     
     def action_start_operation(self):
@@ -346,6 +348,8 @@ class FreightShipment(models.Model):
             if first_leg.state in ['booked', 'ready', 'loaded']:
                 first_leg.action_depart()
         
+        # Send notification
+        self._send_status_update_notification('shipment_departed')
         return True
     
     def action_arrived(self):
@@ -354,6 +358,8 @@ class FreightShipment(models.Model):
             'state': 'arrived',
             'arrival_date': fields.Date.today()
         })
+        # Send notification
+        self._send_status_update_notification('shipment_arrived')
         return True
     
     def action_customs_clearance(self):
@@ -436,14 +442,39 @@ class FreightShipment(models.Model):
     def _send_delivery_notification(self):
         """Send delivery notification to customer"""
         self.ensure_one()
+        
+        # Check notification preferences
+        preference = self.env['freight.notification.preference'].sudo().get_or_create_preference(self.partner_id.id)
+        if not preference.should_notify('shipment_delivered'):
+            return False
+        
         template = self.env.ref('freight_management.email_template_shipment_delivered', raise_if_not_found=False)
         if template:
             template.send_mail(self.id, force_send=True)
         return True
     
-    def _send_status_update_notification(self):
+    def _send_status_update_notification(self, notification_type='shipment_in_transit'):
         """Send status update notification to customer"""
         self.ensure_one()
+        
+        # Check notification preferences based on state
+        preference = self.env['freight.notification.preference'].sudo().get_or_create_preference(self.partner_id.id)
+        
+        # Map state to notification type
+        state_notification_map = {
+            'draft': 'shipment_booked',
+            'confirmed': 'shipment_booked',
+            'in_transit': 'shipment_in_transit',
+            'departed': 'shipment_departed',
+            'arrived': 'shipment_arrived',
+            'delivered': 'shipment_delivered',
+        }
+        
+        notification_type = state_notification_map.get(self.state, notification_type)
+        
+        if not preference.should_notify(notification_type):
+            return False
+        
         template = self.env.ref('freight_management.email_template_shipment_status_update', raise_if_not_found=False)
         if template:
             template.send_mail(self.id, force_send=True)

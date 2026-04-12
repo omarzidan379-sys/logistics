@@ -123,6 +123,12 @@ class FreightBooking(models.Model):
     def _send_confirmation_email(self):
         """Send booking confirmation email to customer"""
         self.ensure_one()
+        
+        # Check notification preferences
+        preference = self.env['freight.notification.preference'].sudo().get_or_create_preference(self.partner_id.id)
+        if not preference.should_notify('booking_confirmed'):
+            return False
+        
         template = self.env.ref('freight_management.email_template_booking_confirmed', raise_if_not_found=False)
         if template:
             template.send_mail(self.id, force_send=True)

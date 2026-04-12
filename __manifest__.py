@@ -46,6 +46,10 @@
         'data/freight_booking_sequence.xml',
         'data/freight_shipment_sequence.xml',
         'data/freight_demo_data.xml',
+        'data/freight_realistic_demo_data.xml',
+        'data/freight_realistic_shipments_data.xml',
+        'data/freight_complete_shipments.xml',
+        'data/freight_portal_users_data.xml',
         'data/email_templates.xml',
         'data/freight_cron.xml',
         
@@ -77,6 +81,8 @@
         'views/freight_dashboard_views.xml',
         
         # Portal
+        'views/portal_templates_clean.xml',
+        'views/portal_quotation_detail_enhanced.xml',
         'views/portal_menu.xml',
     ],
     'assets': {
@@ -97,6 +103,7 @@
         'web.assets_frontend': [
             'freight_management/static/src/css/freight_management.css',
             'freight_management/static/src/css/portal_freight.css',
+            'freight_management/static/src/css/portal_quotation_enhanced.css',
             'freight_management/static/src/js/portal_tracking.js',
             'freight_management/static/src/js/portal_quote.js',
             'freight_management/static/src/js/portal_dashboard.js',
