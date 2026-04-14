@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- 
+            PARENT MENUS ONLY - Load FIRST
+            These are referenced by menuitems in other files
+        -->
+        
+        <!-- Main Freight Menu -->
+        <menuitem id="menu_freight_root"
+                  name="Freight"
+                  sequence="10"/>
+
+        <!-- Pricing Menu (Parent only, no action) -->
+        <menuitem id="menu_freight_pricing"
+                  name="Pricing"
+                  parent="menu_freight_root"
+                  sequence="20"/>
+
+        <!-- Operations Menu (Parent only, no action) -->
+        <menuitem id="menu_freight_operations"
+                  name="Operations"
+                  parent="menu_freight_root"
+                  sequence="30"/>
+
+        <!-- Configuration Menu (Parent only, no action) -->
+        <menuitem id="menu_freight_configuration"
+                  name="Configuration"
+                  parent="menu_freight_root"
+                  sequence="100"/>
+    </data>
+</odoo>

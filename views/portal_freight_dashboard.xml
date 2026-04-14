@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Freight Portal Dashboard -->
+        <template id="portal_freight_dashboard" name="Freight Dashboard" website="True">
+            <t t-call="portal.portal_layout">
+                <div class="container-fluid freight-dashboard">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h2>Freight Management Dashboard</h2>
+                            <p class="text-muted">Real-time freight monitoring</p>
+                        </div>
+                    </div>
+
+                    <!-- Statistics Cards -->
+                    <div class="row mb-4">
+                        <div class="col-md-3">
+                            <div class="card stat-card bg-primary text-white">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h3 class="mb-0"><t t-esc="stats['active_shipments']"/></h3>
+                                            <p class="mb-0">Active Shipments</p>
+                                        </div>
+                                        <i class="fa fa-ship fa-3x opacity-50"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card bg-info text-white">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h3 class="mb-0"><t t-esc="stats['in_transit']"/></h3>
+                                            <p class="mb-0">In Transit</p>
+                                        </div>
+                                        <i class="fa fa-truck fa-3x opacity-50"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card bg-success text-white">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h3 class="mb-0"><t t-esc="stats['delivered']"/></h3>
+                                            <p class="mb-0">Delivered Today</p>
+                                        </div>
+                                        <i class="fa fa-check-circle fa-3x opacity-50"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="card stat-card bg-warning text-white">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h3 class="mb-0"><t t-esc="stats['pending_quotes']"/></h3>
+                                            <p class="mb-0">Pending Quotes</p>
+                                        </div>
+                                        <i class="fa fa-file-text fa-3x opacity-50"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Shipments -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Recent Shipments</h5>
+                                    <a href="/my/shipments" class="btn btn-sm btn-primary">View All</a>
+                                </div>
+                                <div class="card-body">
+                                    <t t-if="not recent_shipments">
+                                        <div class="alert alert-info">No recent shipments</div>
+                                    </t>
+                                    <t t-if="recent_shipments">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Reference</th>
+                                                        <th>Date</th>
+                                                        <th>Origin</th>
+                                                        <th>Destination</th>
+                                                        <th>Status</th>
+                                                        <th>Progress</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="recent_shipments" t-as="shipment">
+                                                        <tr>
+                                                            <td>
+                                                                <a t-att-href="'/my/shipments/%s' % shipment.id">
+                                                                    <strong><t t-esc="shipment.name"/></strong>
+                                                                </a>
+                                                            </td>
+                                                            <td><t t-esc="shipment.shipment_date"/></td>
+                                                            <td><t t-esc="shipment.origin_location_id.name"/></td>
+                                                            <td><t t-esc="shipment.destination_location_id.name"/></td>
+                                                            <td>
+                                                                <span t-if="shipment.state == 'draft'" class="badge bg-secondary">Draft</span>
+                                                                <span t-if="shipment.state == 'confirmed'" class="badge bg-info">Confirmed</span>
+                                                                <span t-if="shipment.state == 'in_transit'" class="badge bg-primary">In Transit</span>
+                                                                <span t-if="shipment.state == 'delivered'" class="badge bg-success">Delivered</span>
+                                                            </td>
+                                                            <td>
+                                                                <div class="progress" style="height: 20px;">
+                                                                    <t t-set="progress" t-value="25 if shipment.state == 'confirmed' else (50 if shipment.state == 'in_transit' else (100 if shipment.state == 'delivered' else 0))"/>
+                                                                    <div class="progress-bar" role="progressbar" t-att-style="'width: %s%%' % progress" t-att-aria-valuenow="progress" aria-valuemin="0" aria-valuemax="100">
+                                                                        <t t-esc="progress"/>%
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Quotations -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Recent Quotations</h5>
+                                    <a href="/my/quotations" class="btn btn-sm btn-primary">View All</a>
+                                </div>
+                                <div class="card-body">
+                                    <t t-if="not recent_quotations">
+                                        <div class="alert alert-info">No recent quotations</div>
+                                    </t>
+                                    <t t-if="recent_quotations">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Reference</th>
+                                                        <th>Date</th>
+                                                        <th>Route</th>
+                                                        <th>Valid Until</th>
+                                                        <th>Amount</th>
+                                                        <th>Status</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <t t-foreach="recent_quotations" t-as="quotation">
+                                                        <tr>
+                                                            <td>
+                                                                <a t-att-href="'/my/quotations/%s' % quotation.id">
+                                                                    <strong><t t-esc="quotation.name"/></strong>
+                                                                </a>
+                                                            </td>
+                                                            <td><t t-esc="quotation.quotation_date"/></td>
+                                                            <td>
+                                                                <small>
+                                                                    <t t-esc="quotation.origin_port_id.name"/> → 
+                                                                    <t t-esc="quotation.destination_port_id.name"/>
+                                                                </small>
+                                                            </td>
+                                                            <td><t t-esc="quotation.validity_date"/></td>
+                                                            <td><t t-esc="quotation.total_amount" t-options="{'widget': 'monetary', 'display_currency': quotation.currency_id}"/></td>
+                                                            <td>
+                                                                <span t-if="quotation.state == 'draft'" class="badge bg-secondary">Draft</span>
+                                                                <span t-if="quotation.state == 'quoted'" class="badge bg-info">Quoted</span>
+                                                                <span t-if="quotation.state == 'accepted'" class="badge bg-success">Accepted</span>
+                                                                <span t-if="quotation.state == 'rejected'" class="badge bg-danger">Rejected</span>
+                                                            </td>
+                                                            <td>
+                                                                <t t-if="quotation.state == 'quoted'">
+                                                                    <a t-att-href="'/my/quotations/%s' % quotation.id" class="btn btn-sm btn-success">Review</a>
+                                                                </t>
+                                                            </td>
+                                                        </tr>
+                                                    </t>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <i class="fa fa-calculator fa-3x text-primary mb-3"/>
+                                    <h5>Request Quote</h5>
+                                    <p class="text-muted">Get competitive rates for your shipping needs</p>
+                                    <a href="/freight/quote" class="btn btn-primary">Request Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <i class="fa fa-search fa-3x text-info mb-3"/>
+                                    <h5>Track Shipment</h5>
+                                    <p class="text-muted">Get real-time updates on your shipments</p>
+                                    <a href="/freight/track" class="btn btn-info">Track Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <i class="fa fa-file-text fa-3x text-success mb-3"/>
+                                    <h5>Documents</h5>
+                                    <p class="text-muted">Access your shipping documents</p>
+                                    <a href="/my/shipments" class="btn btn-success">View Documents</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>
