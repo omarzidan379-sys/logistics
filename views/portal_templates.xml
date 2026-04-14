@@ -332,97 +332,195 @@
     </template>
 
     <!-- Quotation Detail -->
-    <template id="portal_my_quotation_detail" name="Quotation Detail">
+    <template id="portal_my_quotation_detail" name="Quotation Detail" website="True">
         <t t-call="portal.portal_layout">
             <div class="container">
                 <t t-if="request.params.get('message') == 'accepted'">
                     <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        Quotation accepted successfully! We will contact you shortly.
+                        <i class="fa fa-check-circle me-2"></i>
+                        <strong>Success!</strong> Quotation accepted successfully! We will contact you shortly to proceed with the booking.
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 </t>
                 <t t-if="request.params.get('message') == 'rejected'">
                     <div class="alert alert-info alert-dismissible fade show" role="alert">
-                        Quotation rejected. Thank you for your feedback.
+                        <i class="fa fa-info-circle me-2"></i>
+                        Quotation rejected. Thank you for your feedback. We'll review your comments and may reach out with an updated offer.
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 </t>
+                
+                <!-- Status Badge -->
+                <div class="mb-3">
+                    <span t-if="quotation.state == 'draft'" class="badge badge-draft">
+                        <i class="fa fa-file-o"></i> Draft
+                    </span>
+                    <span t-if="quotation.state == 'quoted'" class="badge badge-info">
+                        <i class="fa fa-paper-plane"></i> Quoted - Awaiting Your Response
+                    </span>
+                    <span t-if="quotation.state == 'accepted'" class="badge badge-success">
+                        <i class="fa fa-check-circle"></i> Accepted
+                    </span>
+                    <span t-if="quotation.state == 'rejected'" class="badge badge-danger">
+                        <i class="fa fa-times-circle"></i> Rejected
+                    </span>
+                    <span t-if="quotation.state == 'expired'" class="badge badge-expired">
+                        <i class="fa fa-clock-o"></i> Expired
+                    </span>
+                    <span t-if="quotation.state == 'cancelled'" class="badge badge-secondary">
+                        <i class="fa fa-ban"></i> Cancelled
+                    </span>
+                </div>
+                
                 <div class="card">
                     <div class="card-header">
-                        <div class="row">
-                            <div class="col-8">
-                                <h4><span t-field="quotation.name"/></h4>
+                        <div class="row align-items-center">
+                            <div class="col-md-6">
+                                <h4 class="mb-0">
+                                    <i class="fa fa-file-text-o me-2"></i>
+                                    <span t-field="quotation.name"/>
+                                </h4>
                             </div>
-                            <div class="col-4 text-end">
-                                <t t-if="quotation.state == 'sent'">
-                                    <a t-att-href="'/my/quotations/%s/accept' % quotation.id" class="btn btn-success me-2">Accept</a>
-                                    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal">Reject</button>
+                            <div class="col-md-6 text-end">
+                                <!-- Action Buttons for Quoted State -->
+                                <t t-if="quotation.state == 'quoted'">
+                                    <a t-att-href="'/my/quotations/%s/accept' % quotation.id" 
+                                       class="btn btn-success me-2"
+                                       onclick="return confirm('Are you sure you want to accept this quotation? This action will notify our team to proceed with your booking.');">
+                                        <i class="fa fa-check"></i> Accept Quotation
+                                    </a>
+                                    <button type="button" class="btn btn-danger me-2" data-bs-toggle="modal" data-bs-target="#rejectModal">
+                                        <i class="fa fa-times"></i> Reject
+                                    </button>
                                 </t>
+                                
+                                <!-- Download Button (always available) -->
                                 <a t-att-href="'/my/quotations/%s/download' % quotation.id" class="btn btn-primary">
-                                    <i class="fa fa-download"/> Download PDF
+                                    <i class="fa fa-download"></i> Download PDF
                                 </a>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
+                        <!-- Customer Action Info -->
+                        <t t-if="quotation.state in ['accepted', 'rejected'] and quotation.customer_action_date">
+                            <div class="alert" t-attf-class="alert-#{{'success' if quotation.state == 'accepted' else 'danger'}}">
+                                <strong>
+                                    <t t-if="quotation.state == 'accepted'">Accepted</t>
+                                    <t t-if="quotation.state == 'rejected'">Rejected</t>
+                                </strong> on <span t-field="quotation.customer_action_date"/>
+                                <t t-if="quotation.state == 'rejected' and quotation.rejection_reason">
+                                    <br/><strong>Reason:</strong> <span t-field="quotation.rejection_reason"/>
+                                </t>
+                            </div>
+                        </t>
+                        
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <strong>Quotation Date:</strong> <span t-field="quotation.quotation_date"/>
+                                <strong><i class="fa fa-calendar me-2"></i>Quotation Date:</strong> 
+                                <span t-field="quotation.quotation_date"/>
                             </div>
                             <div class="col-md-6">
-                                <strong>Valid Until:</strong> <span t-field="quotation.validity_date"/>
+                                <strong><i class="fa fa-clock-o me-2"></i>Valid Until:</strong> 
+                                <span t-field="quotation.validity_date"/>
+                                <t t-if="quotation.validity_date and quotation.validity_date &lt; datetime.date.today()">
+                                    <span class="badge badge-warning ms-2">Expired</span>
+                                </t>
                             </div>
                         </div>
 
                         <div class="row mb-4">
                             <div class="col-md-6">
-                                <h5>Origin</h5>
-                                <p><span t-field="quotation.origin_location_id.name"/></p>
+                                <h5><i class="fa fa-map-marker me-2"></i>Origin</h5>
+                                <p><span t-field="quotation.origin_port_id.name"/></p>
+                                <t t-if="quotation.origin_address">
+                                    <small class="text-muted"><span t-field="quotation.origin_address"/></small>
+                                </t>
                             </div>
                             <div class="col-md-6">
-                                <h5>Destination</h5>
-                                <p><span t-field="quotation.destination_location_id.name"/></p>
+                                <h5><i class="fa fa-map-marker me-2"></i>Destination</h5>
+                                <p><span t-field="quotation.destination_port_id.name"/></p>
+                                <t t-if="quotation.destination_address">
+                                    <small class="text-muted"><span t-field="quotation.destination_address"/></small>
+                                </t>
                             </div>
                         </div>
 
-                        <div class="row mb-4" t-if="quotation.quotation_line_ids">
+                        <!-- Cargo Details -->
+                        <div class="row mb-4">
                             <div class="col-12">
-                                <h5>Quotation Lines</h5>
-                                <table class="table table-sm">
-                                    <thead>
-                                        <tr>
-                                            <th>Description</th>
-                                            <th>Charge Type</th>
-                                            <th class="text-end">Unit Price</th>
-                                            <th class="text-end">Quantity</th>
-                                            <th class="text-end">Subtotal</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <t t-foreach="quotation.quotation_line_ids" t-as="line">
+                                <h5><i class="fa fa-cube me-2"></i>Cargo Details</h5>
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <strong>Service Type:</strong><br/>
+                                        <span t-field="quotation.service_type"/>
+                                    </div>
+                                    <div class="col-md-3" t-if="quotation.container_type">
+                                        <strong>Container:</strong><br/>
+                                        <span t-field="quotation.container_type"/> × <span t-field="quotation.container_qty"/>
+                                    </div>
+                                    <div class="col-md-3" t-if="quotation.total_weight">
+                                        <strong>Weight:</strong><br/>
+                                        <span t-field="quotation.total_weight"/> KG
+                                    </div>
+                                    <div class="col-md-3" t-if="quotation.total_volume">
+                                        <strong>Volume:</strong><br/>
+                                        <span t-field="quotation.total_volume"/> CBM
+                                    </div>
+                                </div>
+                                <t t-if="quotation.cargo_description">
+                                    <div class="mt-2">
+                                        <strong>Description:</strong><br/>
+                                        <span t-field="quotation.cargo_description"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+
+                        <!-- Quotation Lines -->
+                        <div class="row mb-4" t-if="quotation.line_ids">
+                            <div class="col-12">
+                                <h5><i class="fa fa-list me-2"></i>Pricing Details</h5>
+                                <div class="table-responsive">
+                                    <table class="table table-sm">
+                                        <thead>
                                             <tr>
-                                                <td><span t-field="line.description"/></td>
-                                                <td><span t-field="line.charge_type_id.name"/></td>
-                                                <td class="text-end"><span t-field="line.unit_price"/></td>
-                                                <td class="text-end"><span t-field="line.quantity"/></td>
-                                                <td class="text-end"><span t-field="line.subtotal"/></td>
+                                                <th>Description</th>
+                                                <th>Charge Type</th>
+                                                <th class="text-end">Unit Price</th>
+                                                <th class="text-end">Quantity</th>
+                                                <th class="text-end">Subtotal</th>
                                             </tr>
-                                        </t>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <td colspan="4" class="text-end"><strong>Total:</strong></td>
-                                            <td class="text-end"><strong><span t-field="quotation.total_amount"/></strong></td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            <t t-foreach="quotation.line_ids" t-as="line">
+                                                <tr>
+                                                    <td><span t-field="line.description"/></td>
+                                                    <td><span t-field="line.charge_type_id.name"/></td>
+                                                    <td class="text-end"><span t-field="line.unit_price"/></td>
+                                                    <td class="text-end"><span t-field="line.quantity"/></td>
+                                                    <td class="text-end"><span t-field="line.subtotal"/></td>
+                                                </tr>
+                                            </t>
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                                                <td class="text-end"><strong><span t-field="quotation.total_amount"/></strong></td>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="row">
+                        <!-- Notes -->
+                        <div class="row" t-if="quotation.notes">
                             <div class="col-12">
-                                <strong>Notes:</strong>
-                                <p><span t-field="quotation.notes"/></p>
+                                <h5><i class="fa fa-info-circle me-2"></i>Terms and Conditions</h5>
+                                <div class="alert alert-info">
+                                    <span t-field="quotation.notes"/>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -433,19 +531,30 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Reject Quotation</h5>
+                                <h5 class="modal-title">
+                                    <i class="fa fa-times-circle me-2"></i>Reject Quotation
+                                </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                             </div>
                             <form method="get" t-att-action="'/my/quotations/%s/reject' % quotation.id">
                                 <div class="modal-body">
+                                    <p>We're sorry to see you reject this quotation. Your feedback helps us improve our service.</p>
                                     <div class="mb-3">
                                         <label for="reason" class="form-label">Reason for rejection (optional)</label>
-                                        <textarea class="form-control" id="reason" name="reason" rows="3"></textarea>
+                                        <textarea class="form-control" id="reason" name="reason" rows="4" 
+                                                  placeholder="Please let us know why you're rejecting this quotation..."></textarea>
+                                        <small class="form-text text-muted">
+                                            This information will help us provide better quotes in the future.
+                                        </small>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-danger">Confirm Rejection</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        <i class="fa fa-arrow-left"></i> Cancel
+                                    </button>
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="fa fa-times"></i> Confirm Rejection
+                                    </button>
                                 </div>
                             </form>
                         </div>

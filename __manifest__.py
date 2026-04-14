@@ -101,9 +101,8 @@
             'freight_management/static/src/xml/freight_dashboard_enhanced.xml',
         ],
         'web.assets_frontend': [
-            'freight_management/static/src/css/freight_management.css',
-            'freight_management/static/src/css/portal_freight.css',
-            'freight_management/static/src/css/portal_quotation_enhanced.css',
+            'freight_management/static/src/css/portal_unified.css',
+            'freight_management/static/src/css/portal_dashboard_premium.css',
             'freight_management/static/src/js/portal_tracking.js',
             'freight_management/static/src/js/portal_quote.js',
             'freight_management/static/src/js/portal_dashboard.js',

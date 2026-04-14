@@ -1,71 +1,258 @@
+/* =====================================================
+   FREIGHT DASHBOARD - COLORFUL & ANIMATED
+   Eye-catching, Modern, Vibrant Design
+   ===================================================== */
+
 .o_freight_dashboard {
     padding: 20px;
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+    background-size: 400% 400%;
+    animation: gradientShift 15s ease infinite;
     min-height: 100vh;
+    position: relative;
 }
 
+/* Animated gradient background */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Floating particles effect */
+.o_freight_dashboard::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: 
+        radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%);
+    animation: float 20s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+}
+
+/* Dashboard Cards - Vibrant & Animated */
 .o_freight_dashboard .card {
     cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     margin-bottom: 20px;
     border: none;
-    border-radius: 10px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    position: relative;
+    animation: fadeInUp 0.6s ease-out backwards;
+}
+
+/* Staggered animation for cards */
+.o_freight_dashboard .card:nth-child(1) { animation-delay: 0.1s; }
+.o_freight_dashboard .card:nth-child(2) { animation-delay: 0.2s; }
+.o_freight_dashboard .card:nth-child(3) { animation-delay: 0.3s; }
+.o_freight_dashboard .card:nth-child(4) { animation-delay: 0.4s; }
+.o_freight_dashboard .card:nth-child(5) { animation-delay: 0.5s; }
+.o_freight_dashboard .card:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Shimmer effect on cards */
+.o_freight_dashboard .card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        45deg,
+        transparent 30%,
+        rgba(255, 255, 255, 0.3) 50%,
+        transparent 70%
+    );
+    transform: rotate(45deg);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
 }
 
 .o_freight_dashboard .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+/* Pulsing glow effect on hover */
+.o_freight_dashboard .card:hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    box-shadow: 0 0 30px rgba(102, 126, 234, 0.6);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.05); }
 }
 
 .o_freight_dashboard .card-body {
     padding: 25px;
+    position: relative;
+    z-index: 1;
 }
 
 .o_freight_dashboard .card-title {
     font-size: 16px;
-    font-weight: 500;
+    font-weight: 600;
     margin-bottom: 15px;
     opacity: 0.9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    animation: slideInLeft 0.5s ease-out;
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 0.9;
+        transform: translateX(0);
+    }
 }
 
 .o_freight_dashboard .card-text {
-    font-size: 36px;
-    font-weight: bold;
+    font-size: 42px;
+    font-weight: 800;
     margin: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: countUp 1s ease-out;
 }
 
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Headers with gradient text */
 .o_freight_dashboard h2 {
-    color: #2c3e50;
-    font-weight: 600;
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 30px;
+    animation: slideInDown 0.6s ease-out;
+    text-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .o_freight_dashboard h4 {
-    color: #34495e;
-    font-weight: 500;
-    border-bottom: 2px solid #3498db;
-    padding-bottom: 10px;
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 1.5rem;
+    border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+    padding-bottom: 15px;
+    margin-bottom: 20px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    animation: fadeIn 0.8s ease-out;
 }
 
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Colorful status cards with gradients */
 .o_freight_dashboard .bg-info {
-    background-color: #3498db !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
 }
 
 .o_freight_dashboard .bg-warning {
-    background-color: #f39c12 !important;
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+    box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
 }
 
 .o_freight_dashboard .bg-success {
-    background-color: #27ae60 !important;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+    box-shadow: 0 10px 30px rgba(79, 172, 254, 0.4);
 }
 
 .o_freight_dashboard .bg-primary {
-    background-color: #2980b9 !important;
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+    box-shadow: 0 10px 30px rgba(250, 112, 154, 0.4);
 }
 
 .o_freight_dashboard .bg-secondary {
-    background-color: #95a5a6 !important;
+    background: linear-gradient(135deg, #30cfd0 0%, #330867 100%) !important;
+    box-shadow: 0 10px 30px rgba(48, 207, 208, 0.4);
 }
 
+.o_freight_dashboard .bg-danger {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%) !important;
+    box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+}
+
+/* Animated icons */
+.o_freight_dashboard .card i,
+.o_freight_dashboard .card .fa {
+    animation: bounce 2s ease-in-out infinite;
+    display: inline-block;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+/* Row spacing */
 .o_freight_dashboard .row {
     margin-left: -10px;
     margin-right: -10px;
@@ -75,3 +262,37 @@
     padding-left: 10px;
     padding-right: 10px;
 }
+
+/* Glowing borders on focus */
+.o_freight_dashboard .card:focus-within {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.4);
+}
+
+/* Responsive animations */
+@media (max-width: 768px) {
+    .o_freight_dashboard {
+        padding: 15px;
+    }
+    
+    .o_freight_dashboard h2 {
+        font-size: 1.8rem;
+    }
+    
+    .o_freight_dashboard .card-text {
+        font-size: 32px;
+    }
+}
+
+/* Loading spinner animation */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Sparkle effect */
+@keyframes sparkle {
+    0%, 100% { opacity: 0; transform: scale(0); }
+    50% { opacity: 1; transform: scale(1); }
+}
+

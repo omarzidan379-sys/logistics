@@ -188,51 +188,31 @@ class FreightCustomerPortal(CustomerPortal):
             'quotation': quotation_sudo,
             'page_name': 'quotation',
         }
-        return request.render("freight_management.portal_my_quotation_detail_enhanced", values)
+        return request.render("freight_management.portal_my_quotation_detail", values)
 
-    @http.route(['/my/quotations/<int:quotation_id>/accept'], type='json', auth="user", website=True)
+    @http.route(['/my/quotations/<int:quotation_id>/accept'], type='http', auth="user", website=True)
     def portal_quotation_accept(self, quotation_id, access_token=None, **kw):
         try:
             quotation_sudo = self._document_check_access('freight.quotation', quotation_id, access_token)
         except (AccessError, MissingError):
-            return {'error': 'Access denied'}
+            return request.redirect('/my')
 
-        try:
-            if quotation_sudo.state == 'quoted':
-                quotation_sudo.action_customer_accept()
-                return {
-                    'success': True,
-                    'message': 'Quotation accepted successfully!',
-                    'state': quotation_sudo.state
-                }
-            else:
-                return {
-                    'error': f'Cannot accept quotation in {quotation_sudo.state} state'
-                }
-        except Exception as e:
-            return {'error': str(e)}
+        if quotation_sudo.state == 'quoted':
+            quotation_sudo.action_customer_accept()
 
-    @http.route(['/my/quotations/<int:quotation_id>/reject'], type='json', auth="user", website=True)
+        return request.redirect('/my/quotations/%s?message=accepted' % quotation_id)
+
+    @http.route(['/my/quotations/<int:quotation_id>/reject'], type='http', auth="user", website=True)
     def portal_quotation_reject(self, quotation_id, reason=None, access_token=None, **kw):
         try:
             quotation_sudo = self._document_check_access('freight.quotation', quotation_id, access_token)
         except (AccessError, MissingError):
-            return {'error': 'Access denied'}
+            return request.redirect('/my')
 
-        try:
-            if quotation_sudo.state == 'quoted':
-                quotation_sudo.action_customer_reject(reason=reason)
-                return {
-                    'success': True,
-                    'message': 'Quotation rejected successfully.',
-                    'state': quotation_sudo.state
-                }
-            else:
-                return {
-                    'error': f'Cannot reject quotation in {quotation_sudo.state} state'
-                }
-        except Exception as e:
-            return {'error': str(e)}
+        if quotation_sudo.state == 'quoted':
+            quotation_sudo.action_customer_reject(reason=reason)
+
+        return request.redirect('/my/quotations/%s?message=rejected' % quotation_id)
 
     @http.route(['/my/quotations/<int:quotation_id>/download'], type='http', auth="user", website=True)
     def portal_quotation_download(self, quotation_id, access_token=None, **kw):
