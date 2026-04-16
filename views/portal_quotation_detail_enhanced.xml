@@ -54,21 +54,27 @@
                     
                     <!-- Body -->
                     <div class="freight-card-body">
-                        <!-- Action Buttons (Only for Quoted state) -->
-                        <div t-if="quotation.state == 'quoted'" class="action-buttons-container">
-                            <div class="row">
-                                <div class="col-md-6 mb-3 mb-md-0">
-                                    <button type="button" class="btn-action btn-accept" onclick="acceptQuotation()">
-                                        <i class="fa fa-check-circle"></i>
-                                        <span>Accept Quotation</span>
-                                    </button>
+                        <!-- Action Buttons (For Draft and Quoted states) -->
+                        <div t-if="quotation.state in ['draft', 'quoted']" class="action-buttons-container">
+                            <div t-if="quotation.line_ids and quotation.total_amount > 0">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3 mb-md-0">
+                                        <button type="button" class="btn-action btn-accept" onclick="acceptQuotation()">
+                                            <i class="fa fa-check-circle"></i>
+                                            <span>Accept Quotation</span>
+                                        </button>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <button type="button" class="btn-action btn-reject" data-bs-toggle="modal" data-bs-target="#rejectModal">
+                                            <i class="fa fa-times-circle"></i>
+                                            <span>Reject Quotation</span>
+                                        </button>
+                                    </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <button type="button" class="btn-action btn-reject" data-bs-toggle="modal" data-bs-target="#rejectModal">
-                                        <i class="fa fa-times-circle"></i>
-                                        <span>Reject Quotation</span>
-                                    </button>
-                                </div>
+                            </div>
+                            <div t-else="" class="alert alert-info">
+                                <i class="fa fa-info-circle"></i>
+                                This quotation is awaiting pricing from our team. You will be notified once pricing is available.
                             </div>
                         </div>
                         

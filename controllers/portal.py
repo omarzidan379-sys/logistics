@@ -130,7 +130,11 @@ class FreightCustomerPortal(CustomerPortal):
         Quotation = request.env['freight.quotation']
         partner = request.env.user.partner_id
 
-        domain = [('partner_id', 'child_of', partner.commercial_partner_id.id)]
+        # Include draft and quoted states for portal users
+        domain = [
+            ('partner_id', 'child_of', partner.commercial_partner_id.id),
+            ('state', 'in', ['draft', 'quoted', 'accepted', 'rejected', 'expired', 'cancelled'])
+        ]
 
         searchbar_sortings = {
             'date': {'label': _('Date'), 'order': 'quotation_date desc'},
@@ -197,10 +201,32 @@ class FreightCustomerPortal(CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        if quotation_sudo.state == 'quoted':
+        if quotation_sudo.state in ['draft', 'quoted']:
             quotation_sudo.action_customer_accept()
 
         return request.redirect('/my/quotations/%s?message=accepted' % quotation_id)
+
+    @http.route(['/my/quotations/<int:quotation_id>/accept'], type='json', auth="user", website=True)
+    def portal_quotation_accept_json(self, quotation_id, access_token=None, **kw):
+        try:
+            quotation_sudo = self._document_check_access('freight.quotation', quotation_id, access_token)
+        except (AccessError, MissingError):
+            return {'error': 'Access denied'}
+
+        try:
+            if quotation_sudo.state in ['draft', 'quoted']:
+                quotation_sudo.action_customer_accept()
+                return {
+                    'success': True,
+                    'message': 'Quotation accepted successfully!',
+                    'state': quotation_sudo.state
+                }
+            else:
+                return {
+                    'error': f'Cannot accept quotation in {quotation_sudo.state} state'
+                }
+        except Exception as e:
+            return {'error': str(e)}
 
     @http.route(['/my/quotations/<int:quotation_id>/reject'], type='http', auth="user", website=True)
     def portal_quotation_reject(self, quotation_id, reason=None, access_token=None, **kw):
@@ -209,10 +235,32 @@ class FreightCustomerPortal(CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
-        if quotation_sudo.state == 'quoted':
+        if quotation_sudo.state in ['draft', 'quoted']:
             quotation_sudo.action_customer_reject(reason=reason)
 
         return request.redirect('/my/quotations/%s?message=rejected' % quotation_id)
+
+    @http.route(['/my/quotations/<int:quotation_id>/reject'], type='json', auth="user", website=True)
+    def portal_quotation_reject_json(self, quotation_id, reason=None, access_token=None, **kw):
+        try:
+            quotation_sudo = self._document_check_access('freight.quotation', quotation_id, access_token)
+        except (AccessError, MissingError):
+            return {'error': 'Access denied'}
+
+        try:
+            if quotation_sudo.state in ['draft', 'quoted']:
+                quotation_sudo.action_customer_reject(reason=reason)
+                return {
+                    'success': True,
+                    'message': 'Quotation rejected successfully.',
+                    'state': quotation_sudo.state
+                }
+            else:
+                return {
+                    'error': f'Cannot reject quotation in {quotation_sudo.state} state'
+                }
+        except Exception as e:
+            return {'error': str(e)}
 
     @http.route(['/my/quotations/<int:quotation_id>/download'], type='http', auth="user", website=True)
     def portal_quotation_download(self, quotation_id, access_token=None, **kw):
@@ -428,6 +476,7 @@ class FreightCustomerPortal(CustomerPortal):
                 'is_dangerous_goods': post.get('is_dangerous_goods') == 'on',
                 'is_temperature_controlled': post.get('is_temperature_controlled') == 'on',
                 'special_instructions': post.get('special_instructions', ''),
+                'state': 'draft',  # Create in draft state
             }
             
             # Handle optional fields
@@ -446,7 +495,7 @@ class FreightCustomerPortal(CustomerPortal):
                 subtype_xmlid='mail.mt_note'
             )
             
-            return request.redirect('/my/quotations?message=quote_requested')
+            return request.redirect('/my/quotations/%s?message=quote_created' % quotation.id)
         
         # GET request - show form
         locations = request.env['freight.location'].sudo().search([

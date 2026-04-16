@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, AccessError
 from datetime import timedelta
 
 class FreightQuotation(models.Model):
@@ -343,12 +343,12 @@ class FreightQuotation(models.Model):
         """Customer accepts quotation via portal"""
         self.ensure_one()
         
-        if self.state != 'quoted':
-            raise ValidationError('Only quoted quotations can be accepted.')
+        if self.state not in ['draft', 'quoted']:
+            raise ValidationError('Only draft or quoted quotations can be accepted.')
         
-        # Check if user is authorized
-        if not self.env.user.partner_id or self.env.user.partner_id.commercial_partner_id != self.partner_id.commercial_partner_id:
-            raise AccessError('You are not authorized to accept this quotation.')
+        # Check if quotation has pricing
+        if not self.line_ids or self.total_amount <= 0:
+            raise ValidationError('This quotation does not have pricing yet. Please wait for our team to provide pricing.')
         
         self.write({
             'state': 'accepted',
@@ -356,27 +356,75 @@ class FreightQuotation(models.Model):
         })
         
         # Log activity
+        user_name = self.env.user.partner_id.name if self.env.user.partner_id else self.env.user.name
         self.message_post(
-            body=f"Quotation accepted by {self.env.user.partner_id.name} via customer portal.",
+            body=f"Quotation accepted by {user_name} via customer portal.",
             message_type='notification',
             subtype_xmlid='mail.mt_note'
         )
+        
+        # Auto-create draft booking
+        self._create_draft_booking()
         
         # Send notification to sales team
         self._send_acceptance_notification()
         
         return True
     
+    def _create_draft_booking(self):
+        """Automatically create a draft booking from accepted quotation"""
+        self.ensure_one()
+        
+        # Check if booking already exists
+        existing_booking = self.env['freight.booking'].search([
+            ('quotation_id', '=', self.id)
+        ], limit=1)
+        
+        if existing_booking:
+            return existing_booking
+        
+        # Create draft booking with quotation data
+        booking_vals = {
+            'quotation_id': self.id,
+            'partner_id': self.partner_id.id,
+            'service_type': self.service_type,
+            'shipment_direction': self.shipment_direction,
+            'origin_port_id': self.origin_port_id.id if self.origin_port_id else False,
+            'destination_port_id': self.destination_port_id.id if self.destination_port_id else False,
+            'cargo_description': self.cargo_description,
+            'container_type': self.container_type,
+            'container_qty': self.container_qty,
+            'total_weight': self.total_weight,
+            'total_volume': self.total_volume,
+            'is_dangerous_goods': self.is_dangerous_goods,
+            'is_temperature_controlled': self.is_temperature_controlled,
+            'special_instructions': self.special_instructions,
+            'state': 'draft',
+        }
+        
+        booking = self.env['freight.booking'].create(booking_vals)
+        
+        # Log booking creation
+        self.message_post(
+            body=f"Draft booking {booking.name} automatically created from accepted quotation.",
+            message_type='notification',
+            subtype_xmlid='mail.mt_note'
+        )
+        
+        booking.message_post(
+            body=f"Booking created automatically from accepted quotation {self.name}.",
+            message_type='notification',
+            subtype_xmlid='mail.mt_note'
+        )
+        
+        return booking
+    
     def action_customer_reject(self, reason=None):
         """Customer rejects quotation via portal"""
         self.ensure_one()
         
-        if self.state != 'quoted':
-            raise ValidationError('Only quoted quotations can be rejected.')
-        
-        # Check if user is authorized
-        if not self.env.user.partner_id or self.env.user.partner_id.commercial_partner_id != self.partner_id.commercial_partner_id:
-            raise AccessError('You are not authorized to reject this quotation.')
+        if self.state not in ['draft', 'quoted']:
+            raise ValidationError('Only draft or quoted quotations can be rejected.')
         
         self.write({
             'state': 'rejected',
@@ -385,7 +433,8 @@ class FreightQuotation(models.Model):
         })
         
         # Log activity
-        rejection_msg = f"Quotation rejected by {self.env.user.partner_id.name} via customer portal."
+        user_name = self.env.user.partner_id.name if self.env.user.partner_id else self.env.user.name
+        rejection_msg = f"Quotation rejected by {user_name} via customer portal."
         if reason:
             rejection_msg += f"\n\nReason: {reason}"
         
