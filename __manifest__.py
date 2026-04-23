@@ -81,6 +81,7 @@
         'views/freight_dashboard_views.xml',
         
         # Portal
+        'views/freight_portal_login.xml',
         'views/portal_templates_clean.xml',
         'views/portal_quotation_detail_enhanced.xml',
         'views/portal_menu.xml',

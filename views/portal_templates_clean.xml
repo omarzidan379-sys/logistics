@@ -22,67 +22,219 @@
         </template>
 
         <!-- Portal My Home -->
-        <template id="portal_my_home_freight" name="Portal My Home Freight" inherit_id="portal.portal_my_home" priority="40">
-            <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
-                <t t-call="portal.portal_docs_entry">
-                    <t t-set="title">Shipments</t>
-                    <t t-set="url" t-value="'/my/shipments'"/>
-                    <t t-set="placeholder_count" t-value="'shipment_count'"/>
-                </t>
-                <t t-call="portal.portal_docs_entry">
-                    <t t-set="title">Quotations</t>
-                    <t t-set="url" t-value="'/my/quotations'"/>
-                    <t t-set="placeholder_count" t-value="'quotation_count'"/>
-                </t>
+        <template id="portal_my_home_freight" name="Portal My Home Freight" inherit_id="portal.portal_my_home" priority="80">
+            <xpath expr="//div[hasclass('o_portal_docs')]" position="replace">
+                <div class="freight-home-vip">
+                    <div class="freight-home-vip__hero">
+                        <div class="freight-home-vip__hero-glow"/>
+                        <div class="freight-home-vip__hero-left">
+                            <h3>
+                                <i class="fa fa-ship me-2"/>
+                                Freight Operations Portal
+                            </h3>
+                            <p>
+                                Send shipments, monitor active cargo, and respond quickly to quoted or rejected offers.
+                            </p>
+                        </div>
+                        <div class="freight-home-vip__hero-actions">
+                            <a href="/my/request-quote" class="btn btn-primary">
+                                <i class="fa fa-paper-plane"/> Send Shipment Request
+                            </a>
+                            <a href="/my/shipments" class="btn btn-secondary">
+                                <i class="fa fa-search"/> View Shipments
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="freight-home-vip__stats">
+                        <a href="/my/shipments" class="freight-home-vip__stat-card neon-blue">
+                            <div class="label">Shipments</div>
+                            <div class="value"><t t-esc="shipment_count or 0"/></div>
+                            <div class="hint">Track live progress</div>
+                        </a>
+                        <a href="/my/quotations" class="freight-home-vip__stat-card neon-cyan">
+                            <div class="label">All Offers</div>
+                            <div class="value"><t t-esc="quotation_count or 0"/></div>
+                            <div class="hint">Review all quotations</div>
+                        </a>
+                        <a href="/my/quotations?filterby=quoted" class="freight-home-vip__stat-card neon-green">
+                            <div class="label">Waiting Your Reply</div>
+                            <div class="value"><t t-esc="quoted_offer_count or 0"/></div>
+                            <div class="hint">Accept or reject bids</div>
+                        </a>
+                        <a href="/my/quotations?filterby=rejected" class="freight-home-vip__stat-card neon-red">
+                            <div class="label">Rejected</div>
+                            <div class="value"><t t-esc="rejected_offer_count or 0"/></div>
+                            <div class="hint">Reply with your feedback</div>
+                        </a>
+                    </div>
+
+                    <div class="freight-home-vip__actions">
+                        <a href="/my/request-quote" class="freight-home-vip__action">
+                            <i class="fa fa-plus-circle"/>
+                            <span>Create New Shipment Request</span>
+                        </a>
+                        <a href="/my/shipments" class="freight-home-vip__action">
+                            <i class="fa fa-truck"/>
+                            <span>Open My Shipments</span>
+                        </a>
+                        <a href="/my/quotations?filterby=quoted" class="freight-home-vip__action">
+                            <i class="fa fa-gavel"/>
+                            <span>Review Bid Offers</span>
+                        </a>
+                        <a href="/my/quotations?filterby=rejected" class="freight-home-vip__action">
+                            <i class="fa fa-reply"/>
+                            <span>Reply To Rejected Offer</span>
+                        </a>
+                    </div>
+                </div>
             </xpath>
         </template>
 
-        <!-- Unified Freight Dashboard -->
+        <!-- Unified Freight Dashboard — Premium Redesign -->
         <template id="portal_freight_dashboard" name="Freight Dashboard">
             <t t-call="portal.portal_layout">
                 <t t-set="breadcrumbs_searchbar" t-value="True"/>
                 <t t-call="portal.portal_searchbar">
                     <t t-set="title">Freight Dashboard</t>
                 </t>
-                <div class="container mt-4">
-                    <div class="row">
-                        <div class="col-12">
-                            <h3>Welcome to Your Freight Portal</h3>
-                            <p class="text-muted">Manage your shipments, quotations, and more.</p>
+
+                <div class="container mt-3">
+                    <!-- Welcome Hero -->
+                    <div class="freight-welcome-hero animate-fadeInUp">
+                        <div class="d-flex justify-content-between align-items-start flex-wrap">
+                            <div>
+                                <h2><i class="fa fa-ship me-2"/>Welcome to Your Freight Portal</h2>
+                                <p>Manage shipments, quotations, track deliveries — all from one place.</p>
+                            </div>
+                            <div class="live-indicator mt-2">
+                                <span class="live-dot"/>
+                                <span>System Online</span>
+                            </div>
+                        </div>
+                        <div class="hero-stats">
+                            <div class="hero-stat">
+                                <div class="hero-stat-value"><t t-esc="shipment_count or 0"/></div>
+                                <div class="hero-stat-label">Shipments</div>
+                            </div>
+                            <div class="hero-stat">
+                                <div class="hero-stat-value"><t t-esc="quotation_count or 0"/></div>
+                                <div class="hero-stat-label">Quotations</div>
+                            </div>
                         </div>
                     </div>
-                    <div class="row mt-4">
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <i class="fa fa-ship fa-3x text-primary mb-3"/>
-                                    <h5>Shipments</h5>
-                                    <p class="text-muted"><t t-esc="shipment_count"/> Active</p>
-                                    <a href="/my/shipments" class="btn btn-primary btn-sm">View All</a>
-                                </div>
+
+                    <!-- Stat Cards Grid -->
+                    <div class="freight-dashboard-grid">
+                        <!-- Shipments Card -->
+                        <div class="freight-stat-card card-shipments animate-fadeInUp delay-1">
+                            <div class="stat-icon icon-shipments">
+                                <i class="fa fa-ship"/>
+                            </div>
+                            <div class="stat-value"><t t-esc="shipment_count or 0"/></div>
+                            <div class="stat-label">Active Shipments</div>
+                            <a href="/my/shipments" class="stat-action">
+                                View All <span class="arrow">→</span>
+                            </a>
+                        </div>
+
+                        <!-- Quotations Card -->
+                        <div class="freight-stat-card card-quotations animate-fadeInUp delay-2">
+                            <div class="stat-icon icon-quotations">
+                                <i class="fa fa-file-text-o"/>
+                            </div>
+                            <div class="stat-value"><t t-esc="quotation_count or 0"/></div>
+                            <div class="stat-label">Total Quotations</div>
+                            <a href="/my/quotations" class="stat-action">
+                                View All <span class="arrow">→</span>
+                            </a>
+                        </div>
+
+                        <!-- Request Quote Card -->
+                        <div class="freight-stat-card card-action animate-fadeInUp delay-3">
+                            <div class="stat-icon icon-action">
+                                <i class="fa fa-plus-circle"/>
+                            </div>
+                            <div class="stat-value" style="font-size: 1.5rem;">New</div>
+                            <div class="stat-label">Request a Quote</div>
+                            <a href="/my/request-quote" class="stat-action">
+                                Get Quote <span class="arrow">→</span>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Strip -->
+                    <h5 class="mb-3 fw-bold" style="color: #0c4a6e;"><i class="fa fa-bolt me-2"/>Quick Actions</h5>
+                    <div class="freight-quick-actions">
+                        <a href="/my/shipments" class="freight-quick-action animate-fadeInUp delay-2">
+                            <div class="qa-icon" style="background: linear-gradient(135deg, #0ea5e9, #06b6d4);">
+                                <i class="fa fa-search"/>
+                            </div>
+                            <div class="qa-text">
+                                <h6>Track Shipment</h6>
+                                <small>Check real-time status</small>
+                            </div>
+                        </a>
+                        <a href="/my/quotations" class="freight-quick-action animate-fadeInUp delay-3">
+                            <div class="qa-icon" style="background: linear-gradient(135deg, #10b981, #34d399);">
+                                <i class="fa fa-list-alt"/>
+                            </div>
+                            <div class="qa-text">
+                                <h6>View Quotations</h6>
+                                <small>Review &amp; accept quotes</small>
+                            </div>
+                        </a>
+                        <a href="/my/request-quote" class="freight-quick-action animate-fadeInUp delay-4">
+                            <div class="qa-icon" style="background: linear-gradient(135deg, #8b5cf6, #6366f1);">
+                                <i class="fa fa-paper-plane"/>
+                            </div>
+                            <div class="qa-text">
+                                <h6>New Quote Request</h6>
+                                <small>Submit in 5 minutes</small>
+                            </div>
+                        </a>
+                        <a href="/my/freight/settings" class="freight-quick-action animate-fadeInUp delay-5">
+                            <div class="qa-icon" style="background: linear-gradient(135deg, #f59e0b, #f97316);">
+                                <i class="fa fa-cog"/>
+                            </div>
+                            <div class="qa-text">
+                                <h6>Settings</h6>
+                                <small>Notification prefs</small>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Workflow Steps -->
+                    <div class="freight-progress-container animate-fadeInUp delay-4">
+                        <h6 class="mb-3 fw-bold" style="color: #0c4a6e;"><i class="fa fa-tasks me-2"/>Shipment Workflow</h6>
+                        <div class="freight-workflow-steps">
+                            <div class="freight-workflow-step completed">
+                                <div class="step-circle"><i class="fa fa-check"/></div>
+                                <div class="step-label">Quote</div>
+                            </div>
+                            <div class="freight-workflow-step completed">
+                                <div class="step-circle"><i class="fa fa-check"/></div>
+                                <div class="step-label">Booking</div>
+                            </div>
+                            <div class="freight-workflow-step active">
+                                <div class="step-circle">3</div>
+                                <div class="step-label">In Transit</div>
+                            </div>
+                            <div class="freight-workflow-step">
+                                <div class="step-circle">4</div>
+                                <div class="step-label">Customs</div>
+                            </div>
+                            <div class="freight-workflow-step">
+                                <div class="step-circle">5</div>
+                                <div class="step-label">Delivered</div>
                             </div>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="card">
-                                <div class="card-body text-center">
-                                    <i class="fa fa-file-text-o fa-3x text-success mb-3"/>
-                                    <h5>Quotations</h5>
-                                    <p class="text-muted"><t t-esc="quotation_count"/> Total</p>
-                                    <a href="/my/quotations" class="btn btn-success btn-sm">View All</a>
-                                </div>
-                            </div>
+                        <div class="freight-progress-bar mt-3">
+                            <div class="progress-fill" style="width: 55%;"/>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="card border-primary">
-                                <div class="card-body text-center">
-                                    <i class="fa fa-plus-circle fa-3x text-primary mb-3"/>
-                                    <h5>Request Quote</h5>
-                                    <p class="text-muted">Get a new quote</p>
-                                    <a href="/my/request-quote" class="btn btn-primary btn-sm">
-                                        <i class="fa fa-paper-plane me-1"/>Request Now
-                                    </a>
-                                </div>
-                            </div>
+                        <div class="freight-progress-label">
+                            <span>Shipment Progress</span>
+                            <span class="progress-percentage">55%</span>
                         </div>
                     </div>
                 </div>
@@ -101,27 +253,32 @@
                         There are currently no shipments for your account.
                     </div>
                 </t>
-                <t t-if="shipments" t-call="portal.portal_table">
-                    <thead>
-                        <tr>
-                            <th>Reference</th>
-                            <th>Origin</th>
-                            <th>Destination</th>
-                            <th>Status</th>
-                            <th>Booking Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <t t-if="shipments">
+                    <div class="mt-4">
                         <t t-foreach="shipments" t-as="shipment">
-                            <tr>
-                                <td><a t-attf-href="/my/shipments/#{shipment.id}"><t t-esc="shipment.name"/></a></td>
-                                <td><t t-esc="shipment.origin_port_id.name"/></td>
-                                <td><t t-esc="shipment.destination_port_id.name"/></td>
-                                <td><span t-field="shipment.state"/></td>
-                                <td><span t-field="shipment.booking_date"/></td>
-                            </tr>
+                            <a t-attf-href="/my/shipments/#{shipment.id}" class="freight-shipment-row">
+                                <div class="shipment-icon">
+                                    <i class="fa fa-ship"/>
+                                </div>
+                                <div class="shipment-info">
+                                    <div class="shipment-ref"><t t-esc="shipment.name"/></div>
+                                    <div class="shipment-route">
+                                        <t t-esc="shipment.origin_port_id.name"/> <i class="fa fa-arrow-right mx-1" style="color:#bae6fd;"/> <t t-esc="shipment.destination_port_id.name"/>
+                                    </div>
+                                </div>
+                                <div class="shipment-status text-center">
+                                    <span t-attf-class="badge badge-#{shipment.state}"><span t-field="shipment.state"/></span>
+                                </div>
+                                <div class="shipment-date d-none d-md-block">
+                                    <div>Booking Date</div>
+                                    <span><span t-field="shipment.booking_date"/></span>
+                                </div>
+                                <div class="shipment-arrow">
+                                    <i class="fa fa-chevron-right"/>
+                                </div>
+                            </a>
                         </t>
-                    </tbody>
+                    </div>
                 </t>
             </t>
         </template>
@@ -150,6 +307,57 @@
                                     <p><strong>Booking Date:</strong> <span t-field="shipment.booking_date"/></p>
                                 </div>
                             </div>
+
+                            <hr class="my-4"/>
+
+                            <div class="row">
+                                <div class="col-12 col-lg-5 mb-4 mb-lg-0">
+                                    <div class="freight-reply-card">
+                                        <h5 class="mb-3">
+                                            <i class="fa fa-reply me-2"/>Send Reply / Update
+                                        </h5>
+                                        <form method="post" t-att-action="'/my/shipments/%s/message' % shipment.id">
+                                            <textarea class="form-control mb-3" name="message" rows="5" placeholder="Write your reply to operations team..." required="required"></textarea>
+                                            <button type="submit" class="btn btn-primary w-100">
+                                                <i class="fa fa-paper-plane me-1"/>Send Reply
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="col-12 col-lg-7">
+                                    <div class="freight-reply-card">
+                                        <h5 class="mb-3">
+                                            <i class="fa fa-comments me-2"/>Replies &amp; Tracking Conversation
+                                        </h5>
+                                        <t t-if="shipment_messages">
+                                            <div class="freight-reply-thread">
+                                                <t t-foreach="shipment_messages" t-as="msg">
+                                                    <div class="freight-reply-item">
+                                                        <div class="freight-reply-head">
+                                                            <span class="author">
+                                                                <i class="fa fa-user-circle me-1"/>
+                                                                <t t-esc="msg.author_id.name or 'Freight Team'"/>
+                                                            </span>
+                                                            <span class="date">
+                                                                <i class="fa fa-clock-o me-1"/>
+                                                                <span t-field="msg.date"/>
+                                                            </span>
+                                                        </div>
+                                                        <div class="freight-reply-body">
+                                                            <t t-raw="msg.body"/>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </t>
+                                        <t t-else="">
+                                            <div class="alert alert-info mb-0">
+                                                No replies yet. Start by sending your first message above.
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -168,29 +376,32 @@
                         There are currently no quotations for your account.
                     </div>
                 </t>
-                <t t-if="quotations" t-call="portal.portal_table">
-                    <thead>
-                        <tr>
-                            <th>Reference</th>
-                            <th>Date</th>
-                            <th>Origin</th>
-                            <th>Destination</th>
-                            <th>Amount</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
+                <t t-if="quotations">
+                    <div class="mt-4">
                         <t t-foreach="quotations" t-as="quotation">
-                            <tr>
-                                <td><a t-attf-href="/my/quotations/#{quotation.id}"><t t-esc="quotation.name"/></a></td>
-                                <td><span t-field="quotation.quotation_date"/></td>
-                                <td><t t-esc="quotation.origin_port_id.name"/></td>
-                                <td><t t-esc="quotation.destination_port_id.name"/></td>
-                                <td><span t-field="quotation.total_amount"/></td>
-                                <td><span t-field="quotation.state"/></td>
-                            </tr>
+                            <a t-attf-href="/my/quotations/#{quotation.id}" class="freight-shipment-row">
+                                <div class="shipment-icon" style="background: linear-gradient(135deg, #10b981, #34d399);">
+                                    <i class="fa fa-file-text-o"/>
+                                </div>
+                                <div class="shipment-info">
+                                    <div class="shipment-ref"><t t-esc="quotation.name"/> <span class="ms-2 text-primary fw-bold"><span t-field="quotation.total_amount"/></span></div>
+                                    <div class="shipment-route">
+                                        <t t-esc="quotation.origin_port_id.name"/> <i class="fa fa-arrow-right mx-1" style="color:#bae6fd;"/> <t t-esc="quotation.destination_port_id.name"/>
+                                    </div>
+                                </div>
+                                <div class="shipment-status text-center">
+                                    <span t-attf-class="badge badge-#{quotation.state}"><span t-field="quotation.state"/></span>
+                                </div>
+                                <div class="shipment-date d-none d-md-block">
+                                    <div>Valid Until</div>
+                                    <span><span t-field="quotation.validity_date"/></span>
+                                </div>
+                                <div class="shipment-arrow">
+                                    <i class="fa fa-chevron-right"/>
+                                </div>
+                            </a>
                         </t>
-                    </tbody>
+                    </div>
                 </t>
             </t>
         </template>

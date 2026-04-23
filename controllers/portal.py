@@ -7,7 +7,26 @@ from odoo.tools import groupby as groupbyelem
 from operator import itemgetter
 
 
+class FreightPortalGateway(http.Controller):
+    """Public gateway/landing page — no login required"""
+
+    @http.route(['/freight', '/freight/portal', '/freight/gateway'], type='http', auth='public', website=True, sitemap=True)
+    def freight_gateway(self, **kw):
+        """Freight Portal Gateway — Premium Landing Page"""
+        return request.render('freight_management.freight_portal_login', {})
+
+    @http.route(['/freight/track'], type='http', auth='public', website=True)
+    def freight_track_page(self, **kw):
+        """Public tracking page"""
+        return request.render('freight_management.freight_tracking_page', {})
+
+
 class FreightCustomerPortal(CustomerPortal):
+
+    @http.route(['/my/home'], type='http', auth="user", website=True)
+    def portal_home_shipments_redirect(self, **kw):
+        """Make portal home shipment-centric."""
+        return request.redirect('/my/freight')
 
     def _prepare_home_portal_values(self, counters):
         values = super()._prepare_home_portal_values(counters)
@@ -23,10 +42,42 @@ class FreightCustomerPortal(CustomerPortal):
                 ('partner_id', 'child_of', partner.commercial_partner_id.id)
             ]) if request.env['freight.quotation'].check_access_rights('read', raise_exception=False) else 0
 
+        if 'quoted_offer_count' in counters:
+            values['quoted_offer_count'] = request.env['freight.quotation'].search_count([
+                ('partner_id', 'child_of', partner.commercial_partner_id.id),
+                ('state', '=', 'quoted'),
+            ]) if request.env['freight.quotation'].check_access_rights('read', raise_exception=False) else 0
+
+        if 'rejected_offer_count' in counters:
+            values['rejected_offer_count'] = request.env['freight.quotation'].search_count([
+                ('partner_id', 'child_of', partner.commercial_partner_id.id),
+                ('state', '=', 'rejected'),
+            ]) if request.env['freight.quotation'].check_access_rights('read', raise_exception=False) else 0
+
         if 'booking_count' in counters:
             values['booking_count'] = request.env['freight.booking'].search_count([
                 ('partner_id', 'child_of', partner.commercial_partner_id.id)
             ]) if request.env['freight.booking'].check_access_rights('read', raise_exception=False) else 0
+
+        # Ensure freight counters are always available on /my/home custom portal cards.
+        if 'shipment_count' not in values:
+            values['shipment_count'] = request.env['freight.shipment'].search_count([
+                ('partner_id', 'child_of', partner.commercial_partner_id.id)
+            ]) if request.env['freight.shipment'].check_access_rights('read', raise_exception=False) else 0
+        if 'quotation_count' not in values:
+            values['quotation_count'] = request.env['freight.quotation'].search_count([
+                ('partner_id', 'child_of', partner.commercial_partner_id.id)
+            ]) if request.env['freight.quotation'].check_access_rights('read', raise_exception=False) else 0
+        if 'quoted_offer_count' not in values:
+            values['quoted_offer_count'] = request.env['freight.quotation'].search_count([
+                ('partner_id', 'child_of', partner.commercial_partner_id.id),
+                ('state', '=', 'quoted'),
+            ]) if request.env['freight.quotation'].check_access_rights('read', raise_exception=False) else 0
+        if 'rejected_offer_count' not in values:
+            values['rejected_offer_count'] = request.env['freight.quotation'].search_count([
+                ('partner_id', 'child_of', partner.commercial_partner_id.id),
+                ('state', '=', 'rejected'),
+            ]) if request.env['freight.quotation'].check_access_rights('read', raise_exception=False) else 0
 
         return values
 
@@ -117,8 +168,13 @@ class FreightCustomerPortal(CustomerPortal):
         except (AccessError, MissingError):
             return request.redirect('/my')
 
+        shipment_messages = shipment_sudo.message_ids.filtered(
+            lambda msg: msg.message_type in ('comment', 'email')
+        ).sorted(key=lambda msg: msg.date or msg.create_date, reverse=True)[:30]
+
         values = {
             'shipment': shipment_sudo,
+            'shipment_messages': shipment_messages,
             'page_name': 'shipment',
         }
         return request.render("freight_management.portal_my_shipment_detail", values)
